@@ -68,6 +68,8 @@ services:
     container_name: demyx_db
     image: demyx/mariadb:edge
     restart: unless-stopped
+    depends_on:
+      - demyx_traefik
     networks:
       - demyx
     volumes:

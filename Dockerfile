@@ -83,8 +83,6 @@ RUN set -ex; \
     rm "$OPENLITESPEED_CONFIG"/latest.tar.gz; \
     chown -R demyx:demyx "$OPENLITESPEED_CONFIG"/wordpress
 
-RUN apt-get install -y --no-install-recommends nano net-tools
-
 # Copy files
 COPY --chown=demyx:demyx demyx "$OPENLITESPEED_CONFIG"
 COPY demyx.sh /usr/local/bin/demyx

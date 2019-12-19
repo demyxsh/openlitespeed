@@ -1,0 +1,32 @@
+# Demyx
+# https://demyx.sh
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+
+services:
+  - docker
+
+env:
+  - DEMYX_USERNAME=demyx DEMYX_REPOSITORY=openlitespeed
+
+before_install:
+  - docker pull debian:buster-slim
+  - docker pull demyx/docker-socket-proxy
+  - docker pull demyx/traefik
+  - docker pull demyx/mariadb:edge
+  - docker pull demyx/wordpress:cli
+
+script:
+  - docker build --no-cache -t demyx/"$DEMYX_REPOSITORY" .
+  - docker-compose up -d
+  - sleep 5
+  - docker run --rm --volumes-from=demyx_wp demyx/wordpress:cli core install --url=http://domain.tld --title=demyx --admin_user=demyx --admin_password=demyx --admin_email=info@domain.tld --skip-email
+  - docker run --rm --volumes-from=demyx_wp demyx/wordpress:cli core is-installed
+
+after_success:
+  - echo "$DEMYX_PASSWORD" | docker login -u "$DEMYX_USERNAME" --password-stdin
+  - docker push demyx/"$DEMYX_REPOSITORY"
+  - bash travis.sh

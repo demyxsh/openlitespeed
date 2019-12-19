@@ -1,31 +1,3 @@
-# openlitespeed
-[![Build Status](https://img.shields.io/travis/demyxco/openlitespeed?style=flat)](https://travis-ci.org/demyxco/openlitespeed)
-[![Docker Pulls](https://img.shields.io/docker/pulls/demyx/openlitespeed?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![Architecture](https://img.shields.io/badge/linux-amd64-important?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![Debian](https://img.shields.io/badge/debian-10-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![OpenLiteSpeed](https://img.shields.io/badge/openlitespeed-1.6.4-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![Buy Me A Coffee](https://img.shields.io/badge/buy_me_coffee-$5-informational?style=flat&color=blue)](https://www.buymeacoffee.com/VXqkQK5tb)
-[![Become a Patron!](https://img.shields.io/badge/become%20a%20patron-$5-informational?style=flat&color=blue)](https://www.patreon.com/bePatron?u=23406156)
-
-Non-root Docker image running Debian and OpenLiteSpeed.
-
-DEMYX | OPENLITESPEED
---- | ---
-PORT | 80 8080
-USER | demyx
-WORKDIR | /demyx
-CONFIG | /etc/demyx
-LOG | /var/log/demyx
-ENTRYPOINT | ["dumb-init", "demyx"]
-WORDPRESS | https://domain.tld/
-OPENLITESPEED | https://domain.tld/demyx/ols/
-
-## Usage
-- `OPENLITESPEED_ADMIN_IP=myip` to lock down OpenLiteSpeed's admin page
-- `OPENLITESPEED_ADMIN_PREFIX=false` if you're exposing ports
-- `OPENLITESPEED_XMLRPC=true` to enable xmlrpc.php
-
-```
 # Demyx
 # https://demyx.sh
 #
@@ -220,15 +192,3 @@ networks:
     name: demyx
   demyx_socket:
     name: demyx_socket
-```
-
-## Updates & Support
-[![Code Size](https://img.shields.io/github/languages/code-size/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Repository Size](https://img.shields.io/github/repo-size/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Watches](https://img.shields.io/github/watchers/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Stars](https://img.shields.io/github/stars/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Forks](https://img.shields.io/github/forks/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-
-* Auto built weekly on Sundays (America/Los_Angeles)
-* Rolling release updates
-* For support: [#demyx](https://webchat.freenode.net/?channel=#demyx)

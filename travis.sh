@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Demyx
 # https://demyx.sh
 # https://github.com/peter-evans/dockerhub-description/blob/master/entrypoint.sh
@@ -8,10 +8,12 @@ IFS=$'\n\t'
 # Get versions
 DEMYX_DEBIAN_VERSION="$(docker exec -t demyx_wp cat /etc/os-release | grep VERSION_ID | cut -c 12- | sed 's|"||g' | sed 's/\r//g')"
 DEMYX_OPENLITESPEED_VERSION="$(docker exec -t "$DEMYX_REPOSITORY" cat /usr/local/lsws/VERSION | sed -e 's/\r//g')"
+DEMYX_LSPHP_VERSION="$(docker exec -t "$DEMYX_REPOSITORY" sh -c '/usr/local/lsws/"$OPENLITESPEED_LSPHP_VERSION"/bin/lsphp -v' | head -1 | awk '{print $2}' sed 's/\r//g')"
 
 # Replace versions
 sed -i "s|debian-.*.-informational|debian-${DEMYX_DEBIAN_VERSION}-informational|g" README.md
 sed -i "s|${DEMYX_REPOSITORY}-.*.-informational|${DEMYX_REPOSITORY}-${DEMYX_OPENLITESPEED_VERSION}-informational|g" README.md
+sed -i "s|lsphp-.*.-informational|lsphp-${DEMYX_LSPHP_VERSION//-/--}-informational|g" README.md
 
 # Push back to GitHub
 git config --global user.email "travis@travis-ci.org"

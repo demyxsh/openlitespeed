@@ -10,6 +10,8 @@ LABEL sh.demyx.registry https://hub.docker.com/u/demyx
 ENV OPENLITESPEED_ROOT=/demyx
 ENV OPENLITESPEED_CONFIG=/etc/demyx
 ENV OPENLITESPEED_LOG=/var/log/demyx
+ENV OPENLITESPEED_VERSION=1.6.4
+ENV OPENLITESPEED_LSPHP_VERSION=lsphp73
 ENV OPENLITESPEED_ADMIN=/demyx/ols
 ENV OPENLITESPEED_ADMIN_PREFIX=true
 ENV OPENLITESPEED_ADMIN_IP=ALL
@@ -54,8 +56,6 @@ RUN set -ex; \
 # gcc libxml2-dev pkg-config libssl-dev zlib1g-dev libcurl4-gnutls-dev libpng-dev libzip-dev make
 RUN set -ex; \
     apt-get update && apt-get install -y --no-install-recommends ca-certificates dumb-init ed procps sudo tzdata wget; \
-    # Latest OLS
-    OPENLITESPEED_VERSION=1.6.4; \
     \
     wget https://openlitespeed.org/packages/openlitespeed-"$OPENLITESPEED_VERSION".tgz -qO /tmp/openlitespeed-"$OPENLITESPEED_VERSION".tgz; \
     tar -xzf /tmp/openlitespeed-"$OPENLITESPEED_VERSION".tgz -C /tmp; \
@@ -63,9 +63,6 @@ RUN set -ex; \
     rm -rf /tmp/*; \
     \
     wget -O - https://rpms.litespeedtech.com/debian/enable_lst_debian_repo.sh | bash; \
-    \
-    # Set lsphp version
-    OPENLITESPEED_LSPHP_VERSION=lsphp73; \
     \
     apt-get update && apt-get install -y \
         "$OPENLITESPEED_LSPHP_VERSION" \

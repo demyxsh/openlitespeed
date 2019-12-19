@@ -23,8 +23,8 @@ script:
   - docker build --no-cache -t demyx/"$DEMYX_REPOSITORY" .
   - docker-compose up -d
   - sleep 5
-  - docker run --rm --volumes-from=demyx_wp demyx/wordpress:cli core install --url=http://domain.tld --title=demyx --admin_user=demyx --admin_password=demyx --admin_email=info@domain.tld --skip-email
-  - docker run --rm --volumes-from=demyx_wp demyx/wordpress:cli core is-installed
+  - docker run -t --rm --volumes-from=demyx_wp --network=demyx demyx/wordpress:cli core install --url=http://domain.tld --title=demyx --admin_user=demyx --admin_password=demyx --admin_email=info@domain.tld --skip-email
+  - docker run -t --rm --volumes-from=demyx_wp --network=demyx demyx/wordpress:cli core is-installed
 
 after_success:
   - echo "$DEMYX_PASSWORD" | docker login -u "$DEMYX_USERNAME" --password-stdin

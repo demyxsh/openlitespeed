@@ -113,6 +113,12 @@ RUN set -ex;\
     ln -sf "$OPENLITESPEED_CONFIG"/ols/admin_config.conf /usr/local/lsws/admin/conf/admin_config.conf; \
     ln -s "$OPENLITESPEED_CONFIG"/ols /usr/local/lsws/conf/vhosts; \
     \
+    # Make non-root scripts executable
+    chmod +x "$OPENLITESPEED_CONFIG"/encrypt.sh; \
+    chmod +x "$OPENLITESPEED_CONFIG"/install.sh; \
+    chmod +x /usr/local/bin/demyx; \
+    \
+    mv "$OPENLITESPEED_CONFIG"/encrypt.sh /usr/local/bin/demyx-encrypt; \
     mv "$OPENLITESPEED_CONFIG"/install.sh /usr/local/bin/demyx-install; \
     \
     chmod +x "$OPENLITESPEED_CONFIG"/admin.sh; \

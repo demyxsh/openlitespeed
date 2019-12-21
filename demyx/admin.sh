@@ -16,7 +16,7 @@ fi
 # Replace default OLS admin login
 # Default username: demyx
 # Default password: demyx
-ENCRYPT_PASS="$(/usr/local/lsws/admin/fcgi-bin/admin_php -q /usr/local/lsws/admin/misc/htpasswd.php "$OPENLITESPEED_ADMIN_PASSWORD")"
-echo "${OPENLITESPEED_ADMIN_USERNAME}:${ENCRYPT_PASS}" > /usr/local/lsws/admin/conf/htpasswd
+OPENLITESPEED_ADMIN_PASSWORD_ENCRYPTED="$(demyx-encrypt "$OPENLITESPEED_ADMIN_PASSWORD")"
+echo "${OPENLITESPEED_ADMIN_USERNAME}:${OPENLITESPEED_ADMIN_PASSWORD_ENCRYPTED}" > /usr/local/lsws/admin/conf/htpasswd
 chown lsadm:lsadm /usr/local/lsws/admin/conf/htpasswd
 chmod 600 /usr/local/lsws/admin/conf/htpasswd

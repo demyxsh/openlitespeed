@@ -12,6 +12,9 @@ demyx-install
 # OpenLiteSpeed admin
 demyx-admin
 
+# OpenLiteSpeed htpasswd
+demyx-htpasswd
+
 # Start OLS
 demyx-lsws
 

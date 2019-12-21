@@ -24,6 +24,7 @@ OPENLITESPEED | https://domain.tld/demyx/ols/
 ## Usage
 - `OPENLITESPEED_ADMIN_IP=myip` to lock down OpenLiteSpeed's admin page
 - `OPENLITESPEED_ADMIN_PREFIX=false` if you're exposing ports
+- `OPENLITESPEED_BASIC_AUTH_WP=true` to enable basic auth for wp-login.php
 - `OPENLITESPEED_XMLRPC=true` to enable xmlrpc.php
 
 ```
@@ -97,6 +98,8 @@ services:
     container_name: demyx_db
     image: demyx/mariadb:edge
     restart: unless-stopped
+    depends_on:
+      - demyx_traefik
     networks:
       - demyx
     volumes:
@@ -153,6 +156,10 @@ services:
       - OPENLITESPEED_ADMIN_IP=ALL # Change this to your IP
       - OPENLITESPEED_ADMIN_USERNAME=demyx
       - OPENLITESPEED_ADMIN_PASSWORD=demyx
+      - OPENLITESPEED_BASIC_AUTH_USERNAME=demyx
+      - OPENLITESPEED_BASIC_AUTH_PASSWORD=demyx
+      - OPENLITESPEED_BASIC_AUTH_WP=false
+      - OPENLITESPEED_CACHE=false
       - OPENLITESPEED_CLIENT_THROTTLE_STATIC=50
       - OPENLITESPEED_CLIENT_THROTTLE_DYNAMIC=50
       - OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_OUT=0
@@ -181,30 +188,25 @@ services:
       - "traefik.enable=true"
       # WordPress - https://domain.tld
       - "traefik.http.routers.domaintld-http.rule=Host(`domain.tld`) || Host(`www.domain.tld`)"
-      - "traefik.http.routers.domaintld-http.middlewares=demyx-redirect"
-      - "traefik.http.middlewares.demyx-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.domaintld-http.service=domaintld-http-port"
       - "traefik.http.services.domaintld-http-port.loadbalancer.server.port=80"
-      - "traefik.http.routers.domaintld-http.entrypoints=http,https"
+      - "traefik.http.routers.domaintld-http.entrypoints=https"
       - "traefik.http.routers.domaintld-http.tls.certresolver=demyx"
       # OpenLiteSpeed admin - https://domain.tld/demyx/ols/
       - "traefik.http.routers.domaintld-ols.rule=Host(`domain.tld`) && PathPrefix(`/demyx/ols/`)"
-      - "traefik.http.routers.domaintld-ols.middlewares=domaintld-ols-prefix,domaintld-ols-redirect"
+      - "traefik.http.routers.domaintld-ols.middlewares=domaintld-ols-prefix"
       - "traefik.http.middlewares.domaintld-ols-prefix.stripprefix.prefixes=/demyx/ols/"
-      - "traefik.http.middlewares.domaintld-ols-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.domaintld-ols.service=domaintld-ols-port"
       - "traefik.http.services.domaintld-ols-port.loadbalancer.server.port=8080"
-      - "traefik.http.routers.domaintld-ols.entrypoints=http,https"
+      - "traefik.http.routers.domaintld-ols.entrypoints=https"
       - "traefik.http.routers.domaintld-ols.tls.certresolver=demyx"
       - "traefik.http.routers.domaintld-ols.priority=99"
       # Proxy admin assets
       - "traefik.http.routers.domaintld-ols-assets.rule=Host(`domain.tld`) && PathPrefix(`/res/`)"
-      - "traefik.http.routers.domaintld-ols-assets.middlewares=domaintld-ols-assets-redirect"
       - "traefik.http.middlewares.domaintld-ols-assets-prefix.stripprefix.prefixes=/demyx/ols/"
-      - "traefik.http.middlewares.domaintld-ols-assets-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.domaintld-ols-assets.service=domaintld-ols-assets-port"
       - "traefik.http.services.domaintld-ols-assets-port.loadbalancer.server.port=8080"
-      - "traefik.http.routers.domaintld-ols-assets.entrypoints=http,https"
+      - "traefik.http.routers.domaintld-ols-assets.entrypoints=https"
       - "traefik.http.routers.domaintld-ols-assets.tls.certresolver=demyx"
       - "traefik.http.routers.domaintld-ols-assets.priority=99"
 volumes:

@@ -1,7 +1,7 @@
 # Demyx
 # https://demyx.sh
 
-demyx ALL=(ALL) NOPASSWD:/usr/local/lsws/bin/lswsctrl, /etc/demyx/admin.sh, /etc/demyx/config.sh, /etc/demyx/lsws.sh
+demyx ALL=(ALL) NOPASSWD:/usr/local/lsws/bin/lswsctrl, /etc/demyx/admin.sh, /etc/demyx/config.sh, /etc/demyx/htpasswd.sh, /etc/demyx/lsws.sh
 
 Defaults env_keep +="OPENLITESPEED_ROOT"
 Defaults env_keep +="OPENLITESPEED_CONFIG"
@@ -11,6 +11,10 @@ Defaults env_keep +="OPENLITESPEED_ADMIN_PREFIX"
 Defaults env_keep +="OPENLITESPEED_ADMIN_IP"
 Defaults env_keep +="OPENLITESPEED_ADMIN_USERNAME"
 Defaults env_keep +="OPENLITESPEED_ADMIN_PASSWORD"
+Defaults env_keep +="OPENLITESPEED_BASIC_AUTH_USERNAME"
+Defaults env_keep +="OPENLITESPEED_BASIC_AUTH_PASSWORD"
+Defaults env_keep +="OPENLITESPEED_BASIC_AUTH_WP"
+Defaults env_keep +="OPENLITESPEED_CACHE"
 Defaults env_keep +="OPENLITESPEED_CLIENT_THROTTLE_STATIC"
 Defaults env_keep +="OPENLITESPEED_CLIENT_THROTTLE_DYNAMIC"
 Defaults env_keep +="OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_OUT"

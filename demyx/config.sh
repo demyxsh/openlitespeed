@@ -269,24 +269,19 @@ module cache {
 # vhconf.conf
 
 # Enable opcache by default
-if [[ "${OPENLITESPEED_PHP_OPCACHE}" = false ]]; then
-    OPENLITESPEED_PHP_OPCACHE="php_admin_value opcache.enable 0"
-else
-    OPENLITESPEED_PHP_OPCACHE=
-fi
-
+[[ "${OPENLITESPEED_PHP_OPCACHE}" = false ]] && OPENLITESPEED_PHP_OPCACHE_ENABLE="php_admin_value opcache.enable 0"
 # Update auto_prepend_file if WordFence exists
-if [[ -d "$OPENLITESPEED_ROOT"/wp-content/plugins/wordfence ]]; then
-    OPENLITESPEED_WORDFENCE="php_value auto_prepend_file ${OPENLITESPEED_ROOT}/wordfence-waf.php"
-else
-    OPENLITESPEED_WORDFENCE=
-fi
-
+[[ -d "$OPENLITESPEED_ROOT"/wp-content/plugins/wordfence ]] && OPENLITESPEED_WORDFENCE="php_value auto_prepend_file ${OPENLITESPEED_ROOT}/wordfence-waf.php"
 # Disable xmlrpc.php by default
-if [[ "$OPENLITESPEED_XMLRPC" = false ]]; then
-    OPENLITESPEED_XMLRPC="RewriteRule ^xmlrpc.php - [F,L]"
-else
-    OPENLITESPEED_XMLRPC=
+[[ "$OPENLITESPEED_XMLRPC" = false ]] && OPENLITESPEED_XMLRPC="RewriteRule ^xmlrpc.php - [F,L]"
+# LSCache
+[[ "$OPENLITESPEED_CACHE" = true ]] && OPENLITESPEED_CACHE_ENABLE=1
+# Enable basic auth for wp-login.php
+if [[ "$OPENLITESPEED_BASIC_AUTH_WP" = true ]]; then
+    OPENLITESPEED_BASIC_AUTH_WP_CONTEXT="context /wp-login.php {
+            allowBrowse             1
+            realm                   Basic Auth
+        }"
 fi
 
 echo "# Demyx
@@ -379,7 +374,7 @@ context / {
                 RewriteRule \.(old|orig|original|php#|php~|php_bak|save|swo|aspx?|tpl|sh|bash|bak?|cfg|cgi|dll|exe|git|hg|ini|jsp|log|mdb|out|sql|svn|swp|tar|rdf)$ - [F,L]
 
                 # Disable XMLRPC
-                $OPENLITESPEED_XMLRPC
+                ${OPENLITESPEED_XMLRPC:-}
 
                 # Block php in wp-content/uploads
                 RewriteRule ^wp-content/uploads/[^/]+\.php$ - [F,L]
@@ -426,6 +421,8 @@ context / {
         END_rules
     }
 }
+ 
+${OPENLITESPEED_BASIC_AUTH_WP_CONTEXT:-}
 
 rewrite {
     enable                              1
@@ -436,10 +433,16 @@ phpIniOverride  {
     php_admin_value date.timezone       $TZ
     php_admin_value max_execution_time  $OPENLITESPEED_PHP_MAX_EXECUTION_TIME
     php_admin_value memory_limit        $OPENLITESPEED_PHP_MEMORY
-    $OPENLITESPEED_PHP_OPCACHE
+    ${OPENLITESPEED_PHP_OPCACHE_ENABLE:-}
     php_admin_value post_max_size       $OPENLITESPEED_PHP_UPLOAD_LIMIT
     php_admin_value upload_max_filesize $OPENLITESPEED_PHP_UPLOAD_LIMIT
-    $OPENLITESPEED_WORDFENCE
+    ${OPENLITESPEED_WORDFENCE:-}
+}
+
+realm Basic Auth {
+    userDB  {
+        location                        ${OPENLITESPEED_CONFIG}/ols/htpasswd
+    }
 }
 
 module cache {
@@ -457,7 +460,7 @@ module cache {
     expireInSeconds                     3600
     enablePrivateCache                  0
     privateExpireInSeconds              3600
-    ls_enabled                          1
+    ls_enabled                          ${OPENLITESPEED_CACHE_ENABLE:-0}
 }
 
 " > "$OPENLITESPEED_CONFIG"/ols/vhconf.conf

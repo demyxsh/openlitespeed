@@ -17,6 +17,10 @@ ENV OPENLITESPEED_ADMIN_PREFIX=true
 ENV OPENLITESPEED_ADMIN_IP=ALL
 ENV OPENLITESPEED_ADMIN_USERNAME=demyx
 ENV OPENLITESPEED_ADMIN_PASSWORD=demyx
+ENV OPENLITESPEED_BASIC_AUTH_USERNAME=demyx
+ENV OPENLITESPEED_BASIC_AUTH_PASSWORD=demyx
+ENV OPENLITESPEED_BASIC_AUTH_WP=false
+ENV OPENLITESPEED_CACHE=false
 ENV OPENLITESPEED_CLIENT_THROTTLE_STATIC=50
 ENV OPENLITESPEED_CLIENT_THROTTLE_DYNAMIC=50
 ENV OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_OUT=0
@@ -91,14 +95,22 @@ RUN set -ex; \
     echo '#!/bin/bash' > /usr/local/bin/demyx-admin; \
     echo 'sudo "$OPENLITESPEED_CONFIG"/admin.sh' >> /usr/local/bin/demyx-admin; \
     chmod +x /usr/local/bin/demyx-admin; \
+    chmod +x "$OPENLITESPEED_CONFIG"/admin.sh; \
     \
     echo '#!/bin/bash' > /usr/local/bin/demyx-config; \
     echo 'sudo "$OPENLITESPEED_CONFIG"/config.sh' >> /usr/local/bin/demyx-config; \
     chmod +x /usr/local/bin/demyx-config; \
+    chmod +x "$OPENLITESPEED_CONFIG"/config.sh; \
+    \
+    echo '#!/bin/bash' > /usr/local/bin/demyx-htpasswd; \
+    echo 'sudo "$OPENLITESPEED_CONFIG"/htpasswd.sh' >> /usr/local/bin/demyx-htpasswd; \
+    chmod +x /usr/local/bin/demyx-htpasswd; \
+    chmod +x "$OPENLITESPEED_CONFIG"/htpasswd.sh; \
     \
     echo '#!/bin/bash' > /usr/local/bin/demyx-lsws; \
     echo 'sudo "$OPENLITESPEED_CONFIG"/lsws.sh "$@"' >> /usr/local/bin/demyx-lsws; \
     chmod +x /usr/local/bin/demyx-lsws; \
+    chmod +x "$OPENLITESPEED_CONFIG"/lsws.sh; \
     \
     mv "$OPENLITESPEED_CONFIG"/sudoers /etc/sudoers.d/demyx; \
     chown root:root /etc/sudoers.d/demyx
@@ -120,12 +132,6 @@ RUN set -ex;\
     \
     mv "$OPENLITESPEED_CONFIG"/encrypt.sh /usr/local/bin/demyx-encrypt; \
     mv "$OPENLITESPEED_CONFIG"/install.sh /usr/local/bin/demyx-install; \
-    \
-    chmod +x "$OPENLITESPEED_CONFIG"/admin.sh; \
-    chmod +x "$OPENLITESPEED_CONFIG"/config.sh; \
-    chmod +x "$OPENLITESPEED_CONFIG"/lsws.sh; \
-    chmod +x /usr/local/bin/demyx-install; \
-    chmod +x /usr/local/bin/demyx;\
     \
     rm -f webadmin.csr privkey.pem
 

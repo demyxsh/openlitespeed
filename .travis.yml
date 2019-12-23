@@ -21,7 +21,7 @@ before_install:
 
 script:
   - docker build --no-cache -t demyx/"$DEMYX_REPOSITORY" tag-latest
-  - docker build --no-cache -t demyx/"$DEMYX_REPOSITORY" tag-bedrock
+  - docker build --no-cache -t demyx/"$DEMYX_REPOSITORY":bedrock tag-bedrock
   - docker-compose up -d
   - sleep 5
   - docker run -t --rm --volumes-from=demyx_wp --network=demyx demyx/wordpress:cli core install --url=http://domain.tld --title=demyx --admin_user=demyx --admin_password=demyx --admin_email=info@domain.tld --skip-email

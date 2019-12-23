@@ -7,8 +7,8 @@ IFS=$'\n\t'
 
 # Get versions
 DEMYX_DEBIAN_VERSION="$(docker exec -t demyx_wp cat /etc/os-release | grep VERSION_ID | cut -c 12- | sed 's|"||g' | sed 's/\r//g')"
-DEMYX_OPENLITESPEED_VERSION="$(docker exec -t "$DEMYX_REPOSITORY" cat /usr/local/lsws/VERSION | sed -e 's/\r//g')"
-DEMYX_LSPHP_VERSION="$(docker exec -t "$DEMYX_REPOSITORY" sh -c '/usr/local/lsws/"$OPENLITESPEED_LSPHP_VERSION"/bin/lsphp -v' | head -1 | awk '{print $2}' sed 's/\r//g')"
+DEMYX_OPENLITESPEED_VERSION="$(docker exec -t demyx_wp cat /usr/local/lsws/VERSION | sed -e 's/\r//g')"
+DEMYX_LSPHP_VERSION="$(docker exec -t demyx_wp sh -c '/usr/local/lsws/"$OPENLITESPEED_LSPHP_VERSION"/bin/lsphp -v' | head -1 | awk '{print $2}' sed 's/\r//g')"
 
 # Replace versions
 sed -i "s|debian-.*.-informational|debian-${DEMYX_DEBIAN_VERSION}-informational|g" README.md

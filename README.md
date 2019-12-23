@@ -12,6 +12,7 @@ Non-root Docker image running Debian and OpenLiteSpeed.
 
 DEMYX | OPENLITESPEED
 --- | ---
+TAGS | latest bedrock
 PORT | 80 8080
 USER | demyx
 WORKDIR | /demyx

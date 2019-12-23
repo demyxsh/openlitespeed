@@ -4,7 +4,7 @@
 [![Architecture](https://img.shields.io/badge/linux-amd64-important?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
 [![Debian](https://img.shields.io/badge/debian-10-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
 [![OpenLiteSpeed](https://img.shields.io/badge/openlitespeed-1.6.4-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![lsphp](https://img.shields.io/badge/lsphp-7.3.12--3+buster-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
+[![lsphp](https://img.shields.io/badge/lsphp-7.3.13--2+buster-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
 [![Buy Me A Coffee](https://img.shields.io/badge/buy_me_coffee-$5-informational?style=flat&color=blue)](https://www.buymeacoffee.com/VXqkQK5tb)
 [![Become a Patron!](https://img.shields.io/badge/become%20a%20patron-$5-informational?style=flat&color=blue)](https://www.patreon.com/bePatron?u=23406156)
 

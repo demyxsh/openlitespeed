@@ -11,7 +11,7 @@ WORDPRESS_DB_USER="${WORDPRESS_DB_USER:-}"
 WORDPRESS_DB_PASSWORD="${WORDPRESS_DB_PASSWORD:-}"
 WORDPRESS_DB_HOST="${WORDPRESS_DB_HOST:-}"
 
-if [[ ! -d "$OPENLITESPEED_ROOT"/wp-admin ]]; then
+if [[ ! -f "$OPENLITESPEED_ROOT"/.env ]]; then
     echo "[demyx] installing Bedrock..."
     tar -xzf "$OPENLITESPEED_CONFIG"/bedrock.tgz -C "$OPENLITESPEED_CONFIG"
     cp -r "$OPENLITESPEED_CONFIG"/bedrock/. "$OPENLITESPEED_ROOT"

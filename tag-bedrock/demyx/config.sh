@@ -271,7 +271,7 @@ module cache {
 # Enable opcache by default
 [[ "${OPENLITESPEED_PHP_OPCACHE}" = false ]] && OPENLITESPEED_PHP_OPCACHE_ENABLE="php_admin_value opcache.enable 0"
 # Update auto_prepend_file if WordFence exists
-[[ -d "$OPENLITESPEED_ROOT"/wp-content/plugins/wordfence ]] && OPENLITESPEED_WORDFENCE="php_value auto_prepend_file ${OPENLITESPEED_ROOT}/wordfence-waf.php"
+[[ -d "$OPENLITESPEED_ROOT"/web/app/plugins/wordfence ]] && OPENLITESPEED_WORDFENCE="php_value auto_prepend_file ${OPENLITESPEED_ROOT}/wordfence-waf.php"
 # Disable xmlrpc.php by default
 [[ "$OPENLITESPEED_XMLRPC" = false ]] && OPENLITESPEED_XMLRPC="RewriteRule ^xmlrpc.php - [F,L]"
 # LSCache

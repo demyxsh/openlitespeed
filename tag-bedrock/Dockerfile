@@ -19,6 +19,7 @@ RUN set -ex; \
     # Composer
     wget https://getcomposer.org/installer -qO /tmp/composer-setup.php; \
     php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
+    rm -rf /tmp/*; \
     \
     su -c "composer create-project roots/bedrock ${OPENLITESPEED_CONFIG}/bedrock; composer clearcache" -s /bin/sh demyx; \
     tar -czf "$OPENLITESPEED_CONFIG"/bedrock.tgz -C "$OPENLITESPEED_CONFIG" bedrock; \

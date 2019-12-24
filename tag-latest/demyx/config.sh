@@ -138,7 +138,7 @@ accessControl {
 extProcessor lsphp {
     type                                lsapi 
     address                             uds://tmp/lshttpd/lsphp.sock 
-    maxConns                            10 
+    maxConns                            $OPENLITESPEED_PHP_LSAPI_CHILDREN
     env                                 PHP_LSAPI_CHILDREN=$OPENLITESPEED_PHP_LSAPI_CHILDREN
     env                                 LSAPI_AVOID_FORK=200M
     initTimeout                         60 

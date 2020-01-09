@@ -31,11 +31,7 @@ OPENLITESPEED | https://domain.tld/demyx/ols/
 ```
 # Demyx
 # https://demyx.sh
-#
-# This docker-compose.yml is designed for VPS use with SSL/TLS first.
-# Traefik requires no additional configurations and is ready to go.
-# Be sure to change all the domain.tld domains and credentials before running docker-compose up -d.
-#
+
 version: "3.7"
 services:
   demyx_socket:
@@ -78,17 +74,13 @@ services:
       - TRAEFIK_CERTIFICATESRESOLVERS_DEMYX_ACME_STORAGE=/demyx/acme.json
       - TRAEFIK_LOG=true
       - TRAEFIK_LOG_LEVEL=INFO
-      - TRAEFIK_LOG_FILEPATH=/demyx/error.log
+      - TRAEFIK_LOG_FILEPATH=/var/log/demyx/traefik.error.log
       - TRAEFIK_ACCESSLOG=true
-      - TRAEFIK_ACCESSLOG_FILEPATH=/demyx/access.log
+      - TRAEFIK_ACCESSLOG_FILEPATH=/var/log/demyx/traefik.access.log
       - TZ=America/Los_Angeles
     labels:
       # Traefik Dashboard - https://traefik.domain.tld
       - "traefik.enable=true"
-      - "traefik.http.middlewares.traefik-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.traefik-redirect.rule=hostregexp(`{host:.+}`)"
-      - "traefik.http.routers.traefik-redirect.entrypoints=http"
-      - "traefik.http.routers.traefik-redirect.middlewares=traefik-redirect"
       - "traefik.http.routers.traefik-http.rule=Host(`traefik.domain.tld`)" 
       - "traefik.http.routers.traefik-http.entrypoints=https"
       - "traefik.http.routers.traefik-http.service=api@internal"
@@ -105,6 +97,7 @@ services:
       - demyx
     volumes:
       - demyx_db:/demyx
+      - demyx_log:/var/log/demyx
     environment:
       - MARIADB_DATABASE=demyx
       - MARIADB_USERNAME=demyx
@@ -170,6 +163,8 @@ services:
       - OPENLITESPEED_CLIENT_THROTTLE_BLOCK_BAD_REQUEST=1
       - OPENLITESPEED_CLIENT_THROTTLE_GRACE_PERIOD=15
       - OPENLITESPEED_CLIENT_THROTTLE_BAN_PERIOD=60
+      - OPENLITESPEED_CRAWLER_LOAD_LIMIT=5.2
+      - OPENLITESPEED_CRAWLER_USLEEP=1000
       - OPENLITESPEED_TUNING_MAX_CONNECTIONS=1000
       - OPENLITESPEED_TUNING_CONNECTION_TIMEOUT=60
       - OPENLITESPEED_TUNING_MAX_KEEP_ALIVE=500
@@ -184,15 +179,26 @@ services:
       - OPENLITESPEED_RECAPTCHA_TYPE=2
       - OPENLITESPEED_RECAPTCHA_CONNECTION_LIMIT=100
       - OPENLITESPEED_XMLRPC=false
-      - TZ America/Los_Angeles
+      - TZ=America/Los_Angeles
     labels:
-      - "traefik.enable=true"
       # WordPress - https://domain.tld
-      - "traefik.http.routers.domaintld-http.rule=Host(`domain.tld`) || Host(`www.domain.tld`)"
-      - "traefik.http.routers.domaintld-http.service=domaintld-http-port"
-      - "traefik.http.services.domaintld-http-port.loadbalancer.server.port=80"
-      - "traefik.http.routers.domaintld-http.entrypoints=https"
-      - "traefik.http.routers.domaintld-http.tls.certresolver=demyx"
+      - "traefik.enable=true"
+      # HTTP
+      - "traefik.http.routers.elgg-http.rule=Host(`domain.tld`) || Host(`www.domain.tld`)"
+      - "traefik.http.routers.elgg-http.entrypoints=http"
+      # HTTP port
+      - "traefik.http.routers.elgg-http.service=elgg-http-port"
+      - "traefik.http.services.elgg-http-port.loadbalancer.server.port=80"
+      # HTTP redirect to HTTPS
+      - "traefik.http.routers.elgg-http.middlewares=elgg-redirect"
+      - "traefik.http.middlewares.elgg-redirect.redirectscheme.scheme=https"
+      # HTTPS
+      - "traefik.http.routers.elgg-https.rule=Host(`domain.tld`) || Host(`www.domain.tld`)"
+      - "traefik.http.routers.elgg-https.entrypoints=https"
+      - "traefik.http.routers.elgg-https.tls.certresolver=demyx"
+      # HTTPS port
+      - "traefik.http.routers.elgg-https.service=elgg-https-port"
+      - "traefik.http.services.elgg-https-port.loadbalancer.server.port=80"
       # OpenLiteSpeed admin - https://domain.tld/demyx/ols/
       - "traefik.http.routers.domaintld-ols.rule=Host(`domain.tld`) && PathPrefix(`/demyx/ols/`)"
       - "traefik.http.routers.domaintld-ols.middlewares=domaintld-ols-prefix"

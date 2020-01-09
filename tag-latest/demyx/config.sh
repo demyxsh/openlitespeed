@@ -139,8 +139,10 @@ extProcessor lsphp {
     type                                lsapi 
     address                             uds://tmp/lshttpd/lsphp.sock 
     maxConns                            $OPENLITESPEED_PHP_LSAPI_CHILDREN
-    env                                 PHP_LSAPI_CHILDREN=$OPENLITESPEED_PHP_LSAPI_CHILDREN
+    env                                 CRAWLER_LOAD_LIMIT=$OPENLITESPEED_CRAWLER_LOAD_LIMIT
+    env                                 CRAWLER_USLEEP=$OPENLITESPEED_CRAWLER_USLEEP
     env                                 LSAPI_AVOID_FORK=200M
+    env                                 PHP_LSAPI_CHILDREN=$OPENLITESPEED_PHP_LSAPI_CHILDREN
     initTimeout                         60 
     retryTimeout                        0 
     persistConn                         1 

@@ -14,7 +14,7 @@ USER root
 
 # Bedrock
 RUN set -ex; \
-    apt-get update && apt-get install -y --no-install-recommends git php7.3 php7.3-zip php7.3-xml unzip; \
+    apt-get update && apt-get install -y --no-install-recommends git php7.4 php7.4-zip php7.4-xml unzip; \
     \
     # Composer
     wget https://getcomposer.org/installer -qO /tmp/composer-setup.php; \

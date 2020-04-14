@@ -1,53 +1,52 @@
 FROM debian:buster-slim
 
-LABEL sh.demyx.image demyx/openlitespeed
-LABEL sh.demyx.maintainer Demyx <info@demyx.sh>
-LABEL sh.demyx.url https://demyx.sh
-LABEL sh.demyx.github https://github.com/demyxco
-LABEL sh.demyx.registry https://hub.docker.com/u/demyx
+LABEL sh.demyx.image        demyx/openlitespeed
+LABEL sh.demyx.maintainer   Demyx <info@demyx.sh>
+LABEL sh.demyx.url          https://demyx.sh
+LABEL sh.demyx.github       https://github.com/demyxco
+LABEL sh.demyx.registry     https://hub.docker.com/u/demyx
 
 # Set default variables
-ENV OPENLITESPEED_ROOT=/demyx
-ENV OPENLITESPEED_CONFIG=/etc/demyx
-ENV OPENLITESPEED_LOG=/var/log/demyx
-ENV OPENLITESPEED_VERSION=1.6.9
-ENV OPENLITESPEED_LSPHP_VERSION=lsphp74
-ENV OPENLITESPEED_ADMIN=/demyx/ols
-ENV OPENLITESPEED_ADMIN_PREFIX=true
-ENV OPENLITESPEED_ADMIN_IP=ALL
-ENV OPENLITESPEED_ADMIN_USERNAME=demyx
-ENV OPENLITESPEED_ADMIN_PASSWORD=demyx
-ENV OPENLITESPEED_BASIC_AUTH_USERNAME=demyx
-ENV OPENLITESPEED_BASIC_AUTH_PASSWORD=demyx
-ENV OPENLITESPEED_BASIC_AUTH_WP=false
-ENV OPENLITESPEED_CACHE=false
-ENV OPENLITESPEED_CLIENT_THROTTLE_STATIC=50
-ENV OPENLITESPEED_CLIENT_THROTTLE_DYNAMIC=50
-ENV OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_OUT=0
-ENV OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_IN=0
-ENV OPENLITESPEED_CLIENT_THROTTLE_SOFT_LIMIT=250
-ENV OPENLITESPEED_CLIENT_THROTTLE_HARD_LIMIT=500
-ENV OPENLITESPEED_CLIENT_THROTTLE_BLOCK_BAD_REQUEST=1
-ENV OPENLITESPEED_CLIENT_THROTTLE_GRACE_PERIOD=15
-ENV OPENLITESPEED_CLIENT_THROTTLE_BAN_PERIOD=60
-ENV OPENLITESPEED_CRAWLER_LOAD_LIMIT=5.2
-ENV OPENLITESPEED_CRAWLER_USLEEP=1000
-ENV OPENLITESPEED_TUNING_MAX_CONNECTIONS=1000
-ENV OPENLITESPEED_TUNING_CONNECTION_TIMEOUT=60
-ENV OPENLITESPEED_TUNING_MAX_KEEP_ALIVE=500
-ENV OPENLITESPEED_TUNING_SMART_KEEP_ALIVE=0
-ENV OPENLITESPEED_TUNING_KEEP_ALIVE_TIMEOUT=5
-ENV OPENLITESPEED_PHP_LSAPI_CHILDREN=1000
-ENV OPENLITESPEED_PHP_OPCACHE=true
-ENV OPENLITESPEED_PHP_MAX_EXECUTION_TIME=300
-ENV OPENLITESPEED_PHP_MEMORY=256M
-ENV OPENLITESPEED_PHP_UPLOAD_LIMIT=128M
-ENV OPENLITESPEED_RECAPTCHA_ENABLE=1
-ENV OPENLITESPEED_RECAPTCHA_TYPE=2
-ENV OPENLITESPEED_RECAPTCHA_CONNECTION_LIMIT=100
-ENV OPENLITESPEED_XMLRPC=false
-ENV TZ America/Los_Angeles
-ENV TERM=xterm
+ENV OPENLITESPEED_ROOT                                  /demyx
+ENV OPENLITESPEED_CONFIG                                /etc/demyx
+ENV OPENLITESPEED_LOG                                   /var/log/demyx
+ENV OPENLITESPEED_VERSION                               1.6.12
+ENV OPENLITESPEED_LSPHP_VERSION                         lsphp74
+ENV OPENLITESPEED_ADMIN                                 /demyx/ols
+ENV OPENLITESPEED_ADMIN_PREFIX                          true
+ENV OPENLITESPEED_ADMIN_IP                              ALL
+ENV OPENLITESPEED_ADMIN_USERNAME                        demyx
+ENV OPENLITESPEED_ADMIN_PASSWORD                        demyx
+ENV OPENLITESPEED_BASIC_AUTH_USERNAME                   demyx
+ENV OPENLITESPEED_BASIC_AUTH_PASSWORD                   demyx
+ENV OPENLITESPEED_BASIC_AUTH_WP                         false
+ENV OPENLITESPEED_CACHE                                 false
+ENV OPENLITESPEED_CLIENT_THROTTLE_STATIC                1000
+ENV OPENLITESPEED_CLIENT_THROTTLE_DYNAMIC               1000
+ENV OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_OUT         0
+ENV OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_IN          0
+ENV OPENLITESPEED_CLIENT_THROTTLE_SOFT_LIMIT            1500
+ENV OPENLITESPEED_CLIENT_THROTTLE_HARD_LIMIT            2000
+ENV OPENLITESPEED_CLIENT_THROTTLE_BLOCK_BAD_REQUEST     1
+ENV OPENLITESPEED_CLIENT_THROTTLE_GRACE_PERIOD          30
+ENV OPENLITESPEED_CLIENT_THROTTLE_BAN_PERIOD            60
+ENV OPENLITESPEED_CRAWLER_LOAD_LIMIT                    5.2
+ENV OPENLITESPEED_CRAWLER_USLEEP                        1000
+ENV OPENLITESPEED_TUNING_MAX_CONNECTIONS                2000
+ENV OPENLITESPEED_TUNING_CONNECTION_TIMEOUT             300
+ENV OPENLITESPEED_TUNING_MAX_KEEP_ALIVE                 1000
+ENV OPENLITESPEED_TUNING_SMART_KEEP_ALIVE               1000
+ENV OPENLITESPEED_TUNING_KEEP_ALIVE_TIMEOUT             300
+ENV OPENLITESPEED_PHP_LSAPI_CHILDREN                    2000
+ENV OPENLITESPEED_PHP_OPCACHE                           true
+ENV OPENLITESPEED_PHP_MAX_EXECUTION_TIME                300
+ENV OPENLITESPEED_PHP_MEMORY                            256M
+ENV OPENLITESPEED_PHP_UPLOAD_LIMIT                      128M
+ENV OPENLITESPEED_RECAPTCHA_ENABLE                      1
+ENV OPENLITESPEED_RECAPTCHA_TYPE                        2
+ENV OPENLITESPEED_RECAPTCHA_CONNECTION_LIMIT            500
+ENV OPENLITESPEED_XMLRPC                                false
+ENV TZ                                                  America/Los_Angeles
 
 # Configure Demyx
 RUN set -ex; \
@@ -66,7 +65,6 @@ RUN set -ex; \
     wget https://openlitespeed.org/packages/openlitespeed-"$OPENLITESPEED_VERSION".tgz -qO /tmp/openlitespeed-"$OPENLITESPEED_VERSION".tgz; \
     tar -xzf /tmp/openlitespeed-"$OPENLITESPEED_VERSION".tgz -C /tmp; \
     cd /tmp/openlitespeed && ./install.sh; \
-    rm -rf /tmp/*; \
     \
     wget -O - https://rpms.litespeedtech.com/debian/enable_lst_debian_repo.sh | bash; \
     \
@@ -77,7 +75,9 @@ RUN set -ex; \
         "$OPENLITESPEED_LSPHP_VERSION"-json \
         "$OPENLITESPEED_LSPHP_VERSION"-mysql; \
     \
-    ln -sf /usr/local/lsws/"$OPENLITESPEED_LSPHP_VERSION"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5
+    ln -sf /usr/local/lsws/"$OPENLITESPEED_LSPHP_VERSION"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5; \
+    \
+    rm -rf /tmp/*
 
 # WordPress
 RUN set -ex; \
@@ -86,14 +86,12 @@ RUN set -ex; \
     rm "$OPENLITESPEED_CONFIG"/latest.tar.gz; \
     chown -R demyx:demyx "$OPENLITESPEED_CONFIG"/wordpress
 
-# Copy files
-COPY --chown=demyx:demyx demyx "$OPENLITESPEED_CONFIG"
-COPY demyx.sh /usr/local/bin/demyx
+# Copy source
+COPY --chown=demyx:demyx src "$OPENLITESPEED_CONFIG"
 
-# Setup sudo
+# Setup sudo wrappers
 RUN set -ex; \
     \
-    # Sudo wrappers
     echo '#!/bin/bash' > /usr/local/bin/demyx-admin; \
     echo 'sudo "$OPENLITESPEED_CONFIG"/admin.sh' >> /usr/local/bin/demyx-admin; \
     chmod +x /usr/local/bin/demyx-admin; \
@@ -127,14 +125,22 @@ RUN set -ex;\
     ln -sf "$OPENLITESPEED_CONFIG"/ols/admin_config.conf /usr/local/lsws/admin/conf/admin_config.conf; \
     ln -s "$OPENLITESPEED_CONFIG"/ols /usr/local/lsws/conf/vhosts; \
     \
-    # Make non-root scripts executable
+    # demyx-encrypt
     chmod +x "$OPENLITESPEED_CONFIG"/encrypt.sh; \
-    chmod +x "$OPENLITESPEED_CONFIG"/install.sh; \
-    chmod +x /usr/local/bin/demyx; \
-    \
     mv "$OPENLITESPEED_CONFIG"/encrypt.sh /usr/local/bin/demyx-encrypt; \
+    \
+    # demyx-install
+    chmod +x "$OPENLITESPEED_CONFIG"/install.sh; \
     mv "$OPENLITESPEED_CONFIG"/install.sh /usr/local/bin/demyx-install; \
     \
+    # demyx-entrypoint
+    chmod +x "$OPENLITESPEED_CONFIG"/entrypoint.sh; \
+    mv "$OPENLITESPEED_CONFIG"/entrypoint.sh /usr/local/bin/demyx-entrypoint; \
+    \
+    # Reset permissions
+    chown -R root:root /usr/local/bin; \
+    \
+    # Remove unused files
     rm -f webadmin.csr privkey.pem
 
 EXPOSE 80 8080
@@ -143,4 +149,4 @@ WORKDIR "$OPENLITESPEED_ROOT"
 
 USER demyx
 
-ENTRYPOINT ["dumb-init", "demyx"]
+ENTRYPOINT ["demyx-entrypoint"]

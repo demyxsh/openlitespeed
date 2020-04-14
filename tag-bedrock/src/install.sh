@@ -24,7 +24,7 @@ if [[ ! -f "$OPENLITESPEED_ROOT"/.env ]]; then
         sed -i "s|database_name|$WORDPRESS_DB_NAME|g" "$OPENLITESPEED_ROOT"/.env
         sed -i "s|database_user|$WORDPRESS_DB_USER|g" "$OPENLITESPEED_ROOT"/.env
         sed -i "s|database_password|$WORDPRESS_DB_PASSWORD|g" "$OPENLITESPEED_ROOT"/.env
-        sed -i "s|# DB_HOST=localhost|DB_HOST=$WORDPRESS_DB_HOST|g" "$OPENLITESPEED_ROOT"/.env
+        sed -i "s|# DB_HOST='localhost'|DB_HOST='$WORDPRESS_DB_HOST'|g" "$OPENLITESPEED_ROOT"/.env
         SALT="$(wget -qO- https://api.wordpress.org/secret-key/1.1/salt/ | sed "s|define('||g" | sed "s|',|=|g" | sed "s| ||g" | sed "s|);||g")"
         printf '%s\n' "g/generateme/d" a "$SALT" . w | ed -s "$OPENLITESPEED_ROOT"/.env
         sed -i "s|WP_ENV=.*|WP_ENV=production|g" "$OPENLITESPEED_ROOT"/.env

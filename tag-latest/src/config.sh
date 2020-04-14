@@ -63,8 +63,8 @@ tuning{
     totalInMemCacheSize                 20M 
     maxMMapFileSize                     256K 
     totalMMapCacheSize                  40M 
-    useSendfile                         1 
-    fileETag                            28 
+    useSendfile                          1 
+    fileETag                             28 
     SSLCryptoDevice                     null 
     maxReqURLLen                        32768 
     maxReqHeaderSize                    65536 
@@ -122,12 +122,12 @@ CGIRLimit {
     minUID                              11 
     minGID                              10 
     priority                            0 
-    CPUSoftLimit                        10 
-    CPUHardLimit                        50 
-    memSoftLimit                        1460M
-    memHardLimit                        1470M
-    procSoftLimit                       400 
-    procHardLimit                       450 
+    CPUSoftLimit                        0 
+    CPUHardLimit                        0 
+    memSoftLimit                        0
+    memHardLimit                        0
+    procSoftLimit                       0 
+    procHardLimit                       0 
 }
     
 accessControl {
@@ -139,22 +139,24 @@ extProcessor lsphp {
     type                                lsapi 
     address                             uds://tmp/lshttpd/lsphp.sock 
     maxConns                            $OPENLITESPEED_PHP_LSAPI_CHILDREN
-    env                                 PHP_LSAPI_CHILDREN=$OPENLITESPEED_PHP_LSAPI_CHILDREN
+    env                                 CRAWLER_LOAD_LIMIT=$OPENLITESPEED_CRAWLER_LOAD_LIMIT
+    env                                 CRAWLER_USLEEP=$OPENLITESPEED_CRAWLER_USLEEP
     env                                 LSAPI_AVOID_FORK=200M
-    initTimeout                         60 
+    env                                 PHP_LSAPI_CHILDREN=$OPENLITESPEED_PHP_LSAPI_CHILDREN
+    initTimeout                         300 
     retryTimeout                        0 
     persistConn                         1 
-    pcKeepAliveTimeout                  60
+    pcKeepAliveTimeout                  300
     respBuffer                          0 
     autoStart                           1 
     path                                fcgi-bin/lsphp
     backlog                             100 
     instances                           1 
     priority                            0 
-    memSoftLimit                        2047M
-    memHardLimit                        2047M
-    procSoftLimit                       1400 
-    procHardLimit                       1500 
+    memSoftLimit                        0
+    memHardLimit                        0
+    procSoftLimit                       0 
+    procHardLimit                       0 
 }
 
 scriptHandler {
@@ -174,10 +176,10 @@ railsDefaults {
     runOnStartUp                        3
     extMaxIdleTime                      300
     priority                            3 
-    memSoftLimit                        2047M 
-    memHardLimit                        2047M 
-    procSoftLimit                       500 
-    procHardLimit                       600 
+    memSoftLimit                        0 
+    memHardLimit                        0 
+    procSoftLimit                       0 
+    procHardLimit                       0 
 }
 
 wsgiDefaults {
@@ -193,10 +195,10 @@ wsgiDefaults {
     runOnStartUp                        3
     extMaxIdleTime                      300
     priority                            3 
-    memSoftLimit                        2047M 
-    memHardLimit                        2047M 
-    procSoftLimit                       500 
-    procHardLimit                       600 
+    memSoftLimit                        0 
+    memHardLimit                        0 
+    procSoftLimit                       0 
+    procHardLimit                       0 
 }
 
 nodeDefaults{
@@ -212,10 +214,10 @@ nodeDefaults{
     runOnStartUp                        3
     extMaxIdleTime                      300
     priority                            3 
-    memSoftLimit                        2047M 
-    memHardLimit                        2047M 
-    procSoftLimit                       500 
-    procHardLimit                       600 
+    memSoftLimit                        0 
+    memHardLimit                        0 
+    procSoftLimit                       0 
+    procHardLimit                       0 
 }
 
 virtualHost $OPENLITESPEED_DOMAIN {
@@ -227,7 +229,7 @@ virtualHost $OPENLITESPEED_DOMAIN {
     user                                demyx
     group                               demyx
     chrootMode                          0 
-    configFile                          conf/vhosts/ols/vhconf.conf
+    configFile                           conf/vhosts/ols/vhconf.conf
 }
 
 listener Default {
@@ -271,7 +273,7 @@ module cache {
 # Enable opcache by default
 [[ "${OPENLITESPEED_PHP_OPCACHE}" = false ]] && OPENLITESPEED_PHP_OPCACHE_ENABLE="php_admin_value opcache.enable 0"
 # Update auto_prepend_file if WordFence exists
-[[ -d "$OPENLITESPEED_ROOT"/web/app/plugins/wordfence ]] && OPENLITESPEED_WORDFENCE="php_value auto_prepend_file ${OPENLITESPEED_ROOT}/wordfence-waf.php"
+[[ -d "$OPENLITESPEED_ROOT"/wp-content/plugins/wordfence ]] && OPENLITESPEED_WORDFENCE="php_value auto_prepend_file ${OPENLITESPEED_ROOT}/wordfence-waf.php"
 # Disable xmlrpc.php by default
 [[ "$OPENLITESPEED_XMLRPC" = false ]] && OPENLITESPEED_XMLRPC="RewriteRule ^xmlrpc.php - [F,L]"
 # LSCache
@@ -287,7 +289,7 @@ fi
 echo "# Demyx
 # https://demyx.sh
 
-docRoot                                 /demyx/web
+docRoot                                 /demyx
 enableGzip                              1
 cgroups                                 0
 
@@ -367,9 +369,8 @@ context / {
                 RewriteRule (^\.) - [F,L]
 
                 # Return 403 forbidden for readme.(txt|html) or license.(txt|html) or example.(txt|html) or other common git repository files
-                RewriteRule \.(txt|html|md|blade.php)$ - [F,L]
+                RewriteRule \.(txt|html|md)$ - [F,L]
                 RewriteRule ^(readme|license|example|changelog|README|LEGALNOTICE|INSTALLATION|CHANGELOG|html|md)$ - [F,L]
-                 
 
                 # Deny backup extensions & log files and return 403 forbidden
                 RewriteRule \.(old|orig|original|php#|php~|php_bak|save|swo|aspx?|tpl|sh|bash|bak?|cfg|cgi|dll|exe|git|hg|ini|jsp|log|mdb|out|sql|svn|swp|tar|rdf)$ - [F,L]
@@ -377,12 +378,8 @@ context / {
                 # Disable XMLRPC
                 ${OPENLITESPEED_XMLRPC:-}
 
-                # Bedrock
-                RewriteRule ^app/uploads/[^/]+\.php$ - [F,L]
-                RewriteRule (^\.)blade.php$ - [F,L]
-                RewriteRule composer.(json|lock)$ - [F,L]
-                RewriteRule package(-lock)?.json$ - [F,L]
-                RewriteRule yarn.lock$ - [F,L]
+                # Block php in wp-content/uploads
+                RewriteRule ^wp-content/uploads/[^/]+\.php$ - [F,L]
 
                 # Misc
                 RewriteRule (&pws=0|_vti_|\(null\)|\{\$itemURL\}|echo(.*)kae|boot\.ini|etc/passwd|eval\(|self/environ|cgi-|muieblack) - [F,L]
@@ -394,12 +391,12 @@ context / {
             <IfModule LiteSpeed>
                 RewriteEngine On
                 RewriteBase /
-                RewriteRule ^wp/wp-admin/includes/ - [F,L]
-                RewriteRule !^wp/wp-includes/ - [S=3]
-                RewriteRule ^wp/wp-includes/[^/]+\.php$ - [F,L]
-                RewriteRule ^wp/wp-includes/js/tinymce/langs/.+\.php - [F,L]
-                RewriteRule ^wp/wp-includes/theme-compat/ - [F,L]
-                RewriteRule ^wp/wp-includes/[^/]+\.xml$ - [F,L]
+                RewriteRule ^wp-admin/includes/ - [F,L]
+                RewriteRule !^wp-includes/ - [S=3]
+                RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]
+                RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]
+                RewriteRule ^wp-includes/theme-compat/ - [F,L]
+                RewriteRule ^wp-includes/[^/]+\.xml$ - [F,L]
             </IfModule>
 
             # Prevent username enumeration
@@ -440,7 +437,7 @@ phpIniOverride  {
     php_admin_value memory_limit        $OPENLITESPEED_PHP_MEMORY
     ${OPENLITESPEED_PHP_OPCACHE_ENABLE:-}
     php_admin_value post_max_size       $OPENLITESPEED_PHP_UPLOAD_LIMIT
-    php_admin_value upload_max_filesize $OPENLITESPEED_PHP_UPLOAD_LIMIT
+    php_admin_value upload_max_filesize  $OPENLITESPEED_PHP_UPLOAD_LIMIT
     ${OPENLITESPEED_WORDFENCE:-}
 }
 
@@ -499,7 +496,8 @@ accessLog ${OPENLITESPEED_LOG}/ols.access.log {
 
 accessControl {
   allow                                 $OPENLITESPEED_ADMIN_IP
-  deny                                  ${OPENLITESPEED_ADMIN_IP_DENY:-}
+  deny                                  ${OPENLITESPEED_ADMIN_IP_DENY:-
+  }
 }
 
 listener adminListener{

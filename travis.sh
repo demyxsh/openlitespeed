@@ -15,6 +15,11 @@ sed -i "s|debian-.*.-informational|debian-${DEMYX_DEBIAN_VERSION}-informational|
 sed -i "s|${DEMYX_REPOSITORY}-.*.-informational|${DEMYX_REPOSITORY}-${DEMYX_OPENLITESPEED_VERSION}-informational|g" README.md
 sed -i "s|lsphp-.*.-informational|lsphp-${DEMYX_LSPHP_VERSION//-/--}-informational|g" README.md
 
+# Echo versions to file
+echo "DEMYX_DEBIAN_VERSION=$DEMYX_DEBIAN_VERSION
+DEMYX_OPENLITESPEED_VERSION=$DEMYX_OPENLITESPEED_VERSION
+DEMYX_LSPHP_VERSION=$DEMYX_LSPHP_VERSION" > VERSION
+
 # Push back to GitHub
 git config --global user.email "travis@travis-ci.org"
 git config --global user.name "Travis CI"

@@ -27,6 +27,7 @@ git remote set-url origin https://${DEMYX_GITHUB_TOKEN}@github.com/demyxco/"$DEM
 # Commit VERSION first
 git add VERSION
 git commit -m "DEBIAN $DEMYX_DEBIAN_VERSION, OPENLITESPEED $DEMYX_OPENLITESPEED_VERSION, LSPHP $DEMYX_LSPHP_VERSION"
+git push origin HEAD:master
 # Commit the rest
 git add .
 git commit -m "Travis Build $TRAVIS_BUILD_NUMBER"

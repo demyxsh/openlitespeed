@@ -93,7 +93,7 @@ services:
       - "traefik.http.middlewares.traefik-http-auth.basicauth.users=demyx:$$apr1$$EqJj89Yw$$WLsBIjCILtBGjHppQ76YT1" # Password: demyx
   demyx_db:
     container_name: demyx_db
-    image: demyx/mariadb:edge
+    image: demyx/mariadb
     restart: unless-stopped
     depends_on:
       - demyx_traefik

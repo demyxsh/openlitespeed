@@ -8,17 +8,17 @@ IFS=$'\n\t'
 # Get versions
 DEMYX_DEBIAN_VERSION="$(docker exec -t demyx_wp cat /etc/os-release | grep VERSION_ID | cut -c 12- | sed 's|"||g' | sed 's/\r//g')"
 DEMYX_OPENLITESPEED_VERSION="$(docker exec -t demyx_wp cat /usr/local/lsws/VERSION | sed -e 's/\r//g')"
-DEMYX_LSPHP_VERSION="$(docker exec -t demyx_wp sh -c '/usr/local/lsws/"$OPENLITESPEED_LSPHP_VERSION"/bin/lsphp -v' | head -1 | awk '{print $2}' | sed 's/\r//g')"
+DEMYX_OPENLITESPEED_LSPHP_VERSION="$(docker exec -t demyx_wp sh -c '/usr/local/lsws/"$OPENLITESPEED_LSPHP_VERSION"/bin/lsphp -v' | head -1 | awk '{print $2}' | sed 's/\r//g')"
 
 # Replace versions
 sed -i "s|debian-.*.-informational|debian-${DEMYX_DEBIAN_VERSION}-informational|g" README.md
 sed -i "s|${DEMYX_REPOSITORY}-.*.-informational|${DEMYX_REPOSITORY}-${DEMYX_OPENLITESPEED_VERSION}-informational|g" README.md
-sed -i "s|lsphp-.*.-informational|lsphp-${DEMYX_LSPHP_VERSION//-/--}-informational|g" README.md
+sed -i "s|lsphp-.*.-informational|lsphp-${DEMYX_OPENLITESPEED_LSPHP_VERSION//-/--}-informational|g" README.md
 
 # Echo versions to file
 echo "DEMYX_DEBIAN_VERSION=$DEMYX_DEBIAN_VERSION
 DEMYX_OPENLITESPEED_VERSION=$DEMYX_OPENLITESPEED_VERSION
-DEMYX_LSPHP_VERSION=$DEMYX_LSPHP_VERSION" > VERSION
+DEMYX_OPENLITESPEED_LSPHP_VERSION=$DEMYX_OPENLITESPEED_LSPHP_VERSION" > VERSION
 
 # Push back to GitHub
 git config --global user.email "travis@travis-ci.org"
@@ -26,7 +26,7 @@ git config --global user.name "Travis CI"
 git remote set-url origin https://${DEMYX_GITHUB_TOKEN}@github.com/demyxco/"$DEMYX_REPOSITORY".git
 # Commit VERSION first
 git add VERSION
-git commit -m "DEBIAN $DEMYX_DEBIAN_VERSION, OPENLITESPEED $DEMYX_OPENLITESPEED_VERSION, LSPHP $DEMYX_LSPHP_VERSION"
+git commit -m "DEBIAN $DEMYX_DEBIAN_VERSION, OPENLITESPEED $DEMYX_OPENLITESPEED_VERSION, LSPHP $DEMYX_OPENLITESPEED_LSPHP_VERSION"
 git push origin HEAD:master
 # Commit the rest
 git add .

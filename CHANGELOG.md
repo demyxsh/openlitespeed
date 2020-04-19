@@ -4,6 +4,7 @@ Entries before tag-* affects all code-server tags.
 ## 2020-04-19
 ### Changed
 - Update version to 1.7.1
+- Bump OPENLITESPEED_TUNING_MAX_CONNECTIONS to 20000
 
 ## 2020-04-14
 ### Added

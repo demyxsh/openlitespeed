@@ -244,6 +244,6 @@ networks:
 [![Stars](https://img.shields.io/github/stars/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
 [![Forks](https://img.shields.io/github/forks/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
 
-* Auto built weekly on Sundays (America/Los_Angeles)
+* Auto built weekly on Saturdays (America/Los_Angeles)
 * Rolling release updates
 * For support: [#demyx](https://webchat.freenode.net/?channel=#demyx)

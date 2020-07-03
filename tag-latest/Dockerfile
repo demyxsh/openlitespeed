@@ -83,8 +83,10 @@ RUN set -ex; \
 RUN set -ex; \
     wget https://wordpress.org/latest.tar.gz -qO "$OPENLITESPEED_CONFIG"/latest.tar.gz; \
     tar -xzf "$OPENLITESPEED_CONFIG"/latest.tar.gz -C "$OPENLITESPEED_CONFIG"; \
+    cp -r "$OPENLITESPEED_CONFIG"/wordpress/* "$OPENLITESPEED_ROOT"; \
     rm "$OPENLITESPEED_CONFIG"/latest.tar.gz; \
-    chown -R demyx:demyx "$OPENLITESPEED_CONFIG"/wordpress
+    chown -R demyx:demyx "$OPENLITESPEED_CONFIG"/wordpress; \
+    chown -R demyx:demyx "$OPENLITESPEED_ROOT"
 
 # Copy source
 COPY --chown=demyx:demyx src "$OPENLITESPEED_CONFIG"

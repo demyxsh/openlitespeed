@@ -10,12 +10,16 @@ WORDPRESS_DB_NAME="${WORDPRESS_DB_NAME:-}"
 WORDPRESS_DB_USER="${WORDPRESS_DB_USER:-}"
 WORDPRESS_DB_PASSWORD="${WORDPRESS_DB_PASSWORD:-}"
 WORDPRESS_DB_HOST="${WORDPRESS_DB_HOST:-}"
+WORDPRESS_INSTALL_CHECK="$([[ -f "$OPENLITESPEED_ROOT"/.env ]] && grep example.com "$OPENLITESPEED_ROOT"/.env || true)"
 
-if [[ ! -f "$OPENLITESPEED_ROOT"/.env ]]; then
+if [[ -n "$WORDPRESS_INSTALL_CHECK" || ! -f "$OPENLITESPEED_ROOT"/.env ]]; then
     echo "[demyx] installing Bedrock..."
-    tar -xzf "$OPENLITESPEED_CONFIG"/bedrock.tgz -C "$OPENLITESPEED_CONFIG"
-    cp -r "$OPENLITESPEED_CONFIG"/bedrock/. "$OPENLITESPEED_ROOT"
-    rm -rf "$OPENLITESPEED_CONFIG"/bedrock
+
+    if [[ ! -f "$OPENLITESPEED_ROOT"/.env ]]; then
+        tar -xzf "$OPENLITESPEED_CONFIG"/bedrock.tgz -C "$OPENLITESPEED_CONFIG"
+        cp -r "$OPENLITESPEED_CONFIG"/bedrock/. "$OPENLITESPEED_ROOT"
+        rm -rf "$OPENLITESPEED_CONFIG"/bedrock
+    fi
 
     if [[ -n "$WORDPRESS_DB_NAME" && -n "$WORDPRESS_DB_USER" && -n "$WORDPRESS_DB_PASSWORD" && -n "$WORDPRESS_DB_HOST" && -n "$WORDPRESS_DOMAIN" ]]; then
         WORDPRESS_PROTO="http://$WORDPRESS_DOMAIN"

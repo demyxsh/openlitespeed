@@ -22,7 +22,8 @@ RUN set -ex; \
 # Composer
 RUN set -ex; \
     wget https://getcomposer.org/installer -qO /tmp/composer-setup.php; \
-    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
+    rm -rf /tmp/*
 
 # Bedrock
 RUN set -ex; \
@@ -32,9 +33,14 @@ RUN set -ex; \
     \
     composer clearcache; \
     \
-    tar -czf ${OPENLITESPEED_CONFIG}/bedrock.tgz -C ${OPENLITESPEED_CONFIG} bedrock; \
+    tar -czf ${OPENLITESPEED_CONFIG}/bedrock.tgz -C $OPENLITESPEED_CONFIG bedrock; \
     \
-    rm -rf ${OPENLITESPEED_CONFIG}/bedrock" -s /bin/sh demyx
+    rm -rf ${OPENLITESPEED_CONFIG}/bedrock" -s /bin/sh demyx; \
+    \
+    tar -xzf "$OPENLITESPEED_CONFIG"/bedrock.tgz -C "$OPENLITESPEED_CONFIG"; \
+    rm -rf "$OPENLITESPEED_ROOT"; \
+    mv "$OPENLITESPEED_CONFIG"/bedrock "$OPENLITESPEED_ROOT"; \
+    chown -R demyx:demyx "$OPENLITESPEED_ROOT"
 
 # Copy source
 COPY --chown=demyx:demyx src "$OPENLITESPEED_CONFIG"

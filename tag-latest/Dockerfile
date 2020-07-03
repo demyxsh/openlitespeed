@@ -10,7 +10,7 @@ LABEL sh.demyx.registry     https://hub.docker.com/u/demyx
 ENV OPENLITESPEED_ROOT                                  /demyx
 ENV OPENLITESPEED_CONFIG                                /etc/demyx
 ENV OPENLITESPEED_LOG                                   /var/log/demyx
-ENV OPENLITESPEED_VERSION                               1.7.1
+ENV OPENLITESPEED_VERSION                               1.7.2
 ENV OPENLITESPEED_LSPHP_VERSION                         lsphp74
 ENV OPENLITESPEED_ADMIN                                 /demyx/ols
 ENV OPENLITESPEED_ADMIN_PREFIX                          true

@@ -9,7 +9,7 @@ WORDPRESS_DB_USER="${WORDPRESS_DB_USER:-}"
 WORDPRESS_DB_PASSWORD="${WORDPRESS_DB_PASSWORD:-}"
 WORDPRESS_DB_HOST="${WORDPRESS_DB_HOST:-}"
 
-if [[ ! -d "$OPENLITESPEED_ROOT"/wp-admin ]]; then
+if [[ ! -d "$OPENLITESPEED_ROOT"/wp-content ]]; then
     echo "WordPress is missing, installing now."
     cp -r "$OPENLITESPEED_CONFIG"/wordpress/* "$OPENLITESPEED_ROOT"
 

@@ -1,6 +1,11 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2020-07-02
+### Changed
+- Update OLS to 1.7.2
+- Populate /demyx directory with WordPress/Bedrock files
+
 ## 2020-04-19
 ### Changed
 - Update version to 1.7.1

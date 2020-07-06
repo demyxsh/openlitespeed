@@ -27,19 +27,20 @@ RUN set -ex; \
 
 # Bedrock
 RUN set -ex; \
-    su -c "composer create-project roots/bedrock ${OPENLITESPEED_CONFIG}/bedrock; \
+    # Remove WordPress
+    rm -rf "$OPENLITESPEED_CONFIG"/wordpress; \
+    rm -rf "$OPENLITESPEED_ROOT"/*; \
     \
-    cd ${OPENLITESPEED_CONFIG}/bedrock && composer update; \
+    su -c "composer create-project roots/bedrock ${OPENLITESPEED_CONFIG}/bedrock" -s /bin/sh demyx; \
     \
-    composer clearcache; \
+    # Upgrade WordPress to latest version
+    sed -i 's|"roots/wordpress": .*|"roots/wordpress": ">5",|g' "$OPENLITESPEED_CONFIG"/bedrock/composer.json; \
     \
-    tar -czf ${OPENLITESPEED_CONFIG}/bedrock.tgz -C $OPENLITESPEED_CONFIG bedrock; \
+    su -c "cd ${OPENLITESPEED_CONFIG}/bedrock && composer update; \
     \
-    rm -rf ${OPENLITESPEED_CONFIG}/bedrock" -s /bin/sh demyx; \
+    composer clearcache" -s /bin/sh demyx; \
     \
-    tar -xzf "$OPENLITESPEED_CONFIG"/bedrock.tgz -C "$OPENLITESPEED_CONFIG"; \
-    rm -rf "$OPENLITESPEED_ROOT"; \
-    mv "$OPENLITESPEED_CONFIG"/bedrock "$OPENLITESPEED_ROOT"; \
+    cp -r "$OPENLITESPEED_CONFIG"/bedrock/. "$OPENLITESPEED_ROOT"; \
     chown -R demyx:demyx "$OPENLITESPEED_ROOT"
 
 # Copy source

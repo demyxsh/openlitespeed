@@ -10,30 +10,28 @@ WORDPRESS_DB_NAME="${WORDPRESS_DB_NAME:-}"
 WORDPRESS_DB_USER="${WORDPRESS_DB_USER:-}"
 WORDPRESS_DB_PASSWORD="${WORDPRESS_DB_PASSWORD:-}"
 WORDPRESS_DB_HOST="${WORDPRESS_DB_HOST:-}"
-WORDPRESS_INSTALL_CHECK="$([[ -f "$OPENLITESPEED_ROOT"/.env ]] && grep example.com "$OPENLITESPEED_ROOT"/.env || true)"
+WORDPRESS_ENV="$OPENLITESPEED_ROOT"/.env
+WORDPRESS_PROTO="http://$WORDPRESS_DOMAIN"
+[[ "$WORDPRESS_SSL" = true ]] && WORDPRESS_PROTO="https://$WORDPRESS_DOMAIN"
 
-if [[ -n "$WORDPRESS_INSTALL_CHECK" || ! -f "$OPENLITESPEED_ROOT"/.env ]]; then
-    echo "[demyx] installing Bedrock..."
+if [[ ! -d "$OPENLITESPEED_ROOT"/web ]]; then
+    echo "[demyx] Bedrock is missing, copying files now ..."
+    cp -r "$OPENLITESPEED_CONFIG"/bedrock/. "$OPENLITESPEED_ROOT"
+fi
 
-    if [[ ! -f "$OPENLITESPEED_ROOT"/.env ]]; then
-        tar -xzf "$OPENLITESPEED_CONFIG"/bedrock.tgz -C "$OPENLITESPEED_CONFIG"
-        cp -r "$OPENLITESPEED_CONFIG"/bedrock/. "$OPENLITESPEED_ROOT"
-        rm -rf "$OPENLITESPEED_CONFIG"/bedrock
-    fi
+if [[ ! -f "$WORDPRESS_ENV" ]]; then
+    echo "[demyx] Generating Bedrock .env file ..."
+    cp "$OPENLITESPEED_CONFIG"/bedrock/.env "$OPENLITESPEED_ROOT"
+fi
 
-    if [[ -n "$WORDPRESS_DB_NAME" && -n "$WORDPRESS_DB_USER" && -n "$WORDPRESS_DB_PASSWORD" && -n "$WORDPRESS_DB_HOST" && -n "$WORDPRESS_DOMAIN" ]]; then
-        WORDPRESS_PROTO="http://$WORDPRESS_DOMAIN"
-        [[ "$WORDPRESS_SSL" = true ]] && WORDPRESS_PROTO="https://$WORDPRESS_DOMAIN"
-        sed -i "s|WP_HOME=.*|WP_HOME=$WORDPRESS_PROTO|g" "$OPENLITESPEED_ROOT"/.env
-        sed -i "s|database_name|$WORDPRESS_DB_NAME|g" "$OPENLITESPEED_ROOT"/.env
-        sed -i "s|database_user|$WORDPRESS_DB_USER|g" "$OPENLITESPEED_ROOT"/.env
-        sed -i "s|database_password|$WORDPRESS_DB_PASSWORD|g" "$OPENLITESPEED_ROOT"/.env
-        sed -i "s|# DB_HOST='localhost'|DB_HOST='$WORDPRESS_DB_HOST'|g" "$OPENLITESPEED_ROOT"/.env
-        SALT="$(wget -qO- https://api.wordpress.org/secret-key/1.1/salt/ | sed "s|define('||g" | sed "s|',|=|g" | sed "s| ||g" | sed "s|);||g")"
-        printf '%s\n' "g/generateme/d" a "$SALT" . w | ed -s "$OPENLITESPEED_ROOT"/.env
-        sed -i "s|WP_ENV=.*|WP_ENV=production|g" "$OPENLITESPEED_ROOT"/.env
-    else
-        echo "One or more environment variables are missing!"
-        exit 1
-    fi
+if [[ -n "$(grep example.com "$WORDPRESS_ENV" || true)" && -n "$WORDPRESS_DB_NAME" && -n "$WORDPRESS_DB_USER" && -n "$WORDPRESS_DB_PASSWORD" && -n "$WORDPRESS_DB_HOST" && -n "$WORDPRESS_DOMAIN" ]]; then
+    echo "[demyx] Configuring Bedrock .env file ..."
+    sed -i "s|WP_HOME=.*|WP_HOME=$WORDPRESS_PROTO|g" "$WORDPRESS_ENV"
+    sed -i "s|database_name|$WORDPRESS_DB_NAME|g" "$WORDPRESS_ENV"
+    sed -i "s|database_user|$WORDPRESS_DB_USER|g" "$WORDPRESS_ENV"
+    sed -i "s|database_password|$WORDPRESS_DB_PASSWORD|g" "$WORDPRESS_ENV"
+    sed -i "s|# DB_HOST='localhost'|DB_HOST='$WORDPRESS_DB_HOST'|g" "$WORDPRESS_ENV"
+    sed -i "s|WP_ENV=.*|WP_ENV=production|g" "$WORDPRESS_ENV"
+    SALT="$(wget -qO- https://api.wordpress.org/secret-key/1.1/salt/ | sed "s|define('||g" | sed "s|',|=|g" | sed "s| ||g" | sed "s|);||g")"
+    printf '%s\n' "g/generateme/d" a "$SALT" . w | ed -s "$WORDPRESS_ENV"
 fi

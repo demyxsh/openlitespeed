@@ -2,7 +2,7 @@
 [![Build Status](https://img.shields.io/travis/demyxco/openlitespeed?style=flat)](https://travis-ci.org/demyxco/openlitespeed)
 [![Docker Pulls](https://img.shields.io/docker/pulls/demyx/openlitespeed?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
 [![Architecture](https://img.shields.io/badge/linux-amd64-important?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![Debian](https://img.shields.io/badge/debian-10.5-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
+[![Debian](https://img.shields.io/badge/debian-10.6-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
 [![OpenLiteSpeed](https://img.shields.io/badge/openlitespeed-1.7.3-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
 [![lsphp](https://img.shields.io/badge/lsphp-7.4.10-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
 [![Buy Me A Coffee](https://img.shields.io/badge/buy_me_coffee-$5-informational?style=flat&color=blue)](https://www.buymeacoffee.com/VXqkQK5tb)

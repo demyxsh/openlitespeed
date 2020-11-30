@@ -5,7 +5,7 @@
 # Get versions
 DEMYX_OPENLITESPEED_DEBIAN_VERSION="$(/usr/bin/docker exec -t demyx_wp /bin/cat /etc/debian_version | /bin/sed  's/\r//g')"
 DEMYX_OPENLITESPEED_VERSION="$(/usr/bin/docker exec -t demyx_wp /bin/cat /usr/local/lsws/VERSION | /bin/sed  's/\r//g')"
-DEMYX_OPENLITESPEED_LSPHP_VERSION="$(/usr/bin/docker exec -t demyx_wp /bin/sh -c '/usr/local/lsws/"$OPENLITESPEED_LSPHP_VERSION"/bin/lsphp -v' | /usr/bin/head -1 | /usr/bin/awk '{print $2}' | /bin/sed 's/\r//g')"
+DEMYX_OPENLITESPEED_LSPHP_VERSION="$(/usr/bin/docker exec -t demyx_wp /bin/sh -c '/usr/local/lsws/"$DEMYX_LSPHP_VERSION"/bin/lsphp -v' | /usr/bin/head -1 | /usr/bin/awk '{print $2}' | /bin/sed 's/\r//g')"
 
 # Replace versions
 /bin/sed -i "s|debian-.*.-informational|debian-${DEMYX_OPENLITESPEED_DEBIAN_VERSION}-informational|g" README.md

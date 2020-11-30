@@ -23,10 +23,10 @@ WORDPRESS | https://domain.tld/
 OPENLITESPEED | https://domain.tld/demyx/ols/
 
 ## Usage
-- `OPENLITESPEED_ADMIN_IP=myip` to lock down OpenLiteSpeed's admin page
-- `OPENLITESPEED_ADMIN_PREFIX=false` if you're exposing ports
-- `OPENLITESPEED_BASIC_AUTH_WP=true` to enable basic auth for wp-login.php
-- `OPENLITESPEED_XMLRPC=true` to enable xmlrpc.php
+- `DEMYX_ADMIN_IP=myip` to lock down OpenLiteSpeed's admin page
+- `DEMYX_ADMIN_PREFIX=false` if you're exposing ports
+- `DEMYX_BASIC_AUTH_WP=true` to enable basic auth for wp-login.php
+- `DEMYX_XMLRPC=true` to enable xmlrpc.php
 
 ```
 # Demyx

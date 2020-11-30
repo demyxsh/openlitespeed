@@ -4,6 +4,6 @@
 set -euo pipefail
 
 # Set the default command to start
-OPENLITESPEED_LSWS_COMMAND="${1:-start}"
+DEMYX_LSWS_COMMAND="${1:-start}"
 
-sudo /usr/local/lsws/bin/lswsctrl "$OPENLITESPEED_LSWS_COMMAND"
+/usr/bin/sudo /usr/local/lsws/bin/lswsctrl "$DEMYX_LSWS_COMMAND"

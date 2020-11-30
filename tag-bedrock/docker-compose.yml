@@ -1,34 +1,3 @@
-# openlitespeed
-[![Build Status](https://img.shields.io/travis/demyxco/openlitespeed?style=flat)](https://travis-ci.org/demyxco/openlitespeed)
-[![Docker Pulls](https://img.shields.io/docker/pulls/demyx/openlitespeed?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![Architecture](https://img.shields.io/badge/linux-amd64-important?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![Debian](https://img.shields.io/badge/debian-10.4-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![OpenLiteSpeed](https://img.shields.io/badge/openlitespeed-1.7.3-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![lsphp](https://img.shields.io/badge/lsphp-7.4.6-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![Buy Me A Coffee](https://img.shields.io/badge/buy_me_coffee-$5-informational?style=flat&color=blue)](https://www.buymeacoffee.com/VXqkQK5tb)
-[![Become a Patron!](https://img.shields.io/badge/become%20a%20patron-$5-informational?style=flat&color=blue)](https://www.patreon.com/bePatron?u=23406156)
-
-Non-root Docker image running Debian and OpenLiteSpeed.
-
-DEMYX | OPENLITESPEED
---- | ---
-TAGS | latest bedrock
-PORT | 80 8080
-USER | demyx
-WORKDIR | /demyx
-CONFIG | /etc/demyx
-LOG | /var/log/demyx
-ENTRYPOINT | /usr/local/bin/demyx-entrypoint
-WORDPRESS | https://domain.tld/
-OPENLITESPEED | https://domain.tld/demyx/ols/
-
-## Usage
-- `OPENLITESPEED_ADMIN_IP=myip` to lock down OpenLiteSpeed's admin page
-- `OPENLITESPEED_ADMIN_PREFIX=false` if you're exposing ports
-- `OPENLITESPEED_BASIC_AUTH_WP=true` to enable basic auth for wp-login.php
-- `OPENLITESPEED_XMLRPC=true` to enable xmlrpc.php
-
-```
 # Demyx
 # https://demyx.sh
 #
@@ -149,6 +118,8 @@ services:
       - DEMYX_BASIC_AUTH_PASSWORD=demyx
       - DEMYX_BASIC_AUTH_USERNAME=demyx
       - DEMYX_BASIC_AUTH_WP=false
+      - DEMYX_BEDROCK=true
+      - DEMYX_BEDROCK_MODE=production
       - DEMYX_CACHE=false
       - DEMYX_CLIENT_THROTTLE_BANDWIDTH_IN=0
       - DEMYX_CLIENT_THROTTLE_BANDWIDTH_OUT=0
@@ -177,6 +148,7 @@ services:
       - DEMYX_RECAPTCHA_CONNECTION_LIMIT=500
       - DEMYX_RECAPTCHA_ENABLE=1
       - DEMYX_RECAPTCHA_TYPE=2
+      - DEMYX_SSL=true
       - DEMYX_TUNING_CONNECTION_TIMEOUT=300
       - DEMYX_TUNING_KEEP_ALIVE_TIMEOUT=300
       - DEMYX_TUNING_MAX_CONNECTIONS=20000
@@ -184,7 +156,7 @@ services:
       - DEMYX_TUNING_SMART_KEEP_ALIVE=1000
       - DEMYX_WP_CONFIG=/demyx/wp-config.php
       - DEMYX_XMLRPC=false
-    image: demyx/openlitespeed
+    image: demyx/openlitespeed:bedrock
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.demyx-wp-ols-assets-prefix.stripprefix.prefixes=/demyx/ols/"
@@ -231,15 +203,3 @@ volumes:
     name: demyx_traefik
   demyx_wp:
     name: demyx_wp
-```
-
-## Updates & Support
-[![Code Size](https://img.shields.io/github/languages/code-size/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Repository Size](https://img.shields.io/github/repo-size/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Watches](https://img.shields.io/github/watchers/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Stars](https://img.shields.io/github/stars/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Forks](https://img.shields.io/github/forks/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-
-* Auto built weekly on Saturdays (America/Los_Angeles)
-* Rolling release updates
-* For support: [#demyx](https://webchat.freenode.net/?channel=#demyx)

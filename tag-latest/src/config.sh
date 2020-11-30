@@ -3,82 +3,115 @@
 # https://demyx.sh
 set -euo pipefail
 
-OPENLITESPEED_DOMAIN="${OPENLITESPEED_DOMAIN:-domain.tld}"
+# Support for old variables
+[[ -n "${OPENLITESPEED_ADMIN_IP:-}" ]] && DEMYX_ADMIN_IP="$OPENLITESPEED_ADMIN_IP"
+[[ -n "${OPENLITESPEED_BASIC_AUTH_WP:-}" ]] && DEMYX_BASIC_AUTH_WP="$OPENLITESPEED_BASIC_AUTH_WP"
+[[ -n "${OPENLITESPEED_CACHE:-}" ]] && DEMYX_CACHE="$OPENLITESPEED_CACHE"
+[[ -n "${OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_IN:-}" ]] && DEMYX_CLIENT_THROTTLE_BANDWIDTH_IN="$OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_IN"
+[[ -n "${OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_OUT:-}" ]] && DEMYX_CLIENT_THROTTLE_BANDWIDTH_OUT="$OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_OUT"
+[[ -n "${OPENLITESPEED_CLIENT_THROTTLE_BAN_PERIOD:-}" ]] && DEMYX_CLIENT_THROTTLE_BAN_PERIOD="$OPENLITESPEED_CLIENT_THROTTLE_BAN_PERIOD"
+[[ -n "${OPENLITESPEED_CLIENT_THROTTLE_BLOCK_BAD_REQUEST:-}" ]] && DEMYX_CLIENT_THROTTLE_BLOCK_BAD_REQUEST="$OPENLITESPEED_CLIENT_THROTTLE_BLOCK_BAD_REQUEST"
+[[ -n "${OPENLITESPEED_CLIENT_THROTTLE_DYNAMIC:-}" ]] && DEMYX_CLIENT_THROTTLE_DYNAMIC="$OPENLITESPEED_CLIENT_THROTTLE_DYNAMIC"
+[[ -n "${OPENLITESPEED_CLIENT_THROTTLE_GRACE_PERIOD:-}" ]] && DEMYX_CLIENT_THROTTLE_GRACE_PERIOD="$OPENLITESPEED_CLIENT_THROTTLE_GRACE_PERIOD"
+[[ -n "${OPENLITESPEED_CLIENT_THROTTLE_HARD_LIMIT:-}" ]] && DEMYX_CLIENT_THROTTLE_HARD_LIMIT="$OPENLITESPEED_CLIENT_THROTTLE_HARD_LIMIT"
+[[ -n "${OPENLITESPEED_CLIENT_THROTTLE_SOFT_LIMIT:-}" ]] && DEMYX_CLIENT_THROTTLE_SOFT_LIMIT="$OPENLITESPEED_CLIENT_THROTTLE_SOFT_LIMIT"
+[[ -n "${OPENLITESPEED_CLIENT_THROTTLE_STATIC:-}" ]] && DEMYX_CLIENT_THROTTLE_STATIC="$OPENLITESPEED_CLIENT_THROTTLE_STATIC"
+[[ -n "${OPENLITESPEED_CRAWLER_LOAD_LIMIT:-}" ]] && DEMYX_CRAWLER_LOAD_LIMIT="$OPENLITESPEED_CRAWLER_LOAD_LIMIT"
+[[ -n "${OPENLITESPEED_CRAWLER_USLEEP:-}" ]] && DEMYX_CRAWLER_USLEEP="$OPENLITESPEED_CRAWLER_USLEEP"
+[[ -n "${OPENLITESPEED_DOMAIN:-}" ]] && DEMYX_DOMAIN="$OPENLITESPEED_DOMAIN"
+[[ -n "${OPENLITESPEED_PHP_LSAPI_CHILDREN:-}" ]] && DEMYX_PHP_LSAPI_CHILDREN="$OPENLITESPEED_PHP_LSAPI_CHILDREN"
+[[ -n "${OPENLITESPEED_PHP_MAX_EXECUTION_TIME:-}" ]] && DEMYX_PHP_MAX_EXECUTION_TIME="$OPENLITESPEED_PHP_MAX_EXECUTION_TIME"
+[[ -n "${OPENLITESPEED_PHP_MEMORY:-}" ]] && DEMYX_PHP_MEMORY="$OPENLITESPEED_PHP_MEMORY"
+[[ -n "${OPENLITESPEED_PHP_OPCACHE:-}" ]] && DEMYX_PHP_OPCACHE="$OPENLITESPEED_PHP_OPCACHE"
+[[ -n "${OPENLITESPEED_PHP_UPLOAD_LIMIT:-}" ]] && DEMYX_PHP_UPLOAD_LIMIT="$OPENLITESPEED_PHP_UPLOAD_LIMIT"
+[[ -n "${OPENLITESPEED_RECAPTCHA_CONNECTION_LIMIT:-}" ]] && DEMYX_RECAPTCHA_CONNECTION_LIMIT="$OPENLITESPEED_RECAPTCHA_CONNECTION_LIMIT"
+[[ -n "${OPENLITESPEED_RECAPTCHA_ENABLE:-}" ]] && DEMYX_RECAPTCHA_ENABLE="$OPENLITESPEED_RECAPTCHA_ENABLE"
+[[ -n "${OPENLITESPEED_RECAPTCHA_TYPE:-}" ]] && DEMYX_RECAPTCHA_TYPE="$OPENLITESPEED_RECAPTCHA_TYPE"
+[[ -n "${OPENLITESPEED_TUNING_CONNECTION_TIMEOUT:-}" ]] && DEMYX_TUNING_CONNECTION_TIMEOUT="$OPENLITESPEED_TUNING_CONNECTION_TIMEOUT"
+[[ -n "${OPENLITESPEED_TUNING_KEEP_ALIVE_TIMEOUT:-}" ]] && DEMYX_TUNING_KEEP_ALIVE_TIMEOUT="$OPENLITESPEED_TUNING_KEEP_ALIVE_TIMEOUT"
+[[ -n "${OPENLITESPEED_TUNING_MAX_CONNECTIONS:-}" ]] && DEMYX_TUNING_MAX_CONNECTIONS="$OPENLITESPEED_TUNING_MAX_CONNECTIONS"
+[[ -n "${OPENLITESPEED_TUNING_MAX_CONNECTIONS:-}" ]] && DEMYX_TUNING_MAX_CONNECTIONS="$OPENLITESPEED_TUNING_MAX_CONNECTIONS"
+[[ -n "${OPENLITESPEED_TUNING_MAX_KEEP_ALIVE:-}" ]] && DEMYX_TUNING_MAX_KEEP_ALIVE="$OPENLITESPEED_TUNING_MAX_KEEP_ALIVE"
+[[ -n "${OPENLITESPEED_TUNING_SMART_KEEP_ALIVE:-}" ]] && DEMYX_TUNING_SMART_KEEP_ALIVE="$OPENLITESPEED_TUNING_SMART_KEEP_ALIVE"
+[[ -n "${OPENLITESPEED_XMLRPC:-}" ]] && DEMYX_XMLRPC="$OPENLITESPEED_XMLRPC"
+
+# Support for bedrock tag
+[[ "${DEMYX_BEDROCK:-}" = true ]] && DEMYX="$DEMYX"/web
 
 # httpd_config.conf
-echo "# Demyx
+/bin/echo "# Demyx
 # https://demyx.sh
 
 serverName                              Demyx
 user                                    nobody
 group                                   nogroup
 priority                                0
-autoRestart                             1 
+autoRestart                             1
 chrootPath                              /
-enableChroot                            0 
-inMemBufSize                            60M 
-swappingDir                             /tmp/lshttpd/swap 
-autoFix503                              1 
+enableChroot                            0
+inMemBufSize                            60M
+swappingDir                             /tmp/lshttpd/swap
+autoFix503                              1
 gracefulRestartTimeout                  300
-mime                                    conf/mime.properties 
+mime                                    conf/mime.properties
 useIpInProxyHeader                      1
-showVersionNumber                       0 
+showVersionNumber                       0
 adminEmails                             demyx@localhost
 indexFiles                              index.html, index.php
 disableWebAdmin                         0
 
-errorlog ${OPENLITESPEED_LOG}/ols.error.log {
+errorlog ${DEMYX_LOG}/ols.error.log {
     logLevel                            DEBUG
     debugLevel                          0
     rollingSize                         10M
     enableStderrLog                     1
 }
-    
-accessLog ${OPENLITESPEED_LOG}/ols.access.log {
-    rollingSize                         10M    
-    keepDays                            30    
+
+accessLog ${DEMYX_LOG}/ols.access.log {
+    rollingSize                         10M
+    keepDays                            30
     compressArchive                     0
-    logReferer                          1     
+    logReferer                          1
     logUserAgent                        1
 }
-    
+
 expires {
     enableExpires                       1
     expiresByType                       image/*=A604800,text/css=A604800,application/x-javascript=A604800,application/javascript=A604800,font/*=A604800,application/x-font-ttf=A604800
 }
 
 tuning{
-    maxConnections                      $OPENLITESPEED_TUNING_MAX_CONNECTIONS
-    maxSSLConnections                   $OPENLITESPEED_TUNING_MAX_CONNECTIONS
-    connTimeout                         $OPENLITESPEED_TUNING_CONNECTION_TIMEOUT
-    maxKeepAliveReq                     $OPENLITESPEED_TUNING_MAX_KEEP_ALIVE
-    smartKeepAlive                      $OPENLITESPEED_TUNING_SMART_KEEP_ALIVE
-    keepAliveTimeout                    $OPENLITESPEED_TUNING_KEEP_ALIVE_TIMEOUT
-    sndBufSize                          0 
-    rcvBufSize                          0 
-    gzipStaticCompressLevel             6 
-    gzipMaxFileSize                     10M 
-    eventDispatcher                     best 
-    maxCachedFileSize                   4096 
-    totalInMemCacheSize                 20M 
-    maxMMapFileSize                     256K 
-    totalMMapCacheSize                  40M 
-    useSendfile                          1 
-    fileETag                             28 
-    SSLCryptoDevice                     null 
-    maxReqURLLen                        32768 
-    maxReqHeaderSize                    65536 
-    maxReqBodySize                      2047M 
-    maxDynRespHeaderSize                32768 
-    maxDynRespSize                      2047M 
+    maxConnections                      $DEMYX_TUNING_MAX_CONNECTIONS
+    maxSSLConnections                   $DEMYX_TUNING_MAX_CONNECTIONS
+    connTimeout                         $DEMYX_TUNING_CONNECTION_TIMEOUT
+    maxKeepAliveReq                     $DEMYX_TUNING_MAX_KEEP_ALIVE
+    smartKeepAlive                      $DEMYX_TUNING_SMART_KEEP_ALIVE
+    keepAliveTimeout                    $DEMYX_TUNING_KEEP_ALIVE_TIMEOUT
+    sndBufSize                          0
+    rcvBufSize                          0
+    gzipStaticCompressLevel             6
+    gzipMaxFileSize                     10M
+    eventDispatcher                     best
+    maxCachedFileSize                   4096
+    totalInMemCacheSize                 20M
+    maxMMapFileSize                     256K
+    totalMMapCacheSize                  40M
+    useSendfile                         1
+    fileETag                            28
+    SSLCryptoDevice                     null
+    maxReqURLLen                        32768
+    maxReqHeaderSize                    65536
+    maxReqBodySize                      2047M
+    maxDynRespHeaderSize                32768
+    maxDynRespSize                      2047M
     enableGzipCompress                  1
     enableBrCompress                    4
-    enableDynGzipCompress               1 
-    gzipCompressLevel                   6 
+    enableDynGzipCompress               1
+    gzipCompressLevel                   6
     brStaticCompressLevel               6
     compressibleTypes                   text/*, application/x-javascript, application/xml, application/javascript, image/svg+xml,application/rss+xml
-    gzipAutoUpdateStatic                1 
-    gzipMinFileSize                     300 
+    gzipAutoUpdateStatic                1
+    gzipMinFileSize                     300
     quicEnable                          1
     quicShmDir                          /dev/shm
 }
@@ -92,71 +125,71 @@ accessDenyDir {
 }
 
 fileAccessControl {
-    followSymbolLink                    1 
-    checkSymbolLink                     0 
-    requiredPermissionMask              000 
-    restrictedPermissionMask            000 
+    followSymbolLink                    1
+    checkSymbolLink                     0
+    requiredPermissionMask              000
+    restrictedPermissionMask            000
 }
 
 perClientConnLimit {
-    staticReqPerSec                     $OPENLITESPEED_CLIENT_THROTTLE_STATIC
-    dynReqPerSec                        $OPENLITESPEED_CLIENT_THROTTLE_DYNAMIC
-    outBandwidth                        $OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_OUT
-    inBandwidth                         $OPENLITESPEED_CLIENT_THROTTLE_BANDWIDTH_IN
-    softLimit                           $OPENLITESPEED_CLIENT_THROTTLE_SOFT_LIMIT
-    hardLimit                           $OPENLITESPEED_CLIENT_THROTTLE_HARD_LIMIT
-    blockBadReq                         $OPENLITESPEED_CLIENT_THROTTLE_BLOCK_BAD_REQUEST
-    gracePeriod                         $OPENLITESPEED_CLIENT_THROTTLE_GRACE_PERIOD
-    banPeriod                           $OPENLITESPEED_CLIENT_THROTTLE_BAN_PERIOD
+    staticReqPerSec                     $DEMYX_CLIENT_THROTTLE_STATIC
+    dynReqPerSec                        $DEMYX_CLIENT_THROTTLE_DYNAMIC
+    outBandwidth                        $DEMYX_CLIENT_THROTTLE_BANDWIDTH_OUT
+    inBandwidth                         $DEMYX_CLIENT_THROTTLE_BANDWIDTH_IN
+    softLimit                           $DEMYX_CLIENT_THROTTLE_SOFT_LIMIT
+    hardLimit                           $DEMYX_CLIENT_THROTTLE_HARD_LIMIT
+    blockBadReq                         $DEMYX_CLIENT_THROTTLE_BLOCK_BAD_REQUEST
+    gracePeriod                         $DEMYX_CLIENT_THROTTLE_GRACE_PERIOD
+    banPeriod                           $DEMYX_CLIENT_THROTTLE_BAN_PERIOD
 }
 
 lsrecaptcha  {
-    enabled                             $OPENLITESPEED_RECAPTCHA_ENABLE
-    type                                $OPENLITESPEED_RECAPTCHA_TYPE
-    regConnLimit                        $OPENLITESPEED_RECAPTCHA_CONNECTION_LIMIT
-    sslConnLimit                        $OPENLITESPEED_RECAPTCHA_CONNECTION_LIMIT
+    enabled                             $DEMYX_RECAPTCHA_ENABLE
+    type                                $DEMYX_RECAPTCHA_TYPE
+    regConnLimit                        $DEMYX_RECAPTCHA_CONNECTION_LIMIT
+    sslConnLimit                        $DEMYX_RECAPTCHA_CONNECTION_LIMIT
 }
 
 CGIRLimit {
-    maxCGIInstances                     20 
-    minUID                              11 
-    minGID                              10 
-    priority                            0 
-    CPUSoftLimit                        0 
-    CPUHardLimit                        0 
+    maxCGIInstances                     20
+    minUID                              11
+    minGID                              10
+    priority                            0
+    CPUSoftLimit                        0
+    CPUHardLimit                        0
     memSoftLimit                        0
     memHardLimit                        0
-    procSoftLimit                       0 
-    procHardLimit                       0 
+    procSoftLimit                       0
+    procHardLimit                       0
 }
-    
+
 accessControl {
     allow                               ALL
     deny
 }
- 
+
 extProcessor lsphp {
-    type                                lsapi 
-    address                             uds://tmp/lshttpd/lsphp.sock 
-    maxConns                            $OPENLITESPEED_PHP_LSAPI_CHILDREN
-    env                                 CRAWLER_LOAD_LIMIT=$OPENLITESPEED_CRAWLER_LOAD_LIMIT
-    env                                 CRAWLER_USLEEP=$OPENLITESPEED_CRAWLER_USLEEP
+    type                                lsapi
+    address                             uds://tmp/lshttpd/lsphp.sock
+    maxConns                            $DEMYX_PHP_LSAPI_CHILDREN
+    env                                 CRAWLER_LOAD_LIMIT=$DEMYX_CRAWLER_LOAD_LIMIT
+    env                                 CRAWLER_USLEEP=$DEMYX_CRAWLER_USLEEP
     env                                 LSAPI_AVOID_FORK=200M
-    env                                 PHP_LSAPI_CHILDREN=$OPENLITESPEED_PHP_LSAPI_CHILDREN
-    initTimeout                         300 
-    retryTimeout                        0 
-    persistConn                         1 
+    env                                 PHP_LSAPI_CHILDREN=$DEMYX_PHP_LSAPI_CHILDREN
+    initTimeout                         300
+    retryTimeout                        0
+    persistConn                         1
     pcKeepAliveTimeout                  300
-    respBuffer                          0 
-    autoStart                           1 
+    respBuffer                          0
+    autoStart                           1
     path                                fcgi-bin/lsphp
-    backlog                             100 
-    instances                           1 
-    priority                            0 
+    backlog                             100
+    instances                           1
+    priority                            0
     memSoftLimit                        0
     memHardLimit                        0
-    procSoftLimit                       0 
-    procHardLimit                       0 
+    procSoftLimit                       0
+    procHardLimit                       0
 }
 
 scriptHandler {
@@ -164,80 +197,80 @@ scriptHandler {
 }
 
 railsDefaults {
-    binPath                  
-    railsEnv                            1 
-    maxConns                            1 
-    env                                 LSAPI_MAX_IDLE=60 
-    initTimeout                         60 
-    retryTimeout                        0 
-    pcKeepAliveTimeout                  60 
-    respBuffer                          0 
-    backlog                             50 
+    binPath
+    railsEnv                            1
+    maxConns                            1
+    env                                 LSAPI_MAX_IDLE=60
+    initTimeout                         60
+    retryTimeout                        0
+    pcKeepAliveTimeout                  60
+    respBuffer                          0
+    backlog                             50
     runOnStartUp                        3
     extMaxIdleTime                      300
-    priority                            3 
-    memSoftLimit                        0 
-    memHardLimit                        0 
-    procSoftLimit                       0 
-    procHardLimit                       0 
+    priority                            3
+    memSoftLimit                        0
+    memHardLimit                        0
+    procSoftLimit                       0
+    procHardLimit                       0
 }
 
 wsgiDefaults {
-    binPath                  
-    railsEnv                            1 
-    maxConns                            5 
-    env                                 LSAPI_MAX_IDLE=60 
-    initTimeout                         60 
-    retryTimeout                        0 
-    pcKeepAliveTimeout                  60 
-    respBuffer                          0 
-    backlog                             50 
+    binPath
+    railsEnv                            1
+    maxConns                            5
+    env                                 LSAPI_MAX_IDLE=60
+    initTimeout                         60
+    retryTimeout                        0
+    pcKeepAliveTimeout                  60
+    respBuffer                          0
+    backlog                             50
     runOnStartUp                        3
     extMaxIdleTime                      300
-    priority                            3 
-    memSoftLimit                        0 
-    memHardLimit                        0 
-    procSoftLimit                       0 
-    procHardLimit                       0 
+    priority                            3
+    memSoftLimit                        0
+    memHardLimit                        0
+    procSoftLimit                       0
+    procHardLimit                       0
 }
 
 nodeDefaults{
-    binPath                  
-    railsEnv                            1 
-    maxConns                            5 
-    env                                 LSAPI_MAX_IDLE=60 
-    initTimeout                         60 
-    retryTimeout                        0 
-    pcKeepAliveTimeout                  60 
-    respBuffer                          0 
-    backlog                             50 
+    binPath
+    railsEnv                            1
+    maxConns                            5
+    env                                 LSAPI_MAX_IDLE=60
+    initTimeout                         60
+    retryTimeout                        0
+    pcKeepAliveTimeout                  60
+    respBuffer                          0
+    backlog                             50
     runOnStartUp                        3
     extMaxIdleTime                      300
-    priority                            3 
-    memSoftLimit                        0 
-    memHardLimit                        0 
-    procSoftLimit                       0 
-    procHardLimit                       0 
+    priority                            3
+    memSoftLimit                        0
+    memHardLimit                        0
+    procSoftLimit                       0
+    procHardLimit                       0
 }
 
-virtualHost $OPENLITESPEED_DOMAIN {
-    vhRoot                              $OPENLITESPEED_CONFIG/ols
-    allowSymbolLink                     1 
-    enableScript                        1 
-    restrained                          1 
+virtualHost $DEMYX_DOMAIN {
+    vhRoot                              $DEMYX_CONFIG/ols
+    allowSymbolLink                     1
+    enableScript                        1
+    restrained                          1
     setUIDMode                          0
     user                                demyx
     group                               demyx
-    chrootMode                          0 
-    configFile                           conf/vhosts/ols/vhconf.conf
+    chrootMode                          0
+    configFile                          conf/vhosts/ols/vhconf.conf
 }
 
 listener Default {
     address                             *:80
     secure                              0
-    map                                 $OPENLITESPEED_DOMAIN *
+    map                                 $DEMYX_DOMAIN *
 }
-    
+
 vhTemplate centralConfigLog {
     templateFile                        conf/templates/ccl.conf
     listeners                           Default
@@ -266,40 +299,68 @@ module cache {
 
 }
 
-" > "$OPENLITESPEED_CONFIG"/ols/httpd_config.conf
+" > "$DEMYX_CONFIG"/ols/httpd_config.conf
 
 # vhconf.conf
 
 # Enable opcache by default
-[[ "${OPENLITESPEED_PHP_OPCACHE}" = false ]] && OPENLITESPEED_PHP_OPCACHE_ENABLE="php_admin_value opcache.enable 0"
+[[ "${DEMYX_PHP_OPCACHE}" = false ]] && DEMYX_PHP_OPCACHE_ENABLE="php_admin_value opcache.enable 0"
 # Update auto_prepend_file if WordFence exists
-[[ -d "$OPENLITESPEED_ROOT"/wp-content/plugins/wordfence ]] && OPENLITESPEED_WORDFENCE="php_value auto_prepend_file ${OPENLITESPEED_ROOT}/wordfence-waf.php"
+if [[ "${DEMYX_BEDROCK:-}" = true && -d "$DEMYX"/app/plugins/wordfence || -d "$DEMYX"/wp-content/plugins/wordfence ]]; then
+    DEMYX_WORDFENCE="php_value auto_prepend_file ${DEMYX}/wordfence-waf.php"
+fi
 # Disable xmlrpc.php by default
-[[ "$OPENLITESPEED_XMLRPC" = false ]] && OPENLITESPEED_XMLRPC="RewriteRule ^xmlrpc.php - [F,L]"
+[[ "$DEMYX_XMLRPC" = false ]] && DEMYX_XMLRPC="RewriteRule ^xmlrpc.php - [F,L]"
 # LSCache
-[[ "$OPENLITESPEED_CACHE" = true ]] && OPENLITESPEED_CACHE_ENABLE=1
+[[ "$DEMYX_CACHE" = true ]] && DEMYX_CACHE_ENABLE=1
 # Enable basic auth for wp-login.php
-if [[ "$OPENLITESPEED_BASIC_AUTH_WP" = true ]]; then
-    OPENLITESPEED_BASIC_AUTH_WP_CONTEXT="context /wp-login.php {
+if [[ "$DEMYX_BASIC_AUTH_WP" = true ]]; then
+    DEMYX_BASIC_AUTH_WP_CONTEXT="context /wp-login.php {
             allowBrowse             1
             realm                   Basic Auth
         }"
 fi
 
-echo "# Demyx
+# Support for bedrock tag
+if [[ "${DEMYX_BEDROCK:-}" = true ]]; then
+    DEMYX_VHCONF_BLADE="|blade.php"
+    DEMYX_VHCONF_REWRITES="# Bedrock
+                RewriteRule ^app/uploads/[^/]+\.php\$ - [F,L]
+                RewriteRule (^\.)blade.php\$ - [F,L]
+                RewriteRule composer.(json|lock)\$ - [F,L]
+                RewriteRule package(-lock)?.json\$ - [F,L]
+                RewriteRule yarn.lock\$ - [F,L]"
+    DEMYX_VHCONF_INCLUDES="RewriteRule ^wp/wp-admin/includes/ - [F,L]
+                RewriteRule !^wp/wp-includes/ - [S=3]
+                RewriteRule ^wp/wp-includes/[^/]+\.php\$ - [F,L]
+                RewriteRule ^wp/wp-includes/js/tinymce/langs/.+\.php - [F,L]
+                RewriteRule ^wp/wp-includes/theme-compat/ - [F,L]
+                RewriteRule ^wp/wp-includes/[^/]+\.xml\$ - [F,L]"
+else
+    DEMYX_VHCONF_REWRITES="# Block php in wp-content/uploads
+                RewriteRule ^wp-content/uploads/[^/]+\.php\$ - [F,L]"
+    DEMYX_VHCONF_INCLUDES="RewriteRule ^wp-admin/includes/ - [F,L]
+                RewriteRule !^wp-includes/ - [S=3]
+                RewriteRule ^wp-includes/[^/]+\.php\$ - [F,L]
+                RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]
+                RewriteRule ^wp-includes/theme-compat/ - [F,L]
+                RewriteRule ^wp-includes/[^/]+\.xml\$ - [F,L]"
+fi
+
+/bin/echo "# Demyx
 # https://demyx.sh
 
-docRoot                                 /demyx
+docRoot                                 $DEMYX
 enableGzip                              1
 cgroups                                 0
 
-errorlog ${OPENLITESPEED_LOG}/${OPENLITESPEED_DOMAIN}.error.log {
+errorlog ${DEMYX_LOG}/${DEMYX_DOMAIN}.error.log {
     useServer                           0
     logLevel                            DEBUG
     rollingSize                         10M
 }
 
-accesslog ${OPENLITESPEED_LOG}/${OPENLITESPEED_DOMAIN}.access.log {
+accesslog ${DEMYX_LOG}/${DEMYX_DOMAIN}.access.log {
     useServer                           0
     logHeaders                          7
     rollingSize                         10M
@@ -369,17 +430,16 @@ context / {
                 RewriteRule (^\.) - [F,L]
 
                 # Return 403 forbidden for readme.(txt|html) or license.(txt|html) or example.(txt|html) or other common git repository files
-                RewriteRule \.(txt|html|md)$ - [F,L]
+                RewriteRule \.(txt|html|md${DEMYX_VHCONF_BLADE:-})$ - [F,L]
                 RewriteRule ^(readme|license|example|changelog|README|LEGALNOTICE|INSTALLATION|CHANGELOG|html|md)$ - [F,L]
 
                 # Deny backup extensions & log files and return 403 forbidden
                 RewriteRule \.(old|orig|original|php#|php~|php_bak|save|swo|aspx?|tpl|sh|bash|bak?|cfg|cgi|dll|exe|git|hg|ini|jsp|log|mdb|out|sql|svn|swp|tar|rdf)$ - [F,L]
 
                 # Disable XMLRPC
-                ${OPENLITESPEED_XMLRPC:-}
+                ${DEMYX_XMLRPC:-}
 
-                # Block php in wp-content/uploads
-                RewriteRule ^wp-content/uploads/[^/]+\.php$ - [F,L]
+                $DEMYX_VHCONF_REWRITES
 
                 # Misc
                 RewriteRule (&pws=0|_vti_|\(null\)|\{\$itemURL\}|echo(.*)kae|boot\.ini|etc/passwd|eval\(|self/environ|cgi-|muieblack) - [F,L]
@@ -391,12 +451,7 @@ context / {
             <IfModule LiteSpeed>
                 RewriteEngine On
                 RewriteBase /
-                RewriteRule ^wp-admin/includes/ - [F,L]
-                RewriteRule !^wp-includes/ - [S=3]
-                RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]
-                RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]
-                RewriteRule ^wp-includes/theme-compat/ - [F,L]
-                RewriteRule ^wp-includes/[^/]+\.xml$ - [F,L]
+                $DEMYX_VHCONF_INCLUDES
             </IfModule>
 
             # Prevent username enumeration
@@ -423,8 +478,8 @@ context / {
         END_rules
     }
 }
- 
-${OPENLITESPEED_BASIC_AUTH_WP_CONTEXT:-}
+
+${DEMYX_BASIC_AUTH_WP_CONTEXT:-}
 
 rewrite {
     enable                              1
@@ -433,17 +488,17 @@ rewrite {
 
 phpIniOverride  {
     php_admin_value date.timezone       $TZ
-    php_admin_value max_execution_time  $OPENLITESPEED_PHP_MAX_EXECUTION_TIME
-    php_admin_value memory_limit        $OPENLITESPEED_PHP_MEMORY
-    ${OPENLITESPEED_PHP_OPCACHE_ENABLE:-}
-    php_admin_value post_max_size       $OPENLITESPEED_PHP_UPLOAD_LIMIT
-    php_admin_value upload_max_filesize  $OPENLITESPEED_PHP_UPLOAD_LIMIT
-    ${OPENLITESPEED_WORDFENCE:-}
+    php_admin_value max_execution_time  $DEMYX_PHP_MAX_EXECUTION_TIME
+    php_admin_value memory_limit        $DEMYX_PHP_MEMORY
+    ${DEMYX_PHP_OPCACHE_ENABLE:-}
+    php_admin_value post_max_size       $DEMYX_PHP_UPLOAD_LIMIT
+    php_admin_value upload_max_filesize  $DEMYX_PHP_UPLOAD_LIMIT
+    ${DEMYX_WORDFENCE:-}
 }
 
 realm Basic Auth {
     userDB  {
-        location                        ${OPENLITESPEED_CONFIG}/ols/htpasswd
+        location                        ${DEMYX_CONFIG}/ols/htpasswd
     }
 }
 
@@ -462,31 +517,31 @@ module cache {
     expireInSeconds                     3600
     enablePrivateCache                  0
     privateExpireInSeconds              3600
-    ls_enabled                          ${OPENLITESPEED_CACHE_ENABLE:-0}
+    ls_enabled                          ${DEMYX_CACHE_ENABLE:-0}
 }
 
-" > "$OPENLITESPEED_CONFIG"/ols/vhconf.conf
+" > "$DEMYX_CONFIG"/ols/vhconf.conf
 
 # admin_config.conf
 
-# Lockdown admin url if OPENLITESPEED_ADMIN_IP value changed
-if [[ "$OPENLITESPEED_ADMIN_IP" != ALL ]]; then
-    OPENLITESPEED_ADMIN_IP_DENY=ALL
+# Lockdown admin url if DEMYX_ADMIN_IP value changed
+if [[ "$DEMYX_ADMIN_IP" != ALL ]]; then
+    DEMYX_ADMIN_IP_DENY=ALL
 fi
 
-echo "# Demyx
+/bin/echo "# Demyx
 # https://demyx.sh
 
 enableCoreDump                          1
 sessionTimeout                          3600
 
-errorlog ${OPENLITESPEED_LOG}/ols.error.log {
+errorlog ${DEMYX_LOG}/ols.error.log {
   useServer                             1
   logLevel                              INFO
   rollingSize                           10M
 }
 
-accessLog ${OPENLITESPEED_LOG}/ols.access.log {
+accessLog ${DEMYX_LOG}/ols.access.log {
   useServer                             1
   rollingSize                           10M
   keepDays                              90
@@ -495,16 +550,15 @@ accessLog ${OPENLITESPEED_LOG}/ols.access.log {
 }
 
 accessControl {
-  allow                                 $OPENLITESPEED_ADMIN_IP
-  deny                                  ${OPENLITESPEED_ADMIN_IP_DENY:-
-  }
+  allow                                 $DEMYX_ADMIN_IP
+  deny                                  ${DEMYX_ADMIN_IP_DENY:-}
 }
 
 listener adminListener{
   address                               *:8080
   secure                                0
 }
-" > "$OPENLITESPEED_CONFIG"/ols/admin_config.conf
+" > "$DEMYX_CONFIG"/ols/admin_config.conf
 
 # Set proper ownership so lsws can write to the configs
-chown -R lsadm:lsadm "$OPENLITESPEED_CONFIG"/ols
+/bin/chown -R lsadm:lsadm "$DEMYX_CONFIG"/ols

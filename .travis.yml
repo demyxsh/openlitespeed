@@ -13,30 +13,30 @@ env:
   - DEMYX_USERNAME=demyx DEMYX_REPOSITORY=openlitespeed
 
 before_install:
-  - docker pull debian:buster-slim
-  - docker pull demyx/mariadb
-  - docker pull demyx/wordpress:cli
-  - docker pull demyx/utilities
-  - docker network create demyx
+  - /usr/bin/docker pull debian:buster-slim
+  - /usr/bin/docker pull demyx/mariadb
+  - /usr/bin/docker pull demyx/wordpress:cli
+  - /usr/bin/docker pull demyx/utilities
+  - /usr/bin/docker network create demyx
 
 script:
   # tag-latest test
-  - docker build --no-cache -t demyx/"$DEMYX_REPOSITORY" tag-latest
-  - docker run -d --name=demyx_db --network=demyx -e MARIADB_DATABASE=demyx -e MARIADB_USERNAME=demyx -e MARIADB_PASSWORD=demyx -e MARIADB_ROOT_PASSWORD=demyx demyx/mariadb
-  - docker run -d --name=demyx_wp --network=demyx -v demyx_wp:/demyx -e WORDPRESS_DB_HOST=demyx_db -e WORDPRESS_DB_NAME=demyx -e WORDPRESS_DB_USER=demyx -e WORDPRESS_DB_PASSWORD=demyx demyx/"$DEMYX_REPOSITORY"
-  - sleep 5
-  - docker run --network=demyx --volumes-from=demyx_wp --workdir=/demyx demyx/wordpress:cli core install --url=http://localhost --title=demyx --admin_user=demyx --admin_password=demyx --admin_email=info@domain.tld --skip-email
-  - docker exec demyx_wp sh -c "wget -qO- http://localhost | grep 'Hello world'"
+  - /usr/bin/docker build --no-cache -t demyx/"$DEMYX_REPOSITORY" tag-latest
+  - /usr/bin/docker run -d --name=demyx_db --network=demyx -e DEMYX_DATABASE=demyx -e DEMYX_USERNAME=demyx -e DEMYX_PASSWORD=demyx -e DEMYX_ROOT_PASSWORD=demyx demyx/mariadb
+  - /usr/bin/docker run -d --name=demyx_wp --network=demyx -v demyx_wp:/demyx -e DEMYX_DB_HOST=demyx_db -e DEMYX_DB_NAME=demyx -e DEMYX_DB_USER=demyx -e DEMYX_DB_PASSWORD=demyx demyx/"$DEMYX_REPOSITORY"
+  - /bin/sleep 5
+  - /usr/bin/docker run --network=demyx --volumes-from=demyx_wp --workdir=/demyx demyx/wordpress:cli core install --url=http://localhost --title=demyx --admin_user=demyx --admin_password=demyx --admin_email=info@domain.tld --skip-email
+  - /usr/bin/docker exec demyx_wp /bin/sh -c "/usr/bin/wget -qO- http://localhost | /bin/grep 'Hello world'"
   # tag-bedrock test
-  - docker build --no-cache -t demyx/"$DEMYX_REPOSITORY":bedrock tag-bedrock
-  - docker run -d --name=demyx_db_bedrock --network=demyx -e MARIADB_DATABASE=demyx -e MARIADB_USERNAME=demyx -e MARIADB_PASSWORD=demyx -e MARIADB_ROOT_PASSWORD=demyx demyx/mariadb
-  - docker run -d --name=demyx_wp_bedrock --network=demyx -v demyx_wp_bedrock:/demyx -e WORDPRESS_DB_HOST=demyx_db_bedrock -e WORDPRESS_DB_NAME=demyx -e WORDPRESS_DB_USER=demyx -e WORDPRESS_DB_PASSWORD=demyx demyx/"$DEMYX_REPOSITORY":bedrock
-  - sleep 5
-  - docker run --network=demyx -v demyx_wp_bedrock:/demyx demyx/wordpress:cli core install --url=http://localhost --title=demyx --admin_user=demyx --admin_password=demyx --admin_email=info@domain.tld --skip-email
-  - docker exec demyx_wp_bedrock sh -c "wget -qO- http://localhost | grep 'Hello world'"
+  - /usr/bin/docker build --no-cache -t demyx/"$DEMYX_REPOSITORY":bedrock tag-bedrock
+  - /usr/bin/docker run -d --name=demyx_db_bedrock --network=demyx -e DEMYX_DATABASE=demyx -e DEMYX_USERNAME=demyx -e DEMYX_PASSWORD=demyx -e DEMYX_ROOT_PASSWORD=demyx demyx/mariadb
+  - /usr/bin/docker run -d --name=demyx_wp_bedrock --network=demyx -v demyx_wp_bedrock:/demyx -e DEMYX_DB_HOST=demyx_db_bedrock -e DEMYX_DB_NAME=demyx -e DEMYX_DB_USER=demyx -e DEMYX_DB_PASSWORD=demyx demyx/"$DEMYX_REPOSITORY":bedrock
+  - /bin/sleep 5
+  - /usr/bin/docker run --network=demyx -v demyx_wp_bedrock:/demyx demyx/wordpress:cli core install --url=http://localhost --title=demyx --admin_user=demyx --admin_password=demyx --admin_email=info@domain.tld --skip-email
+  - /usr/bin/docker exec demyx_wp_bedrock /bin/sh -c "/usr/bin/wget -qO- http://localhost | grep 'Hello world'"
 
 after_success:
-  - echo "$DEMYX_PASSWORD" | docker login -u "$DEMYX_USERNAME" --password-stdin
-  - docker push demyx/"$DEMYX_REPOSITORY"
-  - docker push demyx/"$DEMYX_REPOSITORY":bedrock
-  - bash travis.sh
+  - /bin/echo "$DEMYX_PASSWORD" | /usr/bin/docker login -u "$DEMYX_USERNAME" --password-stdin
+  - /usr/bin/docker push demyx/"$DEMYX_REPOSITORY"
+  - /usr/bin/docker push demyx/"$DEMYX_REPOSITORY":bedrock
+  - /bin/bash travis.sh

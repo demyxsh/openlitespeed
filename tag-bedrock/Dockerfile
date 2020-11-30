@@ -1,57 +1,62 @@
 FROM demyx/openlitespeed
 
-LABEL sh.demyx.image        demyx/openlitespeed:bedrock
-LABEL sh.demyx.maintainer   Demyx <info@demyx.sh>
-LABEL sh.demyx.url          https://demyx.sh
-LABEL sh.demyx.github       https://github.com/demyxco
-LABEL sh.demyx.registry     https://hub.docker.com/u/demyx
+LABEL sh.demyx.image            demyx/openlitespeed:bedrock
+LABEL sh.demyx.maintainer       Demyx <info@demyx.sh>
+LABEL sh.demyx.url              https://demyx.sh
+LABEL sh.demyx.github           https://github.com/demyxco
+LABEL sh.demyx.registry         https://hub.docker.com/u/demyx
 
 # Default bedrock to production
-ENV WORDPRESS_BEDROCK_MODE  production
+ENV DEMYX_BEDROCK               true
+ENV DEMYX_BEDROCK_MODE          production
+ENV DEMYX_SSL                   false
+# Support for old variables
+ENV WORDPRESS_BEDROCK_MODE      "$DEMYX_BEDROCK_MODE"
 
 # Need root stuff
 USER root
 
 # php 7.4 and friends
 RUN set -ex; \
-    apt-get install -y --no-install-recommends lsb-release apt-transport-https wget; \
-    wget https://packages.sury.org/php/apt.gpg -qO /etc/apt/trusted.gpg.d/php.gpg; \
-    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list; \
-    apt-get update && apt-get install -y --no-install-recommends git php7.4 php7.4-zip php7.4-xml unzip
+    /usr/bin/apt-get install -y --no-install-recommends lsb-release apt-transport-https; \
+    /usr/bin/wget https://packages.sury.org/php/apt.gpg -qO /etc/apt/trusted.gpg.d/php.gpg; \
+    /bin/echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | /usr/bin/tee /etc/apt/sources.list.d/php.list; \
+    /usr/bin/apt-get update && /usr/bin/apt-get install -y --no-install-recommends git php7.4 php7.4-zip php7.4-xml unzip
 
 # Composer
 RUN set -ex; \
-    wget https://getcomposer.org/installer -qO /tmp/composer-setup.php; \
-    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
-    rm -rf /tmp/*
+    /usr/bin/wget https://getcomposer.org/installer -qO /tmp/composer-setup.php; \
+    /usr/bin/php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
+    /bin/rm -rf /tmp/*
 
 # Bedrock
 RUN set -ex; \
     # Remove WordPress
-    rm -rf "$OPENLITESPEED_CONFIG"/wordpress; \
-    rm -rf "$OPENLITESPEED_ROOT"/*; \
+    /bin/rm -rf "$DEMYX_CONFIG"/wordpress; \
+    /bin/rm -rf "$DEMYX"/*; \
     \
-    su -c "composer create-project roots/bedrock ${OPENLITESPEED_CONFIG}/bedrock" -s /bin/sh demyx; \
+    /bin/su -c "/usr/local/bin/composer create-project roots/bedrock ${DEMYX_CONFIG}/bedrock" -s /bin/sh demyx; \
     \
     # Upgrade WordPress to latest version
-    sed -i 's|"roots/wordpress": .*|"roots/wordpress": ">5",|g' "$OPENLITESPEED_CONFIG"/bedrock/composer.json; \
+    /bin/sed -i 's|"roots/wordpress": .*|"roots/wordpress": ">5",|g' "$DEMYX_CONFIG"/bedrock/composer.json; \
     \
-    su -c "cd ${OPENLITESPEED_CONFIG}/bedrock && composer update; \
+    /bin/su -c "cd ${DEMYX_CONFIG}/bedrock && /usr/local/bin/composer update; \
     \
-    composer clearcache" -s /bin/sh demyx; \
+    /usr/local/bin/composer clearcache" -s /bin/sh demyx; \
     \
-    cp -r "$OPENLITESPEED_CONFIG"/bedrock/. "$OPENLITESPEED_ROOT"; \
-    chown -R demyx:demyx "$OPENLITESPEED_ROOT"
+    /bin/cp -r "$DEMYX_CONFIG"/bedrock/. "$DEMYX"; \
+    /bin/chown -R demyx:demyx "$DEMYX"
 
 # Copy source
-COPY --chown=demyx:demyx src "$OPENLITESPEED_CONFIG"
+COPY --chown=demyx:demyx src "$DEMYX_CONFIG"
 
 # Finalize
 RUN set -ex; \
-    chmod +x "$OPENLITESPEED_CONFIG"/config.sh; \
-    chmod +x "$OPENLITESPEED_CONFIG"/install.sh; \
-    chmod +x /usr/local/bin/demyx-install; \
+    /bin/chmod +x "$DEMYX_CONFIG"/config.sh; \
+    /bin/chmod +x "$DEMYX_CONFIG"/install.sh; \
     \
-    mv "$OPENLITESPEED_CONFIG"/install.sh /usr/local/bin/demyx-install
+    # demyx-install
+    /bin/cp "$DEMYX_CONFIG"/install.sh /usr/local/bin/demyx-install; \
+    /bin/chmod +x /usr/local/bin/demyx-install
 
 USER demyx

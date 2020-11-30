@@ -1,6 +1,16 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2020-11-29
+### Changed
+- Alphabetized
+- Misc updates
+- Rename variables and support old ones
+- ShellCheck approved
+- Update Dockerfile RUN commands
+- Use -E flag for sudo to keep environment variables
+- Use full paths to binaries/scripts
+
 ## 2020-07-05
 ### Changed
 - Update logic when installing WordPress

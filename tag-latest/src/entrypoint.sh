@@ -1,22 +1,22 @@
-#!/usr/bin/dumb-init /bin/bash
+#!/bin/bash
 # Demyx
 # https://demyx.sh
 set -euo pipefail
 
 # Generate config
-demyx-config
+/usr/local/bin/demyx-config
 
 # Install WordPress
-demyx-install
+/usr/local/bin/demyx-install
 
 # OpenLiteSpeed admin
-demyx-admin
+/usr/local/bin/demyx-admin
 
 # OpenLiteSpeed htpasswd
-demyx-htpasswd
+/usr/local/bin/demyx-htpasswd
 
 # Start OLS
-demyx-lsws
+/usr/local/bin/demyx-lsws
 
 # Keeps container alive
-tail -f "$OPENLITESPEED_LOG"/ols.access.log "$OPENLITESPEED_LOG"/ols.error.log
+tail -f "$DEMYX_LOG"/ols.access.log "$DEMYX_LOG"/ols.error.log

@@ -57,17 +57,7 @@ ENV OPENLITESPEED_ROOT                          /demyx
 ENV OPENLITESPEED_CONFIG                        /etc/demyx
 ENV OPENLITESPEED_LOG                           /var/log/demyx
 
-# Configure Demyx
-RUN set -ex; \
-    # Create demyx user
-    /usr/sbin/adduser --gecos '' --disabled-password demyx; \
-    \
-    # Create demyx directories
-    /usr/bin/install -d -m 0755 -o demyx -g demyx "$DEMYX"; \
-    /usr/bin/install -d -m 0755 -o demyx -g demyx "$DEMYX_CONFIG"; \
-    /usr/bin/install -d -m 0755 -o demyx -g demyx "$DEMYX_LOG"
-
-# OpenLiteSpeed
+# Packages
 # Install these packages if you want to recompile PHP
 # gcc libxml2-dev pkg-config libssl-dev zlib1g-dev libcurl4-gnutls-dev libpng-dev libzip-dev make
 RUN set -ex; \
@@ -79,8 +69,24 @@ RUN set -ex; \
         ruby \
         sudo \
         tzdata \
-        wget; \
+        wget
+
+# Configure Demyx
+RUN set -ex; \
+    # Create demyx user
+    /usr/sbin/adduser --gecos '' --disabled-password demyx; \
     \
+    # Create demyx directories
+    /usr/bin/install -d -m 0755 -o demyx -g demyx "$DEMYX"; \
+    /usr/bin/install -d -m 0755 -o demyx -g demyx "$DEMYX_CONFIG"; \
+    /usr/bin/install -d -m 0755 -o demyx -g demyx "$DEMYX_LOG"; \
+    \
+    # Update .bashrc
+    /bin/echo 'PS1="$(whoami)@\h:\w \$ "' > /home/demyx/.bashrc; \
+    /bin/echo 'PS1="$(whoami)@\h:\w \$ "' > /root/.bashrc
+
+# OpenLiteSpeed
+RUN set -ex; \
     DEMYX_VERSION="$(/usr/bin/wget -qO- https://api.github.com/repos/litespeedtech/openlitespeed/tags 2>&1 | /usr/bin/jq -r '.[].name' | /usr/bin/head -n 1 | /bin/sed 's|v||g')"; \
     /usr/bin/wget https://openlitespeed.org/packages/openlitespeed-"$DEMYX_VERSION".tgz -qO /tmp/openlitespeed-"$DEMYX_VERSION".tgz; \
     /bin/tar -xzf /tmp/openlitespeed-"$DEMYX_VERSION".tgz -C /tmp; \
@@ -103,18 +109,19 @@ RUN set -ex; \
     # Symlink configs to lsws
     /bin/ln -sf "$DEMYX_CONFIG"/ols/httpd_config.conf /usr/local/lsws/conf/httpd_config.conf; \
     /bin/ln -sf "$DEMYX_CONFIG"/ols/admin_config.conf /usr/local/lsws/admin/conf/admin_config.conf; \
-    /bin/ln -s "$DEMYX_CONFIG"/ols /usr/local/lsws/conf/vhosts; \
-    \
-    /bin/rm -rf /tmp/*
+    /bin/ln -s "$DEMYX_CONFIG"/ols /usr/local/lsws/conf/vhosts
 
 # WordPress
 RUN set -ex; \
-    /usr/bin/wget https://wordpress.org/latest.tar.gz -qO "$DEMYX_CONFIG"/latest.tar.gz; \
-    /bin/tar -xzf "$DEMYX_CONFIG"/latest.tar.gz -C "$DEMYX_CONFIG"; \
-    /bin/cp -r "$DEMYX_CONFIG"/wordpress/* "$DEMYX"; \
-    /bin/rm "$DEMYX_CONFIG"/latest.tar.gz; \
-    /bin/chown -R demyx:demyx "$DEMYX_CONFIG"/wordpress; \
-    /bin/chown -R demyx:demyx "$DEMYX"
+    /bin/su -c "/usr/bin/wget https://wordpress.org/latest.tar.gz -qO /tmp/latest.tar.gz; \
+        \
+        /bin/tar -xzf /tmp/latest.tar.gz -C /tmp; \
+        \
+        /bin/mv /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php; \
+        \
+        /bin/cp -r /tmp/wordpress/* ${DEMYX}; \
+        \
+        /bin/tar -czf ${DEMYX_CONFIG}/wordpress.tgz -C /tmp/wordpress ." -s /bin/sh demyx
 
 # Imports
 COPY --chown=demyx:demyx src "$DEMYX_CONFIG"
@@ -149,7 +156,7 @@ RUN set -ex; \
     /bin/chmod +x "$DEMYX_CONFIG"/lsws.sh
 
 # Finalize
-RUN set -ex;\ 
+RUN set -ex;\
     # demyx-encrypt
     /bin/cp "$DEMYX_CONFIG"/encrypt.sh /usr/local/bin/demyx-encrypt; \
     /bin/chmod +x /usr/local/bin/demyx-encrypt; \
@@ -166,7 +173,10 @@ RUN set -ex;\
     /bin/chown -R root:root /usr/local/bin; \
     \
     # Remove unused files
-    /bin/rm -f webadmin.csr privkey.pem
+    /bin/rm -f webadmin.csr privkey.pem; \
+    \
+    # Clear /tmp
+    /bin/rm -rf /tmp/*
 
 EXPOSE 80 8080
 

@@ -25,27 +25,29 @@ RUN set -ex; \
 
 # Composer
 RUN set -ex; \
-    /usr/bin/wget https://getcomposer.org/installer -qO /tmp/composer-setup.php; \
-    /usr/bin/php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer; \
-    /bin/rm -rf /tmp/*
+    su -c "/usr/bin/wget https://getcomposer.org/installer -qO /tmp/composer-setup.php" -s /bin/sh demyx; \
+    /usr/bin/php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
 # Bedrock
 RUN set -ex; \
     # Remove WordPress
-    /bin/rm -rf "$DEMYX_CONFIG"/wordpress; \
+    /bin/rm -rf "$DEMYX_CONFIG"/wordpress.tgz; \
     /bin/rm -rf "$DEMYX"/*; \
     \
-    /bin/su -c "/usr/local/bin/composer create-project roots/bedrock ${DEMYX_CONFIG}/bedrock" -s /bin/sh demyx; \
+    /bin/su -c "/usr/local/bin/composer create-project roots/bedrock /tmp/bedrock" -s /bin/sh demyx; \
     \
     # Upgrade WordPress to latest version
-    /bin/sed -i 's|"roots/wordpress": .*|"roots/wordpress": ">5",|g' "$DEMYX_CONFIG"/bedrock/composer.json; \
+    /bin/sed -i 's|"roots/wordpress": .*|"roots/wordpress": ">5",|g' /tmp/bedrock/composer.json; \
     \
-    /bin/su -c "cd ${DEMYX_CONFIG}/bedrock && /usr/local/bin/composer update; \
-    \
-    /usr/local/bin/composer clearcache" -s /bin/sh demyx; \
-    \
-    /bin/cp -r "$DEMYX_CONFIG"/bedrock/. "$DEMYX"; \
-    /bin/chown -R demyx:demyx "$DEMYX"
+    /bin/su -c "cd /tmp/bedrock && /usr/local/bin/composer update; \
+        \
+        /usr/local/bin/composer clearcache; \
+        \
+        /bin/rm -f /tmp/composer-setup.php; \
+        \
+        /bin/cp -r . ${DEMYX}; \
+        \
+        /bin/tar -czf ${DEMYX_CONFIG}/bedrock.tgz -C /tmp/bedrock ." -s /bin/sh demyx
 
 # Copy source
 COPY --chown=demyx:demyx src "$DEMYX_CONFIG"
@@ -57,6 +59,9 @@ RUN set -ex; \
     \
     # demyx-install
     /bin/cp "$DEMYX_CONFIG"/install.sh /usr/local/bin/demyx-install; \
-    /bin/chmod +x /usr/local/bin/demyx-install
+    /bin/chmod +x /usr/local/bin/demyx-install; \
+    \
+    # Clear /tmp
+    /bin/rm -rf /tmp/*
 
 USER demyx

@@ -33,6 +33,7 @@ OPENLITESPEED | https://domain.tld/demyx/ols/
 # https://demyx.sh
 #
 # This docker-compose.yml is designed for VPS use with SSL/TLS first.
+# Traefik requires no additional configurations and is ready to go.
 # Be sure to change all the domain.tld domains and credentials before running docker-compose up -d.
 #
 networks:

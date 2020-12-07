@@ -1,6 +1,20 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2020-12-06
+### Changed
+- Missing user for su command
+- Misc updates to docker-compose.yml
+- tag-bedrock
+    - Get composer as demyx user
+    - Update Bedrock RUN commands
+    - Clear /tmp
+- tag-latest
+    - Move RUN commands
+    - Update RUN commands for configuring demyx
+    - Update RUN commands for WordPress
+    - Clear /tmp
+
 ## 2020-11-29
 ### Changed
 - Alphabetized

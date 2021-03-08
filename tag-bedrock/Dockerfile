@@ -18,50 +18,46 @@ USER root
 
 # php 7.4 and friends
 RUN set -ex; \
-    /usr/bin/apt-get install -y --no-install-recommends lsb-release apt-transport-https; \
-    /usr/bin/wget https://packages.sury.org/php/apt.gpg -qO /etc/apt/trusted.gpg.d/php.gpg; \
-    /bin/echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | /usr/bin/tee /etc/apt/sources.list.d/php.list; \
-    /usr/bin/apt-get update && /usr/bin/apt-get install -y --no-install-recommends git php7.4 php7.4-zip php7.4-xml unzip
+    apt-get install -y --no-install-recommends lsb-release apt-transport-https; \
+    wget https://packages.sury.org/php/apt.gpg -qO /etc/apt/trusted.gpg.d/php.gpg; \
+    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list; \
+    apt-get update && apt-get install -y --no-install-recommends git php7.4 php7.4-zip php7.4-xml unzip
 
 # Composer
 RUN set -ex; \
-    su -c "/usr/bin/wget https://getcomposer.org/installer -qO /tmp/composer-setup.php" -s /bin/sh demyx; \
-    /usr/bin/php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    su -c "wget https://getcomposer.org/installer -qO /tmp/composer-setup.php" -s /bin/sh demyx; \
+    php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer
 
 # Bedrock
 RUN set -ex; \
     # Remove WordPress
-    /bin/rm -rf "$DEMYX_CONFIG"/wordpress.tgz; \
-    /bin/rm -rf "$DEMYX"/*; \
+    rm -rf "$DEMYX_CONFIG"/wordpress.tgz; \
+    rm -rf "$DEMYX"/*; \
     \
-    /bin/su -c "/usr/local/bin/composer create-project roots/bedrock /tmp/bedrock" -s /bin/sh demyx; \
+    su -c "composer create-project roots/bedrock /tmp/bedrock" -s /bin/sh demyx; \
     \
     # Upgrade WordPress to latest version
-    /bin/sed -i 's|"roots/wordpress": .*|"roots/wordpress": ">5",|g' /tmp/bedrock/composer.json; \
+    sed -i 's|"roots/wordpress": .*|"roots/wordpress": ">5",|g' /tmp/bedrock/composer.json; \
     \
-    /bin/su -c "cd /tmp/bedrock && /usr/local/bin/composer update; \
+    su -c "cd /tmp/bedrock && composer update; \
         \
-        /usr/local/bin/composer clearcache; \
+        composer clearcache; \
         \
-        /bin/rm -f /tmp/composer-setup.php; \
+        rm -f /tmp/composer-setup.php; \
         \
-        /bin/cp -r . ${DEMYX}; \
+        cp -r . ${DEMYX}; \
         \
-        /bin/tar -czf ${DEMYX_CONFIG}/bedrock.tgz -C /tmp/bedrock ." -s /bin/sh demyx
+        tar -czf ${DEMYX_CONFIG}/bedrock.tgz -C /tmp/bedrock ." -s /bin/sh demyx
 
-# Copy source
-COPY --chown=demyx:demyx src "$DEMYX_CONFIG"
+# Imports
+COPY --chown=root:root bin /usr/local/bin
 
 # Finalize
-RUN set -ex; \
-    /bin/chmod +x "$DEMYX_CONFIG"/config.sh; \
-    /bin/chmod +x "$DEMYX_CONFIG"/install.sh; \
-    \
-    # demyx-install
-    /bin/cp "$DEMYX_CONFIG"/install.sh /usr/local/bin/demyx-install; \
-    /bin/chmod +x /usr/local/bin/demyx-install; \
+RUN set -ex;\
+    # Set ownership
+    chown -R root:root /usr/local/bin; \
     \
     # Clear /tmp
-    /bin/rm -rf /tmp/*
+    rm -rf /tmp/*
 
 USER demyx

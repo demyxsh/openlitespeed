@@ -39,7 +39,7 @@ set -euo pipefail
 [[ "${DEMYX_BEDROCK:-}" = true ]] && DEMYX="$DEMYX"/web
 
 # httpd_config.conf
-/bin/echo "# Demyx
+echo "# Demyx
 # https://demyx.sh
 
 serverName                              Demyx
@@ -347,7 +347,7 @@ else
                 RewriteRule ^wp-includes/[^/]+\.xml\$ - [F,L]"
 fi
 
-/bin/echo "# Demyx
+echo "# Demyx
 # https://demyx.sh
 
 docRoot                                 $DEMYX
@@ -397,15 +397,6 @@ context / {
         autoLoadHtaccess               1
         rules                               <<<END_rules
             AddDefaultCharset UTF-8
-
-            # BEGIN WordPress
-            RewriteEngine On
-            RewriteBase /
-            RewriteRule ^/index.php$ - [L]
-            RewriteCond %{REQUEST_FILENAME} !-f
-            RewriteCond %{REQUEST_FILENAME} !-d
-            RewriteRule . /index.php [L]
-            # END WordPress
 
             # Block null user agent
             <IfModule LiteSpeed>
@@ -475,6 +466,15 @@ context / {
                 RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
                 RewriteRule .* index.php [F,L]
             </IfModule>
+
+            # BEGIN WordPress
+            RewriteEngine On
+            RewriteBase /
+            RewriteRule ^/index.php$ - [L]
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteRule . /index.php [L]
+            # END WordPress
         END_rules
     }
 }
@@ -529,7 +529,7 @@ if [[ "$DEMYX_ADMIN_IP" != ALL ]]; then
     DEMYX_ADMIN_IP_DENY=ALL
 fi
 
-/bin/echo "# Demyx
+echo "# Demyx
 # https://demyx.sh
 
 enableCoreDump                          1
@@ -561,4 +561,4 @@ listener adminListener{
 " > "$DEMYX_CONFIG"/ols/admin_config.conf
 
 # Set proper ownership so lsws can write to the configs
-/bin/chown -R lsadm:lsadm "$DEMYX_CONFIG"/ols
+chown -R lsadm:lsadm "$DEMYX_CONFIG"/ols

@@ -6,4 +6,4 @@ set -euo pipefail
 # Set the default command to start
 DEMYX_LSWS_COMMAND="${1:-start}"
 
-/usr/bin/sudo /usr/local/lsws/bin/lswsctrl "$DEMYX_LSWS_COMMAND"
+/usr/local/lsws/bin/lswsctrl "$DEMYX_LSWS_COMMAND"

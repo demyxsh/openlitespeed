@@ -8,7 +8,7 @@ DEMYX_ENCRYPT_PASSWORD="${1:-}"
 
 # Exit script if empty
 if [[ -z "$DEMYX_ENCRYPT_PASSWORD" ]]; then
-    /bin/echo "First argument requires a value!"
+    echo "First argument requires a value!"
     exit 1
 fi
 
@@ -16,4 +16,4 @@ fi
 DEMYX_ENCRYPT="$(/usr/local/lsws/admin/fcgi-bin/admin_php -q /usr/local/lsws/admin/misc/htpasswd.php "$DEMYX_ENCRYPT_PASSWORD")"
 
 # Output encrypted password
-/bin/echo "$DEMYX_ENCRYPT"
+echo "$DEMYX_ENCRYPT"

@@ -4,19 +4,19 @@
 set -euo pipefail
 
 # Generate config
-/usr/local/bin/demyx-config
+sudo -E demyx-config
 
 # Install WordPress
-/usr/local/bin/demyx-install
+demyx-install
 
 # OpenLiteSpeed admin
-/usr/local/bin/demyx-admin
+sudo -E demyx-admin
 
 # OpenLiteSpeed htpasswd
-/usr/local/bin/demyx-htpasswd
+sudo -E demyx-htpasswd
 
 # Start OLS
-/usr/local/bin/demyx-lsws
+sudo -E demyx-lsws
 
 # Keeps container alive
 tail -f "$DEMYX_LOG"/ols.access.log "$DEMYX_LOG"/ols.error.log

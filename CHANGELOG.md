@@ -2,7 +2,7 @@
 Entries before tag-* affects all code-server tags.
 
 ## 2021-07-14
-- Update default versions [1df48e2](https://github.com/demyxco/demyx/commit/1df48e214ac7f45b2e0215434b4baf8bbfc92607)
+- Update default versions [1df48e2](https://github.com/demyxco/openlitespeed/commit/1df48e214ac7f45b2e0215434b4baf8bbfc92607)
 
 ## 2021-03-07
 ### tag-bedrock

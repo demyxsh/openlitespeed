@@ -1,0 +1,160 @@
+name: demyx/openlitespeed
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron:  '0 0 * * 6'
+
+jobs:
+  master:
+    runs-on: ubuntu-latest
+    env:
+      DEMYX_REPOSITORY: openlitespeed
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Login
+        uses: docker/login-action@v1
+        with:
+          username: demyx
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Build
+        run: |
+          docker pull debian:buster-slim
+          docker pull demyx/mariadb
+          docker pull demyx/wordpress:cli
+          docker pull demyx/utilities
+          docker build -t demyx/${{ env.DEMYX_REPOSITORY }} tag-latest
+          docker build -t demyx/${{ env.DEMYX_REPOSITORY }}:bedrock tag-bedrock
+      - name: Test
+        id: test
+        shell: 'script -q -e -c "bash {0}"'
+        run: |
+          docker network create demyx
+
+          # tag-latest test
+          docker run -d \
+            --name=demyx_db \
+            --network=demyx \
+            -e DEMYX_DATABASE=demyx \
+            -e DEMYX_USERNAME=demyx \
+            -e DEMYX_PASSWORD=demyx \
+            -e DEMYX_ROOT_PASSWORD=demyx \
+            demyx/mariadb
+
+          docker run -d \
+            --name=${{ env.DEMYX_REPOSITORY }} \
+            --network=demyx \
+            -v ${{ env.DEMYX_REPOSITORY }}:/demyx \
+            -e DEMYX_DB_HOST=demyx_db \
+            -e DEMYX_DB_NAME=demyx \
+            -e DEMYX_DB_USER=demyx \
+            -e DEMYX_DB_PASSWORD=demyx \
+            demyx/${{ env.DEMYX_REPOSITORY }}
+
+          sleep 5
+
+          docker run \
+            --network=demyx \
+            --volumes-from=${{ env.DEMYX_REPOSITORY }} \
+            --workdir=/demyx \
+            demyx/wordpress:cli core install \
+              --url=http://localhost \
+              --title=demyx \
+              --admin_user=demyx \
+              --admin_password=demyx \
+              --admin_email=info@domain.tld \
+              --skip-email
+
+          docker run -d \
+            --name=${{ env.DEMYX_REPOSITORY }} \
+            --network=demyx \
+            -v ${{ env.DEMYX_REPOSITORY }}:/demyx \
+            -e DEMYX_WORDPRESS=true \
+            -e DEMYX_WORDPRESS_CONTAINER=${{ env.DEMYX_REPOSITORY }} \
+            -e DEMYX_WORDPRESS_CONTAINER_PORT=9000 \
+            -e DEMYX_DOMAIN=localhost \
+            demyx/${{ env.DEMYX_REPOSITORY }}
+
+          sleep 5
+
+          DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c "wget -qO- http://localhost" 2>&1)"
+          if [[ "$DEMYX_TEST" == *"Hello world"* ]]; then
+            echo "$DEMYX_TEST"
+          else
+            exit 1
+          fi
+
+          # tag-bedrock test
+          docker run -d \
+            --name=demyx_db_bedrock \
+            --network=demyx \
+            -e DEMYX_DATABASE=demyx \
+            -e DEMYX_USERNAME=demyx \
+            -e DEMYX_PASSWORD=demyx \
+            -e DEMYX_ROOT_PASSWORD=demyx \
+            demyx/mariadb
+
+          docker run -d \
+            --name=${{ env.DEMYX_REPOSITORY }}_bedrock \
+            --network=demyx \
+            -v ${{ env.DEMYX_REPOSITORY }}_bedrock:/demyx \
+            -e DEMYX_DB_HOST=demyx_db_bedrock \
+            -e DEMYX_DB_NAME=demyx \
+            -e DEMYX_DB_USER=demyx \
+            -e DEMYX_DB_PASSWORD=demyx \
+            demyx/${{ env.DEMYX_REPOSITORY }}:bedrock
+
+          sleep 5
+
+          docker run \
+            --network=demyx \
+            --volumes-from=${{ env.DEMYX_REPOSITORY }}_bedrock \
+            --workdir=/demyx \
+            demyx/wordpress:cli core install \
+              --url=http://localhost \
+              --title=demyx \
+              --admin_user=demyx \
+              --admin_password=demyx \
+              --admin_email=info@domain.tld \
+              --skip-email
+
+          sleep 5
+
+          DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }}:bedrock sh -c "wget -qO- http://localhost" 2>&1)"
+          if [[ "$DEMYX_TEST" == *"Hello world"* ]]; then
+            echo "$DEMYX_TEST"
+          else
+            exit 1
+          fi
+      - name: Version
+        run: |
+          DEMYX_OPENLITESPEED_DEBIAN_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} cat /etc/debian_version)"
+          DEMYX_OPENLITESPEED_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} cat /usr/local/lsws/VERSION)"
+          DEMYX_OPENLITESPEED_LSPHP_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c '/usr/local/lsws/"$DEMYX_LSPHP_VERSION"/bin/lsphp -v' | head -1 | awk '{print $2}')"
+          DEMYX_JQ="$(jq ".debian = \"$DEMYX_OPENLITESPEED_DEBIAN_VERSION\" | .openlitespeed = \"$DEMYX_OPENLITESPEED_VERSION\" | .lsphp = \"$DEMYX_OPENLITESPEED_LSPHP_VERSION\"" version.json)"
+
+          # Update versions
+          echo "$DEMYX_JQ" > version.json
+          echo "DEMYX_OPENLITESPEED_DEBIAN_VERSION=$DEMYX_OPENLITESPEED_DEBIAN_VERSION
+          DEMYX_OPENLITESPEED_VERSION=$DEMYX_OPENLITESPEED_VERSION
+          DEMYX_OPENLITESPEED_LSPHP_VERSION=$DEMYX_OPENLITESPEED_LSPHP_VERSION" > VERSION
+      - name: Push
+        run: |
+          # Not sure why this is being created?
+          [[ -f typescript ]] && rm -f typescript
+
+          DEMYX_CHECK_STATUS="$(git status)"
+          if [[ "$DEMYX_CHECK_STATUS" != *"nothing to commit"* ]]; then
+            git config --global user.name github-actions[bot]
+            git config --global user.email github-actions[bot]@users.noreply.github.com
+            git remote set-url origin https://demyxsh:${{ secrets.DEMYX_TOKEN }}@github.com/demyxsh/${{ env.DEMYX_REPOSITORY }}
+            git add .
+            git commit -m "Scheduled Build"
+            git push
+          fi
+
+          docker push demyx/${{ env.DEMYX_REPOSITORY }}
+          docker push demyx/${{ env.DEMYX_REPOSITORY }}:bedrock

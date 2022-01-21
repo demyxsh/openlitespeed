@@ -1,10 +1,15 @@
 # openlitespeed
-[![Build Status](https://img.shields.io/travis/demyxco/openlitespeed?style=flat)](https://travis-ci.org/demyxco/openlitespeed)
+[![demyxsh/openlitespeed](https://github.com/demyxsh/openlitespeed/actions/workflows/main.yml/badge.svg)](https://github.com/demyxsh/openlitespeed/actions/workflows/main.yml)
+[![Code Size](https://img.shields.io/github/languages/code-size/demyxsh/openlitespeed?style=flat&color=blue)](https://github.com/demyxsh/openlitespeed)
+[![Repository Size](https://img.shields.io/github/repo-size/demyxsh/openlitespeed?style=flat&color=blue)](https://github.com/demyxsh/openlitespeed)
+[![Watches](https://img.shields.io/github/watchers/demyxsh/openlitespeed?style=flat&color=blue)](https://github.com/demyxsh/openlitespeed)
+[![Stars](https://img.shields.io/github/stars/demyxsh/openlitespeed?style=flat&color=blue)](https://github.com/demyxsh/openlitespeed)
+[![Forks](https://img.shields.io/github/forks/demyxsh/openlitespeed?style=flat&color=blue)](https://github.com/demyxsh/openlitespeed)
 [![Docker Pulls](https://img.shields.io/docker/pulls/demyx/openlitespeed?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
 [![Architecture](https://img.shields.io/badge/linux-amd64-important?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![Debian](https://img.shields.io/badge/debian-10.8-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![OpenLiteSpeed](https://img.shields.io/badge/openlitespeed-1.7.8-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
-[![lsphp](https://img.shields.io/badge/lsphp-7.4.15-informational?style=flat&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
+[![Debian](https://img.shields.io/badge/dynamic/json?url=https://github.com/demyxsh/openlitespeed/raw/master/version.json&label=debian&query=$.debian&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
+[![OpenLiteSpeed](https://img.shields.io/badge/dynamic/json?url=https://github.com/demyxsh/openlitespeed/raw/master/version.json&label=openlitespeed&query=$.openlitespeed&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
+[![lsphp](https://img.shields.io/badge/dynamic/json?url=https://github.com/demyxsh/openlitespeed/raw/master/version.json&label=lsphp&query=$.lsphp&color=blue)](https://hub.docker.com/r/demyx/openlitespeed)
 [![Buy Me A Coffee](https://img.shields.io/badge/buy_me_coffee-$5-informational?style=flat&color=blue)](https://www.buymeacoffee.com/VXqkQK5tb)
 [![Become a Patron!](https://img.shields.io/badge/become%20a%20patron-$5-informational?style=flat&color=blue)](https://www.patreon.com/bePatron?u=23406156)
 
@@ -21,6 +26,12 @@ LOG | /var/log/demyx
 ENTRYPOINT | /usr/local/bin/demyx-entrypoint
 WORDPRESS | https://domain.tld/
 OPENLITESPEED | https://domain.tld/demyx/ols/
+
+## NOTICE
+This repository has been moved to the organization [demyxsh](https://github.com/demyxsh); please update the remote URL.
+```
+git remote set-url origin git@github.com:demyxsh/openlitespeed.git
+```
 
 ## Usage
 - `DEMYX_ADMIN_IP=myip` to lock down OpenLiteSpeed's admin page
@@ -235,12 +246,6 @@ volumes:
 ```
 
 ## Updates & Support
-[![Code Size](https://img.shields.io/github/languages/code-size/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Repository Size](https://img.shields.io/github/repo-size/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Watches](https://img.shields.io/github/watchers/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Stars](https://img.shields.io/github/stars/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-[![Forks](https://img.shields.io/github/forks/demyxco/openlitespeed?style=flat&color=blue)](https://github.com/demyxco/openlitespeed)
-
 * Auto built weekly on Saturdays (America/Los_Angeles)
 * Rolling release updates
-* For support: [#demyx](https://webchat.freenode.net/?channel=#demyx)
+* For support: [#demyx](https://web.libera.chat/?channel=#demyx)

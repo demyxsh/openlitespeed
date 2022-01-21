@@ -3,7 +3,7 @@ FROM demyx/openlitespeed
 LABEL sh.demyx.image            demyx/openlitespeed:bedrock
 LABEL sh.demyx.maintainer       Demyx <info@demyx.sh>
 LABEL sh.demyx.url              https://demyx.sh
-LABEL sh.demyx.github           https://github.com/demyxco
+LABEL sh.demyx.github           https://github.com/demyxsh
 LABEL sh.demyx.registry         https://hub.docker.com/u/demyx
 
 # Default bedrock to production

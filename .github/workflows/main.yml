@@ -113,7 +113,7 @@ jobs:
 
           sleep 5
 
-          DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }}:bedrock sh -c "wget -qO- http://localhost" 2>&1)"
+          DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock sh -c "wget -qO- http://localhost" 2>&1)"
           if [[ "$DEMYX_TEST" == *"Hello world"* ]]; then
             echo "$DEMYX_TEST"
           else

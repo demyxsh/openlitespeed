@@ -1,5 +1,5 @@
 {
-  "debian": "init",
-  "openlitespeed": "init",
-  "lsphp": "init"
+  "debian": "10.11",
+  "openlitespeed": "1.7.14",
+  "lsphp": "7.4.27"
 }

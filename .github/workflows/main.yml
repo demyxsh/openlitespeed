@@ -72,7 +72,7 @@ jobs:
 
           DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c "wget -qO- http://localhost" 2>&1)"
           if [[ "$DEMYX_TEST" == *"Hello world"* ]]; then
-            echo "$DEMYX_TEST"
+            echo "Test demyx/${{ env.DEMYX_REPOSITORY }} passed"
           else
             exit 1
           fi
@@ -113,9 +113,9 @@ jobs:
 
           sleep 5
 
-          DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock sh -c "wget -qO- http://localhost" 2>&1)"
+          DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock sh -c "wget -qO- http://localhost/web" 2>&1)"
           if [[ "$DEMYX_TEST" == *"Hello world"* ]]; then
-            echo "$DEMYX_TEST"
+            echo "Test demyx/${{ env.DEMYX_REPOSITORY }}:bedrock passed"
           else
             exit 1
           fi

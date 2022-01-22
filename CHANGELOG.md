@@ -1,6 +1,10 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2022-01-22
+- Use curl to get tarball [fd8f890](https://github.com/demyxco/openlitespeed/commit/fd8f8902a821e18b866908ca92e163369d816f30)
+- Remove default version [dbc4ecd](https://github.com/demyxco/openlitespeed/commit/dbc4ecd2092126ee12dcf0a00a2cd12a486f7554)
+
 ## 2021-07-14
 - Update default versions [1df48e2](https://github.com/demyxco/openlitespeed/commit/1df48e214ac7f45b2e0215434b4baf8bbfc92607)
 

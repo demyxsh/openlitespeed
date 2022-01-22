@@ -88,8 +88,10 @@ RUN set -ex; \
 
 # OpenLiteSpeed
 RUN set -ex; \
+    apt-get install curl -y --no-install-recommends; \
+    \
     DEMYX_OLS_VERSION="$(wget -qO- https://api.github.com/repos/litespeedtech/openlitespeed/tags 2>&1 | jq -r '.[].name' | head -n 1 | sed 's|v||g' || true)"; \
-    wget https://openlitespeed.org/packages/openlitespeed-"$DEMYX_OLS_VERSION".tgz -qO /tmp/openlitespeed-"$DEMYX_OLS_VERSION".tgz; \
+    curl -sL https://openlitespeed.org/packages/openlitespeed-"$DEMYX_OLS_VERSION".tgz -o /tmp/openlitespeed-"$DEMYX_OLS_VERSION".tgz; \
     tar -xzf /tmp/openlitespeed-"$DEMYX_OLS_VERSION".tgz -C /tmp; \
     cd /tmp/openlitespeed && ./install.sh; \
     \
@@ -110,7 +112,10 @@ RUN set -ex; \
     # Symlink configs to lsws
     ln -sf "$DEMYX_CONFIG"/ols/httpd_config.conf /usr/local/lsws/conf/httpd_config.conf; \
     ln -sf "$DEMYX_CONFIG"/ols/admin_config.conf /usr/local/lsws/admin/conf/admin_config.conf; \
-    ln -s "$DEMYX_CONFIG"/ols /usr/local/lsws/conf/vhosts
+    ln -s "$DEMYX_CONFIG"/ols /usr/local/lsws/conf/vhosts; \
+    \
+    # Remove curl and friends
+    apt-get purge curl -y
 
 # WordPress
 RUN set -ex; \

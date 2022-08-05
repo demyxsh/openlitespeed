@@ -103,6 +103,12 @@ RUN set -ex; \
         "$DEMYX_LSPHP"-curl \
         "$DEMYX_LSPHP"-imagick \
         "$DEMYX_LSPHP"-mysql \
+        \
+        lsphp81 \
+        lsphp81-curl \
+        lsphp81-imagick \
+        lsphp81-mysql; \
+    \
     ln -sf /usr/local/lsws/"$DEMYX_LSPHP"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5; \
     \
     # Create directory for lsadm user

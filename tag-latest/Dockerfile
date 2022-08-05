@@ -64,6 +64,7 @@ ENV OPENLITESPEED_LOG                           /var/log/demyx
 RUN set -ex; \
     apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
+        default-mysql-client \
         ed \
         jq \
         procps \

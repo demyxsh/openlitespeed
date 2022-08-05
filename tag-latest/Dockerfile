@@ -1,4 +1,4 @@
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 LABEL sh.demyx.image                            demyx/openlitespeed
 LABEL sh.demyx.maintainer                       Demyx <info@demyx.sh>

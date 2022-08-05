@@ -1,6 +1,15 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2022-08-05
+- Misc updates [fc6b804](https://github.com/demyxsh/openlitespeed/commit/fc6b804c1f4bb6808a8f2cfba9149a3d3150d6e7)
+- Add fallback for lsphp versions [2f58a1f](https://github.com/demyxsh/openlitespeed/commit/2f58a1f7fbd8842ab7214d2e461348abd8853662)
+- wp-cli is now included [e0ac6c3](https://github.com/demyxsh/openlitespeed/commit/e0ac6c381636f2a5dde7a0bbcd20b82d40bc767f)
+- lsphp81 is now included in the image [2f08957](https://github.com/demyxsh/openlitespeed/commit/2f089575127158ceae76e5c37469ad0e5b5f00da)
+- Add default-mysql-client as one of the core packages [229e8ac](https://github.com/demyxsh/openlitespeed/commit/229e8ac6dbc207f6606d077f7608c0f1d3faa0ca)
+- Rename environment variable and set lsphp80 as the default version [308bf15](https://github.com/demyxsh/openlitespeed/commit/308bf15d68ae9d5eadc4d3668f8da21bdd1e2e59)
+- Update to Debian Bullseye [652636c](https://github.com/demyxsh/openlitespeed/commit/652636c16e62539dcfd172478d538f49504d89f7)
+
 ## 2022-01-22
 - Use curl to get tarball [fd8f890](https://github.com/demyxco/openlitespeed/commit/fd8f8902a821e18b866908ca92e163369d816f30)
 - Remove default version [dbc4ecd](https://github.com/demyxco/openlitespeed/commit/dbc4ecd2092126ee12dcf0a00a2cd12a486f7554)

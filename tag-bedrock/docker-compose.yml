@@ -155,7 +155,7 @@ services:
       - DEMYX_TUNING_MAX_CONNECTIONS=20000
       - DEMYX_TUNING_MAX_KEEP_ALIVE=1000
       - DEMYX_TUNING_SMART_KEEP_ALIVE=1000
-      - DEMYX_WP_CONFIG=/demyx/wp-config.php
+      - DEMYX_WP_CONFIG=/demyx/web/wp-config.php
       - DEMYX_XMLRPC=false
     image: demyx/openlitespeed:bedrock
     labels:

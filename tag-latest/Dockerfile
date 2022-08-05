@@ -89,7 +89,7 @@ RUN set -ex; \
 
 # OpenLiteSpeed
 RUN set -ex; \
-    apt-get install curl -y --no-install-recommends; \
+    apt-get install -y --no-install-recommends curl; \
     \
     DEMYX_OLS_VERSION="$(wget -qO- https://api.github.com/repos/litespeedtech/openlitespeed/tags 2>&1 | jq -r '.[].name' | head -n 1 | sed 's|v||g' || true)"; \
     curl -sL https://openlitespeed.org/packages/openlitespeed-"$DEMYX_OLS_VERSION".tgz -o /tmp/openlitespeed-"$DEMYX_OLS_VERSION".tgz; \
@@ -138,7 +138,7 @@ RUN set -ex; \
     chmod +x /usr/local/bin/wp
 
 # Imports
-COPY --chown=root:root bin /usr/local/bin
+COPY bin /usr/local/bin
 
 # Configure sudo
 RUN set -ex; \

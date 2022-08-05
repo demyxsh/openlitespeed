@@ -196,7 +196,7 @@ extProcessor lsphp {
     pcKeepAliveTimeout                  300
     respBuffer                          0
     autoStart                           1
-    path                                fcgi-bin/lsphp
+    path                                ${DEMYX_LSPHP}/bin/lsphp
     backlog                             100
     instances                           1
     priority                            0

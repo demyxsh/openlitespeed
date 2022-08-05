@@ -16,12 +16,9 @@ ENV WORDPRESS_BEDROCK_MODE      "$DEMYX_BEDROCK_MODE"
 # Need root stuff
 USER root
 
-# php 7.4 and friends
+# Install packages
 RUN set -ex; \
-    apt-get install -y --no-install-recommends lsb-release apt-transport-https; \
-    wget https://packages.sury.org/php/apt.gpg -qO /etc/apt/trusted.gpg.d/php.gpg; \
-    echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list; \
-    apt-get update && apt-get install -y --no-install-recommends git php7.4 php7.4-zip php7.4-xml unzip
+    apt-get update && apt-get install -y --no-install-recommends git unzip
 
 # Composer
 RUN set -ex; \
@@ -32,6 +29,7 @@ RUN set -ex; \
 RUN set -ex; \
     # Remove WordPress
     rm -rf "$DEMYX_CONFIG"/wordpress.tgz; \
+    rm -f /usr/local/bin/demyx-install; \
     rm -rf "$DEMYX"/*; \
     \
     su -c "composer create-project roots/bedrock /tmp/bedrock" -s /bin/sh demyx; \
@@ -50,7 +48,7 @@ RUN set -ex; \
         tar -czf ${DEMYX_CONFIG}/bedrock.tgz -C /tmp/bedrock ." -s /bin/sh demyx
 
 # Imports
-COPY --chown=root:root bin /usr/local/bin
+COPY bin /usr/local/bin
 
 # Finalize
 RUN set -ex;\

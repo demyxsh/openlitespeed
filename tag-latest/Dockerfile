@@ -35,7 +35,7 @@ ENV DEMYX_DB_PASSWORD                           demyx
 ENV DEMYX_DB_USER                               demyx
 ENV DEMYX_DOMAIN                                localhost
 ENV DEMYX_LOG                                   /var/log/demyx
-ENV DEMYX_LSPHP_VERSION                         lsphp74
+ENV DEMYX_LSPHP                                 lsphp80
 ENV DEMYX_PHP_LSAPI_CHILDREN                    2000
 ENV DEMYX_PHP_MAX_EXECUTION_TIME                300
 ENV DEMYX_PHP_MEMORY                            256M
@@ -51,7 +51,7 @@ ENV DEMYX_TUNING_MAX_KEEP_ALIVE                 1000
 ENV DEMYX_TUNING_SMART_KEEP_ALIVE               1000
 ENV DEMYX_WP_CONFIG                             "${DEMYX}/wp-config.php"
 ENV DEMYX_XMLRPC                                false
-ENV PATH                                        "${PATH}:/usr/local/lsws/${DEMYX_LSPHP_VERSION}/bin"
+ENV PATH                                        "${PATH}:/usr/local/lsws/${DEMYX_LSPHP}/bin"
 ENV TZ                                          America/Los_Angeles
 # Support for old variables
 ENV OPENLITESPEED_ROOT                          /demyx
@@ -98,13 +98,11 @@ RUN set -ex; \
     wget -O - https://rpms.litespeedtech.com/debian/enable_lst_debian_repo.sh | bash; \
     \
     apt-get update && apt-get install -y \
-        "$DEMYX_LSPHP_VERSION" \
-        "$DEMYX_LSPHP_VERSION"-curl \
-        "$DEMYX_LSPHP_VERSION"-imagick \
-        "$DEMYX_LSPHP_VERSION"-json \
-        "$DEMYX_LSPHP_VERSION"-mysql; \
-    \
-    ln -sf /usr/local/lsws/"$DEMYX_LSPHP_VERSION"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5; \
+        "$DEMYX_LSPHP" \
+        "$DEMYX_LSPHP"-curl \
+        "$DEMYX_LSPHP"-imagick \
+        "$DEMYX_LSPHP"-mysql \
+    ln -sf /usr/local/lsws/"$DEMYX_LSPHP"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5; \
     \
     # Create directory for lsadm user
     install -d -m 0755 -o lsadm -g lsadm "$DEMYX_CONFIG"/ols; \

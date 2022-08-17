@@ -27,23 +27,19 @@ RUN set -ex; \
 
 # Bedrock
 RUN set -ex; \
-    # Remove WordPress
-    rm -rf "$DEMYX_CONFIG"/wordpress.tgz; \
+    # Remove old files
+    rm -f "$DEMYX_CONFIG"/wordpress.tgz; \
     rm -f /usr/local/bin/demyx-install; \
     rm -rf "$DEMYX"/*; \
     \
-    su -c "composer create-project roots/bedrock /tmp/bedrock" -s /bin/sh demyx; \
-    \
-    # Upgrade WordPress to latest version
-    sed -i 's|"roots/wordpress": .*|"roots/wordpress": ">5",|g' /tmp/bedrock/composer.json; \
-    \
-    su -c "cd /tmp/bedrock && composer update; \
+    # Configure Bedrock
+    su -c "composer create-project roots/bedrock /tmp/bedrock; \
         \
-        composer clearcache; \
+        sed -i 's|\"roots/wordpress\": .*|\"roots/wordpress\": \">1\",|g' /tmp/bedrock/composer.json; \
         \
-        rm -f /tmp/composer-setup.php; \
+        cd /tmp/bedrock && composer require roots/acorn; \
         \
-        cp -r . ${DEMYX}; \
+        cp -r /tmp/bedrock/. ${DEMYX}; \
         \
         tar -czf ${DEMYX_CONFIG}/bedrock.tgz -C /tmp/bedrock ." -s /bin/sh demyx
 

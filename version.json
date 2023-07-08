@@ -1,5 +1,5 @@
 {
-  "debian": "11.5",
-  "openlitespeed": "1.7.16",
+  "debian": "11.7",
+  "openlitespeed": "1.7.17",
   "lsphp": ""
 }

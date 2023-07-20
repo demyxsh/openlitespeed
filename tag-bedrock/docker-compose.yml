@@ -1,9 +1,9 @@
 # Demyx
 # https://demyx.sh
 #
-# This docker-compose.yml is designed for VPS use with SSL/TLS first.
-# Traefik requires no additional configurations and is ready to go.
 # Be sure to change all the domain.tld domains and credentials before running docker-compose up -d.
+# For SSL: have a remote server, uncomment all the labels, and set DEMYX_SSL=true.
+# Give it at least 5-10 seconds for Lets Encrypt to provision SSL certificates.
 #
 networks:
   demyx:
@@ -81,20 +81,23 @@ services:
     image: demyx/traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.middlewares.demyx-traefik-auth.basicauth.users=demyx:$$apr1$$L91z3CIR$$m/BKZcnQGBP.Uo2cJm8I0/" # Basic auth password: demyx
-      - "traefik.http.middlewares.demyx-traefik-redirect.redirectscheme.scheme=https"
-      - "traefik.http.routers.demyx-traefik-http.entrypoints=http"
-      - "traefik.http.routers.demyx-traefik-http.middlewares=demyx-traefik-redirect"
-      - "traefik.http.routers.demyx-traefik-http.rule=Host(`traefik.domain.tld`)"
-      - "traefik.http.routers.demyx-traefik-http.service=demyx-traefik-http-port"
-      - "traefik.http.routers.demyx-traefik-https.entrypoints=https"
-      - "traefik.http.routers.demyx-traefik-https.middlewares=demyx-traefik-auth"
-      - "traefik.http.routers.demyx-traefik-https.rule=Host(`traefik.domain.tld`)" # Traefik dashboard https://traefik.domain.tld
-      - "traefik.http.routers.demyx-traefik-https.service=api@internal"
-      - "traefik.http.routers.demyx-traefik-https.service=demyx-traefik-https-port"
-      - "traefik.http.routers.demyx-traefik-https.tls.certresolver=demyx"
-      - "traefik.http.services.demyx-traefik-http-port.loadbalancer.server.port=8080"
-      - "traefik.http.services.demyx-traefik-https-port.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=demyx:$$apr1$$L91z3CIR$$m/BKZcnQGBP.Uo2cJm8I0/" # Password: demyx
+      #- "traefik.http.middlewares.traefik-auth-https.basicauth.users=demyx:$$apr1$$L91z3CIR$$m/BKZcnQGBP.Uo2cJm8I0/" # Password: demyx
+      #- "traefik.http.middlewares.traefik-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.traefik-http.entrypoints=http"
+      #- "traefik.http.routers.traefik-http.middlewares=traefik-redirect"
+      - "traefik.http.routers.traefik-http.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik-http.rule=Host(`traefik.domain.tld`)"
+      - "traefik.http.routers.traefik-http.service=api@internal"
+      - "traefik.http.routers.traefik-http.service=traefik-http-port"
+      #- "traefik.http.routers.traefik-https.entrypoints=https"
+      #- "traefik.http.routers.traefik-https.middlewares=traefik-auth-https"
+      #- "traefik.http.routers.traefik-https.rule=Host(`traefik.domain.tld`)" # https://traefik.domain.tld
+      #- "traefik.http.routers.traefik-https.service=api@internal"
+      #- "traefik.http.routers.traefik-https.service=traefik-https-port"
+      #- "traefik.http.routers.traefik-https.tls.certresolver=demyx"
+      - "traefik.http.services.traefik-http-port.loadbalancer.server.port=8080"
+      #- "traefik.http.services.traefik-https-port.loadbalancer.server.port=8080"
     networks:
       - demyx
       - demyx_socket
@@ -132,31 +135,41 @@ services:
       - DEMYX_CLIENT_THROTTLE_SOFT_LIMIT=1500
       - DEMYX_CLIENT_THROTTLE_STATIC=1000
       - DEMYX_CONFIG=/etc/demyx
+      - DEMYX_CRON=true
+      - DEMYX_CRON_LOGROTATE_INTERVAL="0 0 * * *"
+      - DEMYX_CRON_WP_INTERVAL="*/5 * * * *"
       - DEMYX_CRAWLER_LOAD_LIMIT=5.2
       - DEMYX_CRAWLER_USLEEP=1000
       - DEMYX_DB_HOST=demyx_db
       - DEMYX_DB_NAME=demyx
       - DEMYX_DB_PASSWORD=demyx
-      - DEMYX_DB_USER=demyx
+      - DEMYX_DB_USERNAME=demyx
       - DEMYX_DOMAIN=domain.tld
       - DEMYX_LOG=/var/log/demyx
+      - DEMYX_LOGROTATE=daily
+      - DEMYX_LOGROTATE_INTERVAL=30
+      - DEMYX_LOGROTATE_SIZE=10M
       - DEMYX_LSPHP=lsphp80
-      - DEMYX_PHP_LSAPI_CHILDREN=2000
-      - DEMYX_PHP_MAX_EXECUTION_TIME=300
-      - DEMYX_PHP_MEMORY=256M
-      - DEMYX_PHP_OPCACHE=true
-      - DEMYX_PHP_UPLOAD_LIMIT=128M
+      - DEMYX_LSAPI_CHILDREN=2000
+      - DEMYX_MAX_EXECUTION_TIME=300
+      - DEMYX_MEMORY=256M
+      - DEMYX_OPCACHE=true
+      - DEMYX_PROTO=http
+      - DEMYX_UPLOAD_LIMIT=128M
       - DEMYX_RECAPTCHA_CONNECTION_LIMIT=500
       - DEMYX_RECAPTCHA_ENABLE=1
       - DEMYX_RECAPTCHA_TYPE=2
-      - DEMYX_SSL=true
       - DEMYX_TUNING_CONNECTION_TIMEOUT=300
       - DEMYX_TUNING_KEEP_ALIVE_TIMEOUT=300
       - DEMYX_TUNING_MAX_CONNECTIONS=20000
       - DEMYX_TUNING_MAX_KEEP_ALIVE=1000
       - DEMYX_TUNING_SMART_KEEP_ALIVE=1000
       - DEMYX_WP_CONFIG=/demyx/web/wp-config.php
+      - DEMYX_WP_EMAIL=info@domain.tld
+      - DEMYX_WP_PASSWORD=demyx
+      - DEMYX_WP_USERNAME=demyx
       - DEMYX_XMLRPC=false
+      - TZ=America/Los_Angeles
     image: demyx/openlitespeed:bedrock
     labels:
       - "traefik.enable=true"

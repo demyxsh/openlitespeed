@@ -52,8 +52,7 @@ case "$DEMYX_LSPHP" in
     ;;
 esac
 
-# httpd_config.conf
-echo "# Demyx
+    [[ ! -f "$DEMYX"/web/app/mu-plugins/wp-cli-login-server.php ]] && ln -s "$DEMYX_CONFIG"/wp-cli-login-server.php "$DEMYX"/web/app/mu-plugins/wp-cli-login-server.php
 # https://demyx.sh
 
 serverName                              Demyx

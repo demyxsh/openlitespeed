@@ -2,21 +2,32 @@
 # Demyx
 # https://demyx.sh
 set -euo pipefail
+#
+#   Main.
+#
+demyx_entrypoint() {
+    # Install WordPress
+    demyx-install
 
-# Generate config
-sudo -E demyx-config
+    # Generate config
+    sudo -E demyx-config
 
-# Install WordPress
-demyx-install
+    # Start crond
+    sudo -E demyx-sudo cron
 
-# OpenLiteSpeed admin
-sudo -E demyx-admin
+    # OpenLiteSpeed admin
+    sudo -E demyx-admin
 
-# OpenLiteSpeed htpasswd
-sudo -E demyx-htpasswd
+    # OpenLiteSpeed htpasswd
+    sudo -E demyx-htpasswd
 
-# Start OLS
-sudo -E demyx-lsws
+    # Start OLS
+    sudo -E demyx-lsws
 
-# Keeps container alive
-tail -f "$DEMYX_LOG"/ols.access.log "$DEMYX_LOG"/ols.error.log
+    # Keeps container alive
+    tail -f "$DEMYX_LOG"/ols.access.log "$DEMYX_LOG"/ols.error.log
+}
+#
+#   Init.
+#
+demyx_entrypoint

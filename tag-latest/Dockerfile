@@ -122,11 +122,13 @@ RUN set -ex; \
         "$DEMYX_LSPHP" \
         "$DEMYX_LSPHP"-curl \
         "$DEMYX_LSPHP"-imagick \
+        "$DEMYX_LSPHP"-intl \
         "$DEMYX_LSPHP"-mysql \
         \
         lsphp81 \
         lsphp81-curl \
         lsphp81-imagick \
+        lsphp81-intl \
         lsphp81-mysql; \
     \
     ln -sf /usr/local/lsws/"$DEMYX_LSPHP"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5; \

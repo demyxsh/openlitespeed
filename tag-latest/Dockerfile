@@ -89,6 +89,7 @@ RUN set -ex; \
         \
         docker-php-ext-install mysqli pdo_mysql zip; \
         \
+        apt-get purge -y libzip-dev
 
 # Configure Demyx
 RUN set -ex; \

@@ -157,7 +157,9 @@ RUN set -ex; \
         tar -czf ${DEMYX_CONFIG}/wordpress.tgz -C /tmp/wordpress ." -s /bin/sh demyx; \
     \
     wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -qO /usr/local/bin/wp; \
-    chmod +x /usr/local/bin/wp
+    \
+    su -c "wp package install aaemnnosttv/wp-cli-login-command; \
+        wget https://raw.githubusercontent.com/aaemnnosttv/wp-cli-login-command/master/plugin/wp-cli-login-server.php -qO ${DEMYX_CONFIG}/wp-cli-login-server.php" -s /bin/sh demyx
 
 # Imports
 COPY bin /usr/local/bin

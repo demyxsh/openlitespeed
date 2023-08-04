@@ -1,4 +1,4 @@
-FROM debian:bullseye-slim
+FROM php:cli-bullseye
 
 LABEL sh.demyx.image                            demyx/openlitespeed
 LABEL sh.demyx.maintainer                       Demyx <info@demyx.sh>

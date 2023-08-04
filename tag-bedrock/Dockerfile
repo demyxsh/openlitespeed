@@ -42,9 +42,7 @@ RUN set -ex; \
         \
         cp -r /tmp/bedrock/. ${DEMYX}; \
         \
-        tar -czf ${DEMYX_CONFIG}/bedrock.tgz -C /tmp/bedrock .; \
-        \
-        wp package install aaemnnosttv/wp-cli-login-command" -s /bin/sh demyx
+        tar -czf ${DEMYX_CONFIG}/bedrock.tgz -C /tmp/bedrock ." -s /bin/sh demyx
 
 # Imports
 COPY bin /usr/local/bin

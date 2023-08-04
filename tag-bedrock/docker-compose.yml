@@ -2,7 +2,7 @@
 # https://demyx.sh
 #
 # Be sure to change all the domain.tld domains and credentials before running docker-compose up -d.
-# For SSL: have a remote server, uncomment all the labels, and set DEMYX_SSL=true.
+# For SSL: have a remote server, uncomment all the labels, and set DEMYX_PROTO=https.
 # Give it at least 5-10 seconds for Lets Encrypt to provision SSL certificates.
 #
 networks:
@@ -149,7 +149,7 @@ services:
       - DEMYX_LOGROTATE=daily
       - DEMYX_LOGROTATE_INTERVAL=30
       - DEMYX_LOGROTATE_SIZE=10M
-      - DEMYX_LSPHP=lsphp80
+      - DEMYX_LSPHP=8
       - DEMYX_LSAPI_CHILDREN=2000
       - DEMYX_MAX_EXECUTION_TIME=300
       - DEMYX_MEMORY=256M

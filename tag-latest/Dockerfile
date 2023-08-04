@@ -35,7 +35,7 @@ ENV DEMYX_CRON_WP_INTERVAL                      "*/5 * * * *"
 ENV DEMYX_DB_HOST                               localhost
 ENV DEMYX_DB_NAME                               demyx
 ENV DEMYX_DB_PASSWORD                           demyx
-ENV DEMYX_DB_USER                               demyx
+ENV DEMYX_DB_USERNAME                           demyx
 ENV DEMYX_DOMAIN                                localhost
 ENV DEMYX_LOG                                   /var/log/demyx
 ENV DEMYX_LOGROTATE                             daily
@@ -147,16 +147,17 @@ RUN set -ex; \
 # WordPress
 RUN set -ex; \
     su -c "wget https://wordpress.org/latest.tar.gz -qO /tmp/latest.tar.gz; \
-        \
-        tar -xzf /tmp/latest.tar.gz -C /tmp; \
-        \
-        mv /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php; \
-        \
-        cp -r /tmp/wordpress/* ${DEMYX}; \
-        \
-        tar -czf ${DEMYX_CONFIG}/wordpress.tgz -C /tmp/wordpress ." -s /bin/sh demyx; \
+    \
+    tar -xzf /tmp/latest.tar.gz -C /tmp; \
+    \
+    mv /tmp/wordpress/wp-config-sample.php /tmp/wordpress/wp-config.php; \
+    \
+    cp -r /tmp/wordpress/* ${DEMYX}; \
+    \
+    tar -czf ${DEMYX_CONFIG}/wordpress.tgz -C /tmp/wordpress ." -s /bin/sh demyx; \
     \
     wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -qO /usr/local/bin/wp; \
+    chmod +x /usr/local/bin/wp; \
     \
     su -c "wp package install aaemnnosttv/wp-cli-login-command; \
         wget https://raw.githubusercontent.com/aaemnnosttv/wp-cli-login-command/master/plugin/wp-cli-login-server.php -qO ${DEMYX_CONFIG}/wp-cli-login-server.php" -s /bin/sh demyx
@@ -164,13 +165,10 @@ RUN set -ex; \
 # Imports
 COPY bin /usr/local/bin
 
-# Configure sudo
+# Finalize
 RUN set -ex; \
     # sudoers
-    echo "demyx ALL=(ALL) NOPASSWD:SETENV: /usr/local/lsws/bin/lswsctrl, /usr/local/bin/demyx-admin, /usr/local/bin/demyx-config, /usr/local/bin/demyx-htpasswd, /usr/local/bin/demyx-lsws" > /etc/sudoers.d/demyx
-
-# Finalize
-RUN set -ex;\
+    echo "demyx ALL=(ALL) NOPASSWD:SETENV: /usr/local/lsws/bin/lswsctrl, /usr/local/bin/demyx-admin, /usr/local/bin/demyx-config, /usr/local/bin/demyx-htpasswd, /usr/local/bin/demyx-lsws, /usr/local/bin/demyx-sudo" > /etc/sudoers.d/demyx; \
     # Set ownership
     chown -R root:root /usr/local/bin; \
     \

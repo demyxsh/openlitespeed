@@ -77,11 +77,18 @@ RUN set -ex; \
         default-mysql-client \
         ed \
         jq \
+        libzip-dev \
+        logrotate \
+        mariadb-client \
+        nano \
         procps \
         ruby \
         sudo \
         tzdata \
-        wget
+        wget; \
+        \
+        docker-php-ext-install mysqli pdo_mysql zip; \
+        \
 
 # Configure Demyx
 RUN set -ex; \

@@ -45,13 +45,14 @@ demyx_sudo_logrotate() {
 
 	if [[ ! -f "$DEMYX_SUDO_LOGROTATE" ]]; then
 		echo "${DEMYX_LOG}/*.log {
-    $DEMYX_LOGROTATE
     missingok
-    copytruncate
-    rotate $DEMYX_LOGROTATE_INTERVAL
-    notifempty
-    sharedscripts
+	notifempty
+	$DEMYX_LOGROTATE
+	rotate $DEMYX_LOGROTATE_INTERVAL
+	compress
+	delaycompress
 	size $DEMYX_LOGROTATE_SIZE
+	endscript
 }
     	" > "$DEMYX_SUDO_LOGROTATE"
 		chown root:root "$DEMYX_SUDO_LOGROTATE"

@@ -39,7 +39,7 @@ ENV DEMYX_DB_USERNAME                           demyx
 ENV DEMYX_DOMAIN                                localhost
 ENV DEMYX_LOG                                   /var/log/demyx
 ENV DEMYX_LOGROTATE                             daily
-ENV DEMYX_LOGROTATE_INTERVAL                    30
+ENV DEMYX_LOGROTATE_INTERVAL                    7
 ENV DEMYX_LOGROTATE_SIZE                        10M
 ENV DEMYX_LSAPI_CHILDREN                        2000
 ENV DEMYX_LSPHP                                 lsphp80

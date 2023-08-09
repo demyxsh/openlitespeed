@@ -187,7 +187,7 @@ services:
       - DEMYX_DOMAIN=domain.tld
       - DEMYX_LOG=/var/log/demyx
       - DEMYX_LOGROTATE=daily
-      - DEMYX_LOGROTATE_INTERVAL=30
+      - DEMYX_LOGROTATE_INTERVAL=7
       - DEMYX_LOGROTATE_SIZE=10M
       - DEMYX_LSPHP=8
       - DEMYX_LSAPI_CHILDREN=2000

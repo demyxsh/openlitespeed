@@ -58,7 +58,7 @@ demyx_sudo_logrotate() {
 		chown root:root "$DEMYX_SUDO_LOGROTATE"
 	fi
 
-	logrotate "$DEMYX_SUDO_LOGROTATE"
+	logrotate --log="$DEMYX_LOG"/logrotate.log "$DEMYX_SUDO_LOGROTATE"
 }
 #
 #	Init.

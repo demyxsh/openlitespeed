@@ -36,9 +36,9 @@ RUN set -ex; \
     # Configure Bedrock
     su -c "composer create-project roots/bedrock /tmp/bedrock; \
         \
-        sed -i 's|\"roots/wordpress\": .*|\"roots/wordpress\": \">1\",|g' /tmp/bedrock/composer.json; \
-        \
         cd /tmp/bedrock && composer require roots/acorn; \
+        \
+        mv .env.example .env; \
         \
         cp -r /tmp/bedrock/. ${DEMYX}; \
         \

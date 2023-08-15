@@ -24,8 +24,8 @@ demyx_admin() {
     local DEMYX_ADMIN_PASSWORD_ENCRYPTED=
     DEMYX_ADMIN_PASSWORD_ENCRYPTED="$(demyx-encrypt "$DEMYX_ADMIN_PASSWORD")"
     echo "${DEMYX_ADMIN_USERNAME}:${DEMYX_ADMIN_PASSWORD_ENCRYPTED}" > /usr/local/lsws/admin/conf/htpasswd
-    echo lsadm:lsadm /usr/local/lsws/admin/conf/htpasswd
-    echo 600 /usr/local/lsws/admin/conf/htpasswd
+    chown lsadm:lsadm /usr/local/lsws/admin/conf/htpasswd
+    chmod 600 /usr/local/lsws/admin/conf/htpasswd
 }
 #
 #   Init.

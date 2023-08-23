@@ -2,6 +2,7 @@
 Entries before tag-* affects all code-server tags.
 
 ## 2023-08-23
+- Update variable [65deb2b](https://github.com/demyxsh/openlitespeed/commit/65deb2b35f81b7d66a9a96b7fc30aa6d38bb7f12)
 - Not sure why this was using echo but fixed [fa1b0df](https://github.com/demyxsh/openlitespeed/commit/fa1b0df019f23ec60f5430ce3684348f51a1b09c)
 - Misc updates [50df8a8](https://github.com/demyxsh/openlitespeed/commit/50df8a800e441985ec085b729806fedd8af6fd49)
 - Add --log flag for logrotate [968705b](https://github.com/demyxsh/openlitespeed/commit/968705be085238f87d28fe389fc253ef423bd007)

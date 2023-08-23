@@ -114,7 +114,7 @@ jobs:
         run: |
           DEMYX_OPENLITESPEED_DEBIAN_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} cat /etc/debian_version)"
           DEMYX_OPENLITESPEED_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} cat /usr/local/lsws/VERSION)"
-          DEMYX_OPENLITESPEED_LSPHP_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c '/usr/local/lsws/"$DEMYX_LSPHP_VERSION"/bin/lsphp -v' | head -1 | awk '{print $2}')"
+          DEMYX_OPENLITESPEED_LSPHP_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c '/usr/local/lsws/"$DEMYX_LSPHP"/bin/lsphp -v' | head -1 | awk '{print $2}')"
           DEMYX_JQ="$(jq ".debian = \"$DEMYX_OPENLITESPEED_DEBIAN_VERSION\" | .openlitespeed = \"$DEMYX_OPENLITESPEED_VERSION\" | .lsphp = \"$DEMYX_OPENLITESPEED_LSPHP_VERSION\"" version.json)"
 
           # Update versions

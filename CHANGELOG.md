@@ -1,6 +1,29 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2023-08-23
+- Not sure why this was using echo but fixed [fa1b0df](https://github.com/demyxsh/openlitespeed/commit/fa1b0df019f23ec60f5430ce3684348f51a1b09c)
+- Misc updates [50df8a8](https://github.com/demyxsh/openlitespeed/commit/50df8a800e441985ec085b729806fedd8af6fd49)
+- Add --log flag for logrotate [968705b](https://github.com/demyxsh/openlitespeed/commit/968705be085238f87d28fe389fc253ef423bd007)
+- Misc update [960a81d](https://github.com/demyxsh/openlitespeed/commit/960a81d9cd3f02ae394daa5cc447ce7cf9be8a66)
+- Change value to 7 [08ed891](https://github.com/demyxsh/openlitespeed/commit/08ed891e3eb959c37c24d24bb1471181a87c6372)
+- Misc updates [b5ab2f5](https://github.com/demyxsh/openlitespeed/commit/b5ab2f5c4b19399b1e994577822c28ffa49b00e7)
+- Add new scripts [2404874](https://github.com/demyxsh/openlitespeed/commit/2404874fb7a16dc953905e3a201fda732b1e10b0)
+- Add aaemnnosttv/wp-cli-login-command package [32cb3ec](https://github.com/demyxsh/openlitespeed/commit/32cb3ece06d3de41dca2263e4ae386b4c170d244)
+- Add missing lsphp package [4d038d0](https://github.com/demyxsh/openlitespeed/commit/4d038d08745b5d42dba3b2ad187c222633e3e5bf)
+- Set fallback for OLS version [0822539](https://github.com/demyxsh/openlitespeed/commit/0822539e61e5167332a262fee5d31be4738f7a37)
+- Purge unused package [3dbc651](https://github.com/demyxsh/openlitespeed/commit/3dbc651da9f596ff8171034bd2d7649955c0bac4)
+- Add new packages [63d6bf6](https://github.com/demyxsh/openlitespeed/commit/63d6bf66a2da962fbaab500d580ce181fcef5276)
+- Add new variables [d8412dd](https://github.com/demyxsh/openlitespeed/commit/d8412ddabc4005cc5191688caed5a194b7f488b8)
+- Switch to php's bullseye image [f100cb2](https://github.com/demyxsh/openlitespeed/commit/f100cb20caa4ba738da578993e3eea53ea0752a6)
+- Use new formatting and misc updates [805401d](https://github.com/demyxsh/openlitespeed/commit/805401dc955612974c21de8c94c2a029e46b8f92)
+- Install wp-cli-login-command package [20861df](https://github.com/demyxsh/openlitespeed/commit/20861df259feb741937fdd2e6b1dcf26c192863b)
+- Add missing variable [2c2cb9b](https://github.com/demyxsh/openlitespeed/commit/2c2cb9b59268d54e7f348f3291d275ce642804dd)
+- Add https labels [c25c676](https://github.com/demyxsh/openlitespeed/commit/c25c676dbbe7645b3fb22deee900e8aad829f75e)
+- Merge branch 'master' of github.com:demyxsh/openlitespeed [5e0d281](https://github.com/demyxsh/openlitespeed/commit/5e0d2816aa6ec57c7c39d811a33db123e94a91ca)
+- Add support for login package in wp-cli [a3412ab](https://github.com/demyxsh/openlitespeed/commit/a3412ab5267808a5742e1fd6f0c0e1688f6ab18d)
+- Update YML [51d490e](https://github.com/demyxsh/openlitespeed/commit/51d490eae19e8f5d8a8f37c6327e5f7eedb59046)
+
 ## 2022-08-05
 - Misc updates [fc6b804](https://github.com/demyxsh/openlitespeed/commit/fc6b804c1f4bb6808a8f2cfba9149a3d3150d6e7)
 - Add fallback for lsphp versions [2f58a1f](https://github.com/demyxsh/openlitespeed/commit/2f58a1f7fbd8842ab7214d2e461348abd8853662)

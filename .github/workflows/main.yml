@@ -43,6 +43,8 @@ jobs:
             -e DEMYX_ROOT_PASSWORD=demyx \
             demyx/mariadb
 
+          sleep 5
+
           docker run -d \
             --name=${{ env.DEMYX_REPOSITORY }} \
             --network=demyx \
@@ -51,26 +53,8 @@ jobs:
             -e DEMYX_DB_NAME=demyx \
             -e DEMYX_DB_USER=demyx \
             -e DEMYX_DB_PASSWORD=demyx \
+            -e DEMYX_DOMAIN=localhost \
             demyx/${{ env.DEMYX_REPOSITORY }}
-
-          sleep 5
-
-          docker exec ${{ env.DEMYX_REPOSITORY }} wp core install \
-            --admin_email=info@domain.tld \
-            --admin_password=demyx \
-            --admin_user=demyx \
-            --skip-email \
-            --title=demyx \
-            --url=http://localhost
-
-          sleep 5
-
-          DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c "wget -qO- http://localhost" 2>&1)"
-          if [[ "$DEMYX_TEST" == *"Hello world"* ]]; then
-            echo "Test demyx/${{ env.DEMYX_REPOSITORY }} passed"
-          else
-            exit 1
-          fi
 
           # tag-bedrock test
           docker run -d \
@@ -82,6 +66,8 @@ jobs:
             -e DEMYX_ROOT_PASSWORD=demyx \
             demyx/mariadb
 
+          sleep 5
+
           docker run -d \
             --name=${{ env.DEMYX_REPOSITORY }}_bedrock \
             --network=demyx \
@@ -90,23 +76,16 @@ jobs:
             -e DEMYX_DB_NAME=demyx \
             -e DEMYX_DB_USER=demyx \
             -e DEMYX_DB_PASSWORD=demyx \
+            -e DEMYX_DOMAIN=localhost \
             demyx/${{ env.DEMYX_REPOSITORY }}:bedrock
 
           sleep 5
 
-          docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock wp core install \
-            --admin_email=info@domain.tld \
-            --admin_password=demyx \
-            --admin_user=demyx \
-            --skip-email \
-            --title=demyx \
-            --url=http://localhost
+          DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c "wget -qO- http://localhost" 2>&1)"
+          DEMYX_TEST_BEDROCK="$(docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock sh -c "wget -qO- http://localhost" 2>&1)"
 
-          sleep 5
-
-          DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock sh -c "wget -qO- http://localhost" 2>&1)"
-          if [[ "$DEMYX_TEST" == *"Hello world"* ]]; then
-            echo "Test demyx/${{ env.DEMYX_REPOSITORY }}:bedrock passed"
+          if [[ "$DEMYX_TEST" == *"Hello world"* && "$DEMYX_TEST_BEDROCK" == *"Hello world"* ]]; then
+            echo "Tests passed."
           else
             exit 1
           fi

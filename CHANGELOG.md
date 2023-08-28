@@ -2,6 +2,7 @@
 Entries before tag-* affects all code-server tags.
 
 ## 2023-08-28
+- Add lsphp 8.1 [4b366c4](https://github.com/demyxsh/openlitespeed/commit/4b366c4d59e2337df31ce6098c40d941f61755d8)
 - Update logrotate conf [8f9e858](https://github.com/demyxsh/openlitespeed/commit/8f9e858cec052a37ac6671cdb78a0cd13945eba0)
 
 ## 2023-08-23

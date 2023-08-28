@@ -1,6 +1,9 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2023-08-28
+- Update logrotate conf [8f9e858](https://github.com/demyxsh/openlitespeed/commit/8f9e858cec052a37ac6671cdb78a0cd13945eba0)
+
 ## 2023-08-23
 - Update test commands [54cbb3d](https://github.com/demyxsh/openlitespeed/commit/54cbb3dacfdb3d9d69ae8daca2d6f268ec7f0ff9)
 - Update variable [65deb2b](https://github.com/demyxsh/openlitespeed/commit/65deb2b35f81b7d66a9a96b7fc30aa6d38bb7f12)

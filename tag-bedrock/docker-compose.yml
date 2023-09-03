@@ -137,6 +137,7 @@ services:
       - DEMYX_CONFIG=/etc/demyx
       - DEMYX_CRON=true
       - DEMYX_CRON_LOGROTATE_INTERVAL="0 0 * * *"
+      - DEMYX_CRON_TYPE=wget
       - DEMYX_CRON_WP_INTERVAL="*/5 * * * *"
       - DEMYX_CRAWLER_LOAD_LIMIT=5.2
       - DEMYX_CRAWLER_USLEEP=1000

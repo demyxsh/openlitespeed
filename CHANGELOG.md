@@ -1,6 +1,9 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2023-09-20
+- Prep for redis [576feff](https://github.com/demyxsh/openlitespeed/commit/576feff2fa0f74c0936d2edb0d79a0f01d0df85e)
+
 ## 2023-09-03
 - New variable DEMYX_CRON_TYPE [f79a33e](https://github.com/demyxsh/openlitespeed/commit/f79a33e62d8f94cd325b879713ba7943888cba60)
 

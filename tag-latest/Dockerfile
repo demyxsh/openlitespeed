@@ -1,4 +1,4 @@
-FROM php:cli-bullseye
+FROM php:cli-buster
 
 LABEL sh.demyx.image                            demyx/openlitespeed
 LABEL sh.demyx.maintainer                       Demyx <info@demyx.sh>
@@ -125,12 +125,14 @@ RUN set -ex; \
         "$DEMYX_LSPHP"-imagick \
         "$DEMYX_LSPHP"-intl \
         "$DEMYX_LSPHP"-mysql \
+        "$DEMYX_LSPHP"-redis \
         \
         lsphp81 \
         lsphp81-curl \
         lsphp81-imagick \
         lsphp81-intl \
-        lsphp81-mysql; \
+        lsphp81-mysql \
+        lsphp81-redis; \
     \
     ln -sf /usr/local/lsws/"$DEMYX_LSPHP"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5; \
     \

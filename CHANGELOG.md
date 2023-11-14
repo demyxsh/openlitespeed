@@ -1,6 +1,9 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2023-11-14
+- Disable installation of default themes/plugins when upgrading [f44ad25](https://github.com/demyxsh/openlitespeed/commit/f44ad25fc1cb81408142918f1cb8c30591eb10fb)
+
 ## 2023-09-20
 - Prep for redis [576feff](https://github.com/demyxsh/openlitespeed/commit/576feff2fa0f74c0936d2edb0d79a0f01d0df85e)
 

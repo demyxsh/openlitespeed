@@ -378,8 +378,13 @@ accessControl {
 extProcessor lsphp {
     type                                lsapi
     address                             uds://tmp/lshttpd/lsphp.sock
+    env                                 LSAPI_AVOID_FORK=$DEMYX_LSAPI_AVOID_FORK
+    env                                 LSAPI_CHILDREN=$DEMYX_LSAPI_CHILDREN
     env                                 LSAPI_EXTRA_CHILDREN=$(demyx_config_auto lsapi-extra-children)
+    env                                 LSAPI_MAX_IDLE=$DEMYX_LSAPI_MAX_IDLE
     env                                 LSAPI_MAX_IDLE_CHILDREN=$(demyx_config_auto lsapi-max-idle-children)
+    env                                 LSAPI_MAX_PROCESS_TIME=$DEMYX_LSAPI_MAX_PROCESS_TIME
+    env                                 LSAPI_MAX_REQS=$DEMYX_LSAPI_MAX_REQS
     env                                 CRAWLER_LOAD_LIMIT=$DEMYX_CRAWLER_LOAD_LIMIT
     env                                 CRAWLER_USLEEP=$DEMYX_CRAWLER_USLEEP
     $(demyx_config_env)

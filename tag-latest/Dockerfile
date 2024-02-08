@@ -8,6 +8,7 @@ LABEL sh.demyx.registry                         https://hub.docker.com/u/demyx
 
 # Set default variables
 ENV DEMYX                                       /demyx
+ENV DEMYX_BEDROCK                               false
 ENV DEMYX_ADMIN                                 /demyx/ols
 ENV DEMYX_ADMIN_IP                              ALL
 ENV DEMYX_ADMIN_PASSWORD                        demyx
@@ -31,7 +32,6 @@ ENV DEMYX_CRAWLER_LOAD_LIMIT                    5.2
 ENV DEMYX_CRAWLER_USLEEP                        1000
 ENV DEMYX_CRON                                  true
 ENV DEMYX_CRON_LOGROTATE_INTERVAL               "0 0 * * *"
-ENV DEMYX_CRON_TYPE                             wget
 ENV DEMYX_CRON_WP_INTERVAL                      "*/5 * * * *"
 ENV DEMYX_DB_HOST                               localhost
 ENV DEMYX_DB_NAME                               demyx
@@ -42,8 +42,11 @@ ENV DEMYX_LOG                                   /var/log/demyx
 ENV DEMYX_LOGROTATE                             daily
 ENV DEMYX_LOGROTATE_INTERVAL                    7
 ENV DEMYX_LOGROTATE_SIZE                        10M
-ENV DEMYX_LSAPI_CHILDREN                        2000
-ENV DEMYX_LSPHP                                 lsphp80
+ENV DEMYX_LSAPI_AVOID_FORK                      0
+ENV DEMYX_LSAPI_CHILDREN                        35
+ENV DEMYX_LSAPI_MAX_IDLE                        300
+ENV DEMYX_LSAPI_MAX_PROCESS_TIME                3600
+ENV DEMYX_LSAPI_MAX_REQS                        10000
 ENV DEMYX_MAX_EXECUTION_TIME                    300
 ENV DEMYX_MEMORY                                256M
 ENV DEMYX_OPCACHE                               true

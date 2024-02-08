@@ -47,6 +47,7 @@ ENV DEMYX_LSAPI_CHILDREN                        35
 ENV DEMYX_LSAPI_MAX_IDLE                        300
 ENV DEMYX_LSAPI_MAX_PROCESS_TIME                3600
 ENV DEMYX_LSAPI_MAX_REQS                        10000
+ENV DEMYX_LSPHP                                 lsphp81
 ENV DEMYX_MAX_EXECUTION_TIME                    300
 ENV DEMYX_MEMORY                                256M
 ENV DEMYX_OPCACHE                               true
@@ -130,12 +131,12 @@ RUN set -ex; \
         "$DEMYX_LSPHP"-mysql \
         "$DEMYX_LSPHP"-redis \
         \
-        lsphp81 \
-        lsphp81-curl \
-        lsphp81-imagick \
-        lsphp81-intl \
-        lsphp81-mysql \
-        lsphp81-redis; \
+        lsphp82 \
+        lsphp82-curl \
+        lsphp82-imagick \
+        lsphp82-intl \
+        lsphp82-mysql \
+        lsphp82-redis; \
     \
     ln -sf /usr/local/lsws/"$DEMYX_LSPHP"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5; \
     \

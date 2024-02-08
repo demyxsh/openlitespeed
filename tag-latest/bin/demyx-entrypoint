@@ -24,6 +24,9 @@ demyx_entrypoint() {
     # Start OLS
     sudo -E demyx-lsws
 
+    # Reset permissions
+    sudo -E demyx-sudo permissions
+
     # Keeps container alive
     tail -f "$DEMYX_LOG"/ols.access.log "$DEMYX_LOG"/ols.error.log
 }

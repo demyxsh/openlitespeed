@@ -1,6 +1,23 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2024-02-07
+- Update description with shameless plug and support link [3a244ae](https://github.com/demyxsh/openlitespeed/commit/3a244ae647b065e73f5bdceb394c80cb9ecb53c0)
+- Merge branch 'master' of github.com:demyxsh/openlitespeed [760df80](https://github.com/demyxsh/openlitespeed/commit/760df80aff4e5aba37c0cee4eeadd41f155f0706)
+- Misc updates [a778363](https://github.com/demyxsh/openlitespeed/commit/a7783636ef0b5c39134d8108560b50643a5c593b)
+- Update lsphp versions and set default to 8.1 [d89aa48](https://github.com/demyxsh/openlitespeed/commit/d89aa4885a284c4dc6077549341d6732ffb51554)
+- Use tidy package to scrape the latest stable version in openlitespeed's downloads page [6144e43](https://github.com/demyxsh/openlitespeed/commit/6144e43075bafcf74b58b0d5a3b4d16b95a186a9)
+- Add new core packages [089c0ef](https://github.com/demyxsh/openlitespeed/commit/089c0efe81cf11190cd08048f2133f205097f145)
+- Update base image to bullseye and set php to 8.1 [00f1238](https://github.com/demyxsh/openlitespeed/commit/00f1238c413ad20d4b4cca994f789fa7bfa8c7d6)
+- Include custom volume [7540bdc](https://github.com/demyxsh/openlitespeed/commit/7540bdc284a7d653c3dbb13c6d7436b1ebfc5ea0)
+- Add/update/remove environment variables [e1b9d9d](https://github.com/demyxsh/openlitespeed/commit/e1b9d9d9e54dbe4e377e53d3cd8c04c6573ec518)
+- New function to reset permissions at container start and hourly cron [2218a7b](https://github.com/demyxsh/openlitespeed/commit/2218a7b65937e040f9149f006c4cca770ae9184d)
+- Put back wp-cli as the main wp cron with a delay [c97e8d4](https://github.com/demyxsh/openlitespeed/commit/c97e8d474ff1865276f455f304a1710cb76cc660)
+- Fix rewrite rule for specific strings [b05d197](https://github.com/demyxsh/openlitespeed/commit/b05d1979d2b11e50365c978f36a00a3831a37815)
+- Use new function to include all demyx environment variables  for lsphp [842678d](https://github.com/demyxsh/openlitespeed/commit/842678dabcce6f74848fc0d2a9c16a5be5b06091)
+- New function to auto calculate values for `LSAPI_EXTRA_CHILDREN` and `LSAPI_MAX_IDLE_CHILDREN` [ad96bad](https://github.com/demyxsh/openlitespeed/commit/ad96bada1859109f6d435a17c7316d3c648bf1b9)
+- Update sed for WP_HOME [7e5c232](https://github.com/demyxsh/openlitespeed/commit/7e5c23290d837347f103ab39567299ef6c6326ea)
+
 ## 2023-11-14
 - Disable installation of default themes/plugins when upgrading [f44ad25](https://github.com/demyxsh/openlitespeed/commit/f44ad25fc1cb81408142918f1cb8c30591eb10fb)
 

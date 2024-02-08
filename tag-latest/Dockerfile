@@ -1,4 +1,4 @@
-FROM php:cli-buster
+FROM php:8.1-cli-bullseye
 
 LABEL sh.demyx.image                            demyx/openlitespeed
 LABEL sh.demyx.maintainer                       Demyx <info@demyx.sh>

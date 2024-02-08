@@ -77,7 +77,9 @@ ENV OPENLITESPEED_LOG                           /var/log/demyx
 # gcc libxml2-dev pkg-config libssl-dev zlib1g-dev libcurl4-gnutls-dev libpng-dev libzip-dev make
 RUN set -ex; \
     apt-get update && apt-get install -y --no-install-recommends \
+        bc \
         ca-certificates \
+        curl \
         default-mysql-client \
         ed \
         jq \

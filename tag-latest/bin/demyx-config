@@ -535,7 +535,6 @@ demyx_config_vhconf() {
 
     # Support for bedrock tag
     if [[ "${DEMYX_BEDROCK:-}" = true ]]; then
-    DEMYX_VHCONF_BLADE="|blade.php"
     DEMYX_VHCONF_REWRITES="# Bedrock
                 RewriteRule ^app/uploads/[^/]+\.php\$ - [F,L]
                 RewriteRule (^\.)blade.php\$ - [F,L]
@@ -600,7 +599,7 @@ context / {
         X-Content-Type-Options nosniff; always
         X-Download-Options noopen
         X-Frame-Options SAMEORIGIN
-        X-Powered-By Demyx
+        X-Powered-By Demyx - https://demyx.sh
         X-XSS-Protection 1; mode=block
     END_extraHeaders
 

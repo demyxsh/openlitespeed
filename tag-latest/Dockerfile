@@ -176,10 +176,12 @@ COPY bin /usr/local/bin
 RUN set -ex; \
     # sudoers
     echo "demyx ALL=(ALL) NOPASSWD:SETENV: /usr/local/lsws/bin/lswsctrl, /usr/local/bin/demyx-admin, /usr/local/bin/demyx-config, /usr/local/bin/demyx-htpasswd, /usr/local/bin/demyx-lsws, /usr/local/bin/demyx-sudo" > /etc/sudoers.d/demyx; \
+    \
     # Set ownership
     chown -R root:root /usr/local/bin; \
     \
-    # Clear /tmp
+    # Cleanup
+    rm -rf /var/lib/apt/lists/*; \
     rm -rf /tmp/*
 
 EXPOSE 80 8080

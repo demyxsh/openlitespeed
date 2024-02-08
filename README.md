@@ -19,7 +19,7 @@ Project: [github.com/demyxsh/demyx](https://github.com/demyxsh/demyx)
 <br>
 Homepage: [demyx.sh](https://demyx.sh)
 
-[![Demyx Discord](https://discordapp.com/api/guilds/1152828583446859818/widget.png?style=banner2)](https://www.patreon.com/bePatron?u=23406156)
+[![Demyx Discord](https://discordapp.com/api/guilds/1152828583446859818/widget.png?style=banner2)](https://demyx.sh/discord)
 
 <a href="https://demyx.sh/sponsor-buymeacoffee" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 

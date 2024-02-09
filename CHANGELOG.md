@@ -1,7 +1,11 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
-## 2024-02-07
+## 2024-02-08
+- Update shameless plug [dc4d291](https://github.com/demyxsh/openlitespeed/commit/dc4d2919c1b344ed963d560e6c4ac75b7f1870f3)
+- Double upload limit [4aa1aed](https://github.com/demyxsh/openlitespeed/commit/4aa1aed69e6c803eac5390f6fffdb76ad1fc3fd5)
+- Fix wrong link [ac4dbe2](https://github.com/demyxsh/openlitespeed/commit/ac4dbe21acfe9b603649cb4b3a0b8abee7b36b86)
+- 2024-02-07 [4858c1d](https://github.com/demyxsh/openlitespeed/commit/4858c1d50ac25b072b4c1823d6b6daa261c2af74)
 - Update description with shameless plug and support link [3a244ae](https://github.com/demyxsh/openlitespeed/commit/3a244ae647b065e73f5bdceb394c80cb9ecb53c0)
 - Merge branch 'master' of github.com:demyxsh/openlitespeed [760df80](https://github.com/demyxsh/openlitespeed/commit/760df80aff4e5aba37c0cee4eeadd41f155f0706)
 - Misc updates [a778363](https://github.com/demyxsh/openlitespeed/commit/a7783636ef0b5c39134d8108560b50643a5c593b)

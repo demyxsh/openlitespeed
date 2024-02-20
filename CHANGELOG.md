@@ -1,7 +1,10 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
-## 2024-02-08
+## 2024-02-20
+- Allow users to add custom cron [6dc1c1b](https://github.com/demyxsh/openlitespeed/commit/6dc1c1b1ec2b9ea9bbe892c4d7ac8f927d576a34)
+- Include missing create rule [b20ad02](https://github.com/demyxsh/openlitespeed/commit/b20ad02f065e3051fd69ce71305a8bd380371743)
+- 2024-02-08 [20ce045](https://github.com/demyxsh/openlitespeed/commit/20ce0458bf86d5bb22921f21a580f0d72ffae79e)
 - Update shameless plug [dc4d291](https://github.com/demyxsh/openlitespeed/commit/dc4d2919c1b344ed963d560e6c4ac75b7f1870f3)
 - Double upload limit [4aa1aed](https://github.com/demyxsh/openlitespeed/commit/4aa1aed69e6c803eac5390f6fffdb76ad1fc3fd5)
 - Fix wrong link [ac4dbe2](https://github.com/demyxsh/openlitespeed/commit/ac4dbe21acfe9b603649cb4b3a0b8abee7b36b86)

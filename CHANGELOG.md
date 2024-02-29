@@ -1,7 +1,9 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
-## 2024-02-20
+## 2024-02-28
+- Fix reboot container crash [9eff32e](https://github.com/demyxsh/openlitespeed/commit/9eff32e35d8401963114ceabc87d09414c87f88d)
+- 2024-02-20 [293d00b](https://github.com/demyxsh/openlitespeed/commit/293d00b6bb9e108bf073b19039d1ace61347d401)
 - Allow users to add custom cron [6dc1c1b](https://github.com/demyxsh/openlitespeed/commit/6dc1c1b1ec2b9ea9bbe892c4d7ac8f927d576a34)
 - Include missing create rule [b20ad02](https://github.com/demyxsh/openlitespeed/commit/b20ad02f065e3051fd69ce71305a8bd380371743)
 - 2024-02-08 [20ce045](https://github.com/demyxsh/openlitespeed/commit/20ce0458bf86d5bb22921f21a580f0d72ffae79e)

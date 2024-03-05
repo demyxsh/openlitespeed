@@ -1,6 +1,9 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2024-03-05
+- Remove shorthand since it was causing the container to crash [3ee3f83](https://github.com/demyxsh/openlitespeed/commit/3ee3f83daddcb0766be51e29f1c212c4b892d523)
+
 ## 2024-02-28
 - Fix reboot container crash [9eff32e](https://github.com/demyxsh/openlitespeed/commit/9eff32e35d8401963114ceabc87d09414c87f88d)
 - 2024-02-20 [293d00b](https://github.com/demyxsh/openlitespeed/commit/293d00b6bb9e108bf073b19039d1ace61347d401)

@@ -1,6 +1,6 @@
 {
   "debian": "11.9",
   "openlitespeed": "1.8.1",
-  "lsphp": "8.1.28",
-  "lsphp81": "8.1.28"
+  "lsphp": "8.1.29",
+  "lsphp81": "8.1.29"
 }

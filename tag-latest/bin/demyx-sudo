@@ -49,7 +49,9 @@ demyx_sudo_cron() {
 	chmod 0644 "$DEMYX_SUDO_CRON_FILE"
 	crontab -u demyx "$DEMYX_SUDO_CRON_FILE"
 
-	[[ "$DEMYX_CRON" = true && -z "$DEMYX_SUDO_CRON" ]] && cron
+	if [[ "${DEMYX_CRON}" = true && -z "${DEMYX_SUDO_CRON}" ]]; then
+		cron
+	fi
 }
 #
 #	Logs.

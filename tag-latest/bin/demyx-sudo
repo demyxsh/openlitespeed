@@ -36,6 +36,12 @@ demyx_sudo_cron() {
 		echo "$DEMYX_CRON_LOGROTATE_INTERVAL sudo -E demyx-sudo logrotate"
 		echo "0 * * * * /usr/bin/sudo -E /usr/local/bin/demyx-sudo permissions"
 
+		if [[ "${DEMYX_BEDROCK}" = true ]]; then
+			echo "${DEMYX_CRON_WP_INTERVAL} /usr/local/bin/php ${DEMYX}/web/wp/wp-cron.php"
+		else
+			echo "${DEMYX_CRON_WP_INTERVAL} /usr/local/bin/php ${DEMYX}/wp-cron.php"
+		fi
+
 		# User defined cron
 		if [[ -f "$DEMYX_CONFIG"/custom/cron ]]; then
 			cat < "$DEMYX_CONFIG"/custom/cron

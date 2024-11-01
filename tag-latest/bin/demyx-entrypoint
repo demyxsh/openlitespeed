@@ -34,3 +34,13 @@ demyx_entrypoint() {
 #   Init.
 #
 demyx_entrypoint
+#
+#   Exec.
+#
+if [[ -n "$(pgrep lshttpd || true)" ]]; then
+    sudo -E demyx-lsws restart
+else
+    # Start OLS
+    sudo -E demyx-lsws
+    exec tail -f "${DEMYX_LOG}/ols.access.log" "${DEMYX_LOG}/ols.error.log"
+fi

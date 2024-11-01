@@ -23,7 +23,8 @@ demyx_install_config() {
 
     if [[ ! -d "$DEMYX"/wp-admin ]]; then
         echo "[demyx] WordPress is missing, copying files now ..."
-        tar -xzf "$DEMYX_CONFIG"/wordpress.tgz -C "$DEMYX"
+        wp core download --path="${DEMYX}"
+        mv "${DEMYX}/wp-config-sample.php" "${DEMYX}/wp-config.php"
     fi
 
     DEMYX_INSTALL_CONFIG_CHECK="$(grep "username_here" "$DEMYX_WP_CONFIG" || true)"

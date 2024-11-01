@@ -46,7 +46,6 @@ demyx_sudo_cron() {
 		fi
 	} | sed 's|"||g' >> "$DEMYX_SUDO_CRON_FILE"
 
-	chmod 0644 "$DEMYX_SUDO_CRON_FILE"
 	crontab -u demyx "$DEMYX_SUDO_CRON_FILE"
 
 	if [[ "${DEMYX_CRON}" = true && -z "${DEMYX_SUDO_CRON}" ]]; then

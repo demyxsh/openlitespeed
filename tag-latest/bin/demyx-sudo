@@ -31,9 +31,7 @@ demyx_sudo_cron() {
 	local DEMYX_SUDO_CRON_FILE=/etc/cron.d/demyx
 
 	{
-		printenv | sed 's/^\(.*\)$/\1/g'
-		echo "$DEMYX_CRON_WP_INTERVAL demyx-cron wp"
-		echo "$DEMYX_CRON_LOGROTATE_INTERVAL sudo -E demyx-sudo logrotate"
+		echo "$DEMYX_CRON_LOGROTATE_INTERVAL /usr/bin/sudo -E /usr/local/bin/demyx-sudo logrotate"
 		echo "0 * * * * /usr/bin/sudo -E /usr/local/bin/demyx-sudo permissions"
 
 		if [[ "${DEMYX_BEDROCK}" = true ]]; then

@@ -68,10 +68,6 @@ ENV DEMYX_WP_USERNAME                           demyx
 ENV DEMYX_XMLRPC                                false
 ENV PATH                                        "${PATH}:/usr/local/lsws/${DEMYX_LSPHP}/bin"
 ENV TZ                                          America/Los_Angeles
-# Support for old variables
-ENV OPENLITESPEED_ROOT                          /demyx
-ENV OPENLITESPEED_CONFIG                        /etc/demyx
-ENV OPENLITESPEED_LOG                           /var/log/demyx
 
 # Packages
 # Install these packages if you want to recompile PHP

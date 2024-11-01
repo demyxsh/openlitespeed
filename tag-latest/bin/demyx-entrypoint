@@ -13,22 +13,13 @@ demyx_entrypoint() {
     sudo -E demyx-config
 
     # Start crond
-    sudo -E demyx-sudo cron
+    sudo -E demyx-sudo
 
     # OpenLiteSpeed admin
     sudo -E demyx-admin
 
     # OpenLiteSpeed htpasswd
     sudo -E demyx-htpasswd
-
-    # Start OLS
-    sudo -E demyx-lsws
-
-    # Reset permissions
-    sudo -E demyx-sudo permissions
-
-    # Keeps container alive
-    tail -f "$DEMYX_LOG"/ols.access.log "$DEMYX_LOG"/ols.error.log
 }
 #
 #   Init.

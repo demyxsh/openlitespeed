@@ -12,11 +12,13 @@ demyx_sudo() {
 		cron)
 			demyx_sudo_cron
 		;;
-		logrotate)
-			demyx_sudo_logrotate
+		permission)
+			demyx_sudo_permission 
 		;;
-		permissions)
-			demyx_sudo_permissions
+		*)
+			# Execute all sudo functions
+			demyx_sudo_cron
+			demyx_sudo_permission
 		;;
 	esac
 }

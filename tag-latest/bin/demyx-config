@@ -418,8 +418,7 @@ if ( file_exists( getenv( 'DEMYX_CONFIG' ) . '/demyx.php' ) ) {\n\
         ln -sf "${DEMYX_CONFIG}/custom/wordpress/demyx.php" "${DEMYX_CONFIG}/demyx.php"
     elif [[ ! -f "${DEMYX_CONFIG}/custom/wordpress/demyx.php" ]]; then
         {
-            echo "
-<?php
+            echo "<?php
 /**
 Demyx customizations.
 
@@ -431,8 +430,7 @@ Demyx customizations.
  "
 
         if [[ "${DEMYX_BEDROCK}" = false ]]; then
-            echo "
-// If we're behind a proxy server and using HTTPS, we need to alert WordPress of that fact.
+            echo "// If we're behind a proxy server and using HTTPS, we need to alert WordPress of that fact.
 // See also http://codex.wordpress.org/Administration_Over_SSL#Using_a_Reverse_Proxy.
 if ( isset( \$_SERVER['HTTP_X_FORWARDED_PROTO'] ) && 'https' === \$_SERVER['HTTP_X_FORWARDED_PROTO'] ) {
 	\$_SERVER['HTTPS'] = 'on';
@@ -455,8 +453,7 @@ define( 'DISABLE_WP_CRON', true );
             "
         fi
 
-        echo "
-// Redis Cache - https://wordpress.org/plugins/redis-cache/
+        echo "// Redis Cache - https://wordpress.org/plugins/redis-cache/
 define( 'WP_REDIS_HOST', '${DEMYX_DB_HOST/db/rd}' );
 define( 'WP_REDIS_PORT', 6379 );
 define( 'WP_REDIS_PREFIX', '${DEMYX_DOMAIN}' );

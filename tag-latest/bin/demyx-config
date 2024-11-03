@@ -117,7 +117,7 @@ demyx_config_httpd() {
         ln -sf "${DEMYX_CONFIG}/custom/wordpress/httpd_config.conf" "${DEMYX_CONFIG}/ols/httpd_config.conf"
     elif [[ ! -f "${DEMYX_CONFIG}/custom/wordpress/httpd_config.conf" ]]; then
         cat << EOF > "${DEMYX_CONFIG}/ols/httpd_config.conf"
-    echo "# Demyx
+# Demyx
 # https://demyx.sh
 
 serverName                              Demyx
@@ -528,7 +528,7 @@ demyx_config_vhconf() {
         ln -sf "${DEMYX_CONFIG}/custom/wordpress/vhconf.conf" "${DEMYX_CONFIG}/ols/vhconf.conf"
     elif [[ ! -f "${DEMYX_CONFIG}/custom/wordpress/vhconf.conf" ]]; then
         cat << EOF > "${DEMYX_CONFIG}/ols/vhconf.conf"
-    echo "# Demyx
+# Demyx
 # https://demyx.sh
 
 docRoot                                 $DEMYX_CONFIG_VHCONF

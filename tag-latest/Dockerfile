@@ -1,4 +1,4 @@
-FROM php:8.2-cli-bullseye
+FROM php:8.3-cli-bullseye
 
 LABEL sh.demyx.image                            demyx/openlitespeed
 LABEL sh.demyx.maintainer                       Demyx <info@demyx.sh>
@@ -47,7 +47,7 @@ ENV DEMYX_LSAPI_CHILDREN                        35
 ENV DEMYX_LSAPI_MAX_IDLE                        300
 ENV DEMYX_LSAPI_MAX_PROCESS_TIME                3600
 ENV DEMYX_LSAPI_MAX_REQS                        10000
-ENV DEMYX_LSPHP                                 lsphp82
+ENV DEMYX_LSPHP                                 lsphp83
 ENV DEMYX_MAX_EXECUTION_TIME                    300
 ENV DEMYX_MEMORY                                256M
 ENV DEMYX_OPCACHE                               true
@@ -112,8 +112,18 @@ RUN set -ex; \
 RUN set -ex; \
     apt-get install -y --no-install-recommends tidy; \
     \
-    DEMYX_OLS_VERSION="$(wget -qO- https://openlitespeed.org/downloads/ | tidy -i 2>&1 | grep "<h6>" | head -1 | awk -F '[V]' '{print $2}' | sed 's| ||g' | sed 's|<.*||g')"; \
-    curl -sL https://openlitespeed.org/packages/openlitespeed-"$DEMYX_OLS_VERSION".tgz -o /tmp/openlitespeed-"$DEMYX_OLS_VERSION".tgz; \
+    # Efficient version detection with fallback
+    DEMYX_OLS_VERSION="$(wget -qO- https://openlitespeed.org/downloads/ | tidy -i 2>&1 | grep "<h6>" | head -1 | awk -F '[V]' '{print $2}' | sed 's| ||g' | sed 's|<.*||g' || wget -qO- https://openlitespeed.org/downloads/ | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' | head -1)"; \
+    \
+    # Validate and display version
+    if [ -z "$DEMYX_OLS_VERSION" ] || ! echo "$DEMYX_OLS_VERSION" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' > /dev/null; then \
+        echo "Error: Could not determine OpenLiteSpeed version" >&2; \
+        exit 1; \
+    fi; \
+    echo "Installing OpenLiteSpeed version: $DEMYX_OLS_VERSION"; \
+    \
+    # Download and install OpenLiteSpeed
+    curl -fsSL "https://openlitespeed.org/packages/openlitespeed-$DEMYX_OLS_VERSION.tgz" -o /tmp/openlitespeed-"$DEMYX_OLS_VERSION".tgz; \
     tar -xzf /tmp/openlitespeed-"$DEMYX_OLS_VERSION".tgz -C /tmp; \
     cd /tmp/openlitespeed && ./install.sh; \
     \
@@ -127,12 +137,12 @@ RUN set -ex; \
         "$DEMYX_LSPHP"-mysql \
         "$DEMYX_LSPHP"-redis \
         \
-        lsphp83 \
-        lsphp83-curl \
-        lsphp83-imagick \
-        lsphp83-intl \
-        lsphp83-mysql \
-        lsphp83-redis; \
+        lsphp82 \
+        lsphp82-curl \
+        lsphp82-imagick \
+        lsphp82-intl \
+        lsphp82-mysql \
+        lsphp82-redis; \
     \
     ln -sf /usr/local/lsws/"$DEMYX_LSPHP"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5; \
     \
@@ -149,10 +159,14 @@ RUN set -ex; \
 
 # WordPress
 RUN set -ex; \
+    \    
+    wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -qO /home/demyx/wp; \
+    chmod +x /home/demyx/wp; \
     \
-    wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar -qO /usr/local/bin/wp; \
+    echo "#!/bin/bash\nexec php -d memory_limit=\"${DEMYX_MEMORY}\" /home/demyx/wp \"\$@\"" > /usr/local/bin/wp; \
     chmod +x /usr/local/bin/wp; \
     \
+    # Install wp-cli-login-command
     su -c "wp package install aaemnnosttv/wp-cli-login-command; \
         wget https://raw.githubusercontent.com/aaemnnosttv/wp-cli-login-command/master/plugin/wp-cli-login-server.php -qO ${DEMYX_CONFIG}/wp-cli-login-server.php" -s /bin/sh demyx
 

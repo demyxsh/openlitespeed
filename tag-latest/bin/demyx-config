@@ -6,13 +6,13 @@ set -eEuo pipefail
 #   Main.
 #
 demyx_config() {
-    # Default to lsphp82
+    # Default to lsphp83
     case "$DEMYX_LSPHP" in
-        83|8.3)
-            DEMYX_LSPHP=lsphp83
+        82|8.2)
+            DEMYX_LSPHP=lsphp82
         ;;
         *)
-            DEMYX_LSPHP=lsphp82
+            DEMYX_LSPHP=lsphp83
         ;;
     esac
 
@@ -465,10 +465,14 @@ define( 'WP_REDIS_READ_TIMEOUT', 1 );
 
 // Disable installation of default themes/plugins when upgrading
 define( 'CORE_UPGRADE_SKIP_NEW_BUNDLED', true );
+        "
 
+        if [[ "${DEMYX_BEDROCK}" = false ]]; then
+            echo "
 // Mitigate DoS attack CVE with WordPress script concatenation
 define( 'CONCATENATE_SCRIPTS', false );
         "
+        fi
 
         } > "${DEMYX_CONFIG}/demyx.php"
     fi

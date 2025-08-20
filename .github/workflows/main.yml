@@ -93,9 +93,9 @@ jobs:
         run: |
           DEMYX_OPENLITESPEED_DEBIAN_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} cat /etc/debian_version)"
           DEMYX_OPENLITESPEED_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} cat /usr/local/lsws/VERSION)"
-          DEMYX_OPENLITESPEED_LSPHP_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c '/usr/local/lsws/"$DEMYX_LSPHP"/bin/php -v' | head -1 | awk '{print $2}')"
-          DEMYX_OPENLITESPEED_LSPHP_LATEST_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c '/usr/local/lsws/lsphp81/bin/php -v' | head -1 | awk '{print $2}')"
-          DEMYX_JQ="$(jq ".debian = \"$DEMYX_OPENLITESPEED_DEBIAN_VERSION\" | .openlitespeed = \"$DEMYX_OPENLITESPEED_VERSION\" | .lsphp = \"$DEMYX_OPENLITESPEED_LSPHP_VERSION\" | .lsphp81 = \"$DEMYX_OPENLITESPEED_LSPHP_LATEST_VERSION\"" version.json)"
+          DEMYX_OPENLITESPEED_LSPHP_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c '/usr/local/lsws/lsphp82/bin/php -v' | head -1 | awk '{print $2}')"
+          DEMYX_OPENLITESPEED_LSPHP_LATEST_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c '/usr/local/lsws/lsphp83/bin/php -v' | head -1 | awk '{print $2}')"
+          DEMYX_JQ="$(jq ".debian = \"$DEMYX_OPENLITESPEED_DEBIAN_VERSION\" | .openlitespeed = \"$DEMYX_OPENLITESPEED_VERSION\" | .lsphp82 = \"$DEMYX_OPENLITESPEED_LSPHP_VERSION\" | .lsphp83 = \"$DEMYX_OPENLITESPEED_LSPHP_LATEST_VERSION\"" version.json)"
 
           # Update versions
           echo "$DEMYX_JQ" > version.json

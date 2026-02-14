@@ -1,6 +1,9 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2026-02-13
+- Update logic to grab latest OLS version from the downloads page [4280f9f](https://github.com/demyxsh/openlitespeed/commit/4280f9f94a2ea7d05daeba65dc89db3c0b69a7bf)
+
 ## 2025-07-28
 - Rename compose files [36a44e7](https://github.com/demyxsh/openlitespeed/commit/36a44e7cbafe27f6679094357a028de272c38361)
 - Remove old variables [d6a05af](https://github.com/demyxsh/openlitespeed/commit/d6a05afa0b734cfe578bf938d92077f88af1a5bb)

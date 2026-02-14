@@ -110,16 +110,20 @@ RUN set -ex; \
 
 # OpenLiteSpeed
 RUN set -ex; \
-    apt-get install -y --no-install-recommends tidy; \
-    \
     # Efficient version detection with fallback
-    DEMYX_OLS_VERSION="$(wget -qO- https://openlitespeed.org/downloads/ | tidy -i 2>&1 | grep "<h6>" | head -1 | awk -F '[V]' '{print $2}' | sed 's| ||g' | sed 's|<.*||g' || wget -qO- https://openlitespeed.org/downloads/ | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+' | head -1)"; \
+    DEMYX_OLS_VERSION="$(wget -qO- https://openlitespeed.org/downloads/ \
+        | tr '\n' ' ' \
+        | grep -oE 'OpenLiteSpeed[[:space:]]*V[[:space:]]*[0-9]+\.[0-9]+\.[0-9]+' \
+        | head -1 \
+        | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' \
+        || wget -qO- https://openlitespeed.org/downloads/ | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)"; \
     \
     # Validate and display version
     if [ -z "$DEMYX_OLS_VERSION" ] || ! echo "$DEMYX_OLS_VERSION" | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' > /dev/null; then \
         echo "Error: Could not determine OpenLiteSpeed version" >&2; \
         exit 1; \
     fi; \
+    \
     echo "Installing OpenLiteSpeed version: $DEMYX_OLS_VERSION"; \
     \
     # Download and install OpenLiteSpeed
@@ -154,8 +158,7 @@ RUN set -ex; \
     ln -sf "$DEMYX_CONFIG"/ols/admin_config.conf /usr/local/lsws/admin/conf/admin_config.conf; \
     ln -s "$DEMYX_CONFIG"/ols /usr/local/lsws/conf/vhosts; \
     \
-    # Remove one time use package
-    apt-get purge tidy -y
+    true
 
 # WordPress
 RUN set -ex; \

@@ -1,6 +1,12 @@
 # CHANGELOG
 Entries before tag-* affects all code-server tags.
 
+## 2026-05-09
+- Update `tag-latest` base image from PHP 8.3 to PHP 8.4 and set default `DEMYX_LSPHP` to `lsphp84`
+- Update `tag-latest/bin/demyx-config` to default to `lsphp84` and support `8.4` input
+- Update `compose.yml` and `tag-bedrock/compose.yml` default `DEMYX_LSPHP` from `lsphp82` to `lsphp84`
+- Add fallback logic for `wp package install aaemnnosttv/wp-cli-login-command` to handle GitHub auth/rate-limit failures during build
+
 ## 2026-02-13
 - Update logic to grab latest OLS version from the downloads page [4280f9f](https://github.com/demyxsh/openlitespeed/commit/4280f9f94a2ea7d05daeba65dc89db3c0b69a7bf)
 

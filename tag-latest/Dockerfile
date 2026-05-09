@@ -1,4 +1,4 @@
-FROM php:8.3-cli-bullseye
+FROM php:8.4-cli-bullseye
 
 LABEL sh.demyx.image                            demyx/openlitespeed
 LABEL sh.demyx.maintainer                       Demyx <info@demyx.sh>
@@ -47,7 +47,7 @@ ENV DEMYX_LSAPI_CHILDREN                        35
 ENV DEMYX_LSAPI_MAX_IDLE                        300
 ENV DEMYX_LSAPI_MAX_PROCESS_TIME                3600
 ENV DEMYX_LSAPI_MAX_REQS                        10000
-ENV DEMYX_LSPHP                                 lsphp83
+ENV DEMYX_LSPHP                                 lsphp84
 ENV DEMYX_MAX_EXECUTION_TIME                    300
 ENV DEMYX_MEMORY                                256M
 ENV DEMYX_OPCACHE                               true
@@ -141,12 +141,12 @@ RUN set -ex; \
         "$DEMYX_LSPHP"-mysql \
         "$DEMYX_LSPHP"-redis \
         \
-        lsphp82 \
-        lsphp82-curl \
-        lsphp82-imagick \
-        lsphp82-intl \
-        lsphp82-mysql \
-        lsphp82-redis; \
+        lsphp83 \
+        lsphp83-curl \
+        lsphp83-imagick \
+        lsphp83-intl \
+        lsphp83-mysql \
+        lsphp83-redis; \
     \
     ln -sf /usr/local/lsws/"$DEMYX_LSPHP"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5; \
     \
@@ -169,8 +169,11 @@ RUN set -ex; \
     echo "#!/bin/bash\nexec php -d memory_limit=\"${DEMYX_MEMORY}\" /home/demyx/wp \"\$@\"" > /usr/local/bin/wp; \
     chmod +x /usr/local/bin/wp; \
     \
-    # Install wp-cli-login-command
-    su -c "wp package install aaemnnosttv/wp-cli-login-command; \
+    # Install wp-cli-login-command with fallback (non-fatal in CI/rate-limited envs)
+    su -c "git config --global url.https://github.com/.insteadOf git@github.com:; \
+        wp package install aaemnnosttv/wp-cli-login-command || \
+        wp package install https://github.com/aaemnnosttv/wp-cli-login-command/archive/refs/heads/master.zip || \
+        echo '[demyx] wp package install skipped (github auth/rate limit)'; \
         wget https://raw.githubusercontent.com/aaemnnosttv/wp-cli-login-command/master/plugin/wp-cli-login-server.php -qO ${DEMYX_CONFIG}/wp-cli-login-server.php" -s /bin/sh demyx
 
 # Imports

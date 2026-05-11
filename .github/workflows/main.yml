@@ -14,9 +14,9 @@ jobs:
       DEMYX_REPOSITORY: openlitespeed
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Login
-        uses: docker/login-action@v1
+        uses: docker/login-action@v3
         with:
           username: demyx
           password: ${{ secrets.DOCKER_TOKEN }}
@@ -31,6 +31,77 @@ jobs:
         id: test
         shell: 'script -q -e -c "bash {0}"'
         run: |
+          demyx_test_logs() {
+            echo "==== docker ps -a ===="
+            docker ps -a || true
+            echo ""
+
+            for CONTAINER in demyx_db ${{ env.DEMYX_REPOSITORY }} demyx_db_bedrock ${{ env.DEMYX_REPOSITORY }}_bedrock; do
+              echo "==== logs: ${CONTAINER} ===="
+              docker logs "${CONTAINER}" || true
+              echo ""
+            done
+
+            for CONTAINER in ${{ env.DEMYX_REPOSITORY }} ${{ env.DEMYX_REPOSITORY }}_bedrock; do
+              echo "==== OpenLiteSpeed logs: ${CONTAINER} ===="
+              docker exec "${CONTAINER}" sh -c "tail -n 100 /var/log/demyx/*.log" || true
+              echo ""
+            done
+          }
+
+          demyx_wait_for_http() {
+            local CONTAINER="$1"
+            local ATTEMPTS=30
+            local SLEEP_SECONDS=4
+            local TRY=
+
+            for TRY in $(seq 1 "$ATTEMPTS"); do
+              if ! docker inspect -f '{{.State.Running}}' "$CONTAINER" | grep -q true; then
+                echo "Container is not running: $CONTAINER"
+                return 1
+              fi
+
+              if docker exec "$CONTAINER" sh -c "wget -q --spider http://localhost"; then
+                echo "HTTP ready: $CONTAINER"
+                return 0
+              fi
+
+              echo "Waiting for HTTP on $CONTAINER (attempt $TRY/$ATTEMPTS)..."
+              sleep "$SLEEP_SECONDS"
+            done
+
+            echo "Timed out waiting for HTTP on $CONTAINER"
+            return 1
+          }
+
+          demyx_wait_for_wp_install() {
+            local CONTAINER="$1"
+            local WP_PATH="$2"
+            local ATTEMPTS=30
+            local SLEEP_SECONDS=4
+            local TRY=
+
+            for TRY in $(seq 1 "$ATTEMPTS"); do
+              if docker exec "$CONTAINER" sh -c "wp core is-installed --path=$WP_PATH >/dev/null 2>&1"; then
+                echo "WordPress installed: $CONTAINER ($WP_PATH)"
+                return 0
+              fi
+
+              echo "Waiting for WordPress install on $CONTAINER (attempt $TRY/$ATTEMPTS)..."
+              sleep "$SLEEP_SECONDS"
+            done
+
+            echo "Timed out waiting for WordPress install on $CONTAINER ($WP_PATH)"
+            return 1
+          }
+
+          demyx_fail() {
+            local MESSAGE="$1"
+            echo "Tests failed - $MESSAGE"
+            demyx_test_logs
+            exit 1
+          }
+
           docker network create demyx
 
           # tag-latest test
@@ -51,7 +122,7 @@ jobs:
             -v ${{ env.DEMYX_REPOSITORY }}:/demyx \
             -e DEMYX_DB_HOST=demyx_db \
             -e DEMYX_DB_NAME=demyx \
-            -e DEMYX_DB_USER=demyx \
+            -e DEMYX_DB_USERNAME=demyx \
             -e DEMYX_DB_PASSWORD=demyx \
             -e DEMYX_DOMAIN=localhost \
             demyx/${{ env.DEMYX_REPOSITORY }}
@@ -74,39 +145,37 @@ jobs:
             -v ${{ env.DEMYX_REPOSITORY }}_bedrock:/demyx \
             -e DEMYX_DB_HOST=demyx_db_bedrock \
             -e DEMYX_DB_NAME=demyx \
-            -e DEMYX_DB_USER=demyx \
+            -e DEMYX_DB_USERNAME=demyx \
             -e DEMYX_DB_PASSWORD=demyx \
             -e DEMYX_DOMAIN=localhost \
             demyx/${{ env.DEMYX_REPOSITORY }}:bedrock
 
-          sleep 20
+          sleep 5
 
-          # Check if containers are running
-          echo "Checking container status..."
-          docker ps
-          echo ""
+          # Infra health: ensure all test containers are running
+          for CONTAINER in demyx_db ${{ env.DEMYX_REPOSITORY }} demyx_db_bedrock ${{ env.DEMYX_REPOSITORY }}_bedrock; do
+            if ! docker inspect -f '{{.State.Running}}' "$CONTAINER" | grep -q true; then
+              demyx_fail "container is not running: $CONTAINER"
+            fi
+          done
 
-          # Check web server response
-          echo "Testing web server response..."
-          DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c "wget -qO- http://localhost" 2>&1)"
-          DEMYX_TEST_BEDROCK="$(docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock sh -c "wget -qO- http://localhost" 2>&1)"
+          # Service health: wait for local HTTP readiness
+          demyx_wait_for_http "${{ env.DEMYX_REPOSITORY }}" || demyx_fail "tag-latest HTTP endpoint not ready"
+          demyx_wait_for_http "${{ env.DEMYX_REPOSITORY }}_bedrock" || demyx_fail "tag-bedrock HTTP endpoint not ready"
 
-          echo "DEMYX_TEST output: $DEMYX_TEST"
-          echo "DEMYX_TEST_BEDROCK output: $DEMYX_TEST_BEDROCK"
-          echo ""
+          # Service health: require HTTP status success
+          docker exec ${{ env.DEMYX_REPOSITORY }} sh -c "wget -q --spider http://localhost" || demyx_fail "tag-latest HTTP check failed"
+          docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock sh -c "wget -q --spider http://localhost" || demyx_fail "tag-bedrock HTTP check failed"
 
-          # Check if web server is responding (look for any HTML content)
-          if [[ "$DEMYX_TEST" == *"<html"* || "$DEMYX_TEST" == *"WordPress"* || "$DEMYX_TEST" == *"Hello"* ]] && \
-             [[ "$DEMYX_TEST_BEDROCK" == *"<html"* || "$DEMYX_TEST_BEDROCK" == *"WordPress"* || "$DEMYX_TEST_BEDROCK" == *"Hello"* ]]; then
-            echo "Tests passed - web servers are responding."
-          else
-            echo "Tests failed - web servers not responding properly"
-            echo "Checking container logs..."
-            docker logs ${{ env.DEMYX_REPOSITORY }}
-            echo ""
-            docker logs ${{ env.DEMYX_REPOSITORY }}_bedrock
-            exit 1
-          fi
+          # App readiness: verify WordPress install on both variants
+          demyx_wait_for_wp_install "${{ env.DEMYX_REPOSITORY }}" "/demyx" || demyx_fail "tag-latest WordPress not installed"
+          demyx_wait_for_wp_install "${{ env.DEMYX_REPOSITORY }}_bedrock" "/demyx/web/wp" || demyx_fail "tag-bedrock WordPress not installed"
+
+          # Bedrock sanity: expected structure and wp-cli command path
+          docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock sh -c "test -d /demyx/web/wp" || demyx_fail "tag-bedrock missing /demyx/web/wp"
+          docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock sh -c "wp core version --path=/demyx/web/wp >/dev/null 2>&1" || demyx_fail "tag-bedrock wp-cli core version failed"
+
+          echo "Tests passed - infra, service, and app readiness checks succeeded."
       - name: Version
         run: |
           DEMYX_OPENLITESPEED_DEBIAN_VERSION="$(docker exec ${{ env.DEMYX_REPOSITORY }} cat /etc/debian_version)"

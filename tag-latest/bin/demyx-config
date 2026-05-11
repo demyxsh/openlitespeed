@@ -6,16 +6,16 @@ set -eEuo pipefail
 #   Main.
 #
 demyx_config() {
-    # Default to lsphp84
+    # Normalize DEMYX_LSPHP input and default to lsphp84.
     case "$DEMYX_LSPHP" in
-        ""|84|8.4)
+        ""|84|8.4|lsphp84)
             DEMYX_LSPHP=lsphp84
         ;;
-        83|8.3)
+        83|8.3|lsphp83)
             DEMYX_LSPHP=lsphp83
         ;;
         *)
-            DEMYX_LSPHP=lsphp83
+            DEMYX_LSPHP=lsphp84
         ;;
     esac
 

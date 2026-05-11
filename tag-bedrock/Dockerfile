@@ -32,7 +32,7 @@ RUN set -ex; \
     # Configure Bedrock
     su -c "composer create-project roots/bedrock /tmp/bedrock; \
         \
-        cd /tmp/bedrock && composer require roots/acorn; \
+        cd /tmp/bedrock && composer require roots/acorn:^4.2; \
         \
         mv .env.example .env; \
         \

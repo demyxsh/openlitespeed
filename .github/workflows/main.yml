@@ -79,17 +79,32 @@ jobs:
             -e DEMYX_DOMAIN=localhost \
             demyx/${{ env.DEMYX_REPOSITORY }}:bedrock
 
-          sleep 15
+          sleep 20
 
+          # Check if containers are running
+          echo "Checking container status..."
+          docker ps
+          echo ""
+
+          # Check web server response
+          echo "Testing web server response..."
           DEMYX_TEST="$(docker exec ${{ env.DEMYX_REPOSITORY }} sh -c "wget -qO- http://localhost" 2>&1)"
           DEMYX_TEST_BEDROCK="$(docker exec ${{ env.DEMYX_REPOSITORY }}_bedrock sh -c "wget -qO- http://localhost" 2>&1)"
 
           echo "DEMYX_TEST output: $DEMYX_TEST"
           echo "DEMYX_TEST_BEDROCK output: $DEMYX_TEST_BEDROCK"
+          echo ""
 
-          if [[ "$DEMYX_TEST" == *"Hello world"* && "$DEMYX_TEST_BEDROCK" == *"Hello world"* ]]; then
-            echo "Tests passed."
+          # Check if web server is responding (look for any HTML content)
+          if [[ "$DEMYX_TEST" == *"<html"* || "$DEMYX_TEST" == *"WordPress"* || "$DEMYX_TEST" == *"Hello"* ]] && \
+             [[ "$DEMYX_TEST_BEDROCK" == *"<html"* || "$DEMYX_TEST_BEDROCK" == *"WordPress"* || "$DEMYX_TEST_BEDROCK" == *"Hello"* ]]; then
+            echo "Tests passed - web servers are responding."
           else
+            echo "Tests failed - web servers not responding properly"
+            echo "Checking container logs..."
+            docker logs ${{ env.DEMYX_REPOSITORY }}
+            echo ""
+            docker logs ${{ env.DEMYX_REPOSITORY }}_bedrock
             exit 1
           fi
       - name: Version

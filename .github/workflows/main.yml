@@ -20,13 +20,24 @@ jobs:
         with:
           username: demyx
           password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Resolve DEMYX version tag
+        run: |
+          DEMYX_VERSION_FILE="$(curl -fsSL https://raw.githubusercontent.com/demyxsh/demyx/refs/heads/master/VERSION)"
+          DEMYX_VERSION_TAG="$(printf '%s\n' "$DEMYX_VERSION_FILE" | sed -n 's/^DEMYX_VERSION=//p' | head -n 1 | tr -d '[:space:]')"
+
+          if [[ -z "$DEMYX_VERSION_TAG" ]]; then
+            echo "Failed to resolve DEMYX_VERSION from remote VERSION file." >&2
+            exit 1
+          fi
+
+          echo "DEMYX_VERSION_TAG=$DEMYX_VERSION_TAG" >> "$GITHUB_ENV"
       - name: Build
         run: |
           docker pull debian:buster-slim
           docker pull demyx/mariadb
           docker pull demyx/wordpress:cli
-          docker build -t demyx/${{ env.DEMYX_REPOSITORY }} tag-latest
-          docker build -t demyx/${{ env.DEMYX_REPOSITORY }}:bedrock tag-bedrock
+          docker build -t demyx/${{ env.DEMYX_REPOSITORY }} -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION_TAG }} tag-latest
+          docker build -t demyx/${{ env.DEMYX_REPOSITORY }}:bedrock -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION_TAG }}-bedrock tag-bedrock
       - name: Test
         id: test
         shell: 'script -q -e -c "bash {0}"'
@@ -118,3 +129,5 @@ jobs:
 
           docker push demyx/${{ env.DEMYX_REPOSITORY }}
           docker push demyx/${{ env.DEMYX_REPOSITORY }}:bedrock
+          docker push demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION_TAG }}
+          docker push demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION_TAG }}-bedrock

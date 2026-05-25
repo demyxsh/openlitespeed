@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-05-25
+### Added
+- None.
+### Changed
+- Updated GitHub Actions Docker workflow to publish existing moving image tag(s) plus versioned tag(s) derived from `DEMYX_VERSION` from the `demyx` orchestrator.
+### Fixed
+- None.
+### Removed
+- None.
+### Security
+- None.
+
+
 ## 2026-05-14
 ### Added
 - None.

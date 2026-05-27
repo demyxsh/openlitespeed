@@ -7,6 +7,7 @@
 - Move `DEMYX_VERSION` to job-level `env` key set to `1.10.0` instead of resolving dynamically from remote `demyx` orchestrator via a workflow step.
 - Add `v1` and `v1-bedrock` moving tags to build and push steps in GitHub Actions workflow.
 - Pin demyx cross-repo images (`mariadb`) and self-image in test step `docker run` commands to `:${{ env.DEMYX_VERSION }}`.
+- Changed scheduled GitHub Actions build day from Saturday to Thursday.
 ### Fixed
 - None.
 ### Removed

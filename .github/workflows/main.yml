@@ -27,7 +27,7 @@ jobs:
           docker pull demyx/mariadb:${{ env.DEMYX_VERSION }}
           docker pull demyx/wordpress:${{ env.DEMYX_VERSION }}
           docker build -t demyx/${{ env.DEMYX_REPOSITORY }} -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }} -t demyx/${{ env.DEMYX_REPOSITORY }}:v1 tag-latest
-          docker build -t demyx/${{ env.DEMYX_REPOSITORY }}:bedrock -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }}-bedrock tag-bedrock
+          docker build -t demyx/${{ env.DEMYX_REPOSITORY }}:bedrock -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }}-bedrock -t demyx/${{ env.DEMYX_REPOSITORY }}:v1-bedrock tag-bedrock
       - name: Test
         id: test
         shell: 'script -q -e -c "bash {0}"'

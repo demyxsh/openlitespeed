@@ -12,32 +12,22 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEMYX_REPOSITORY: openlitespeed
+      DEMYX_VERSION: 1.10.0
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Login
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: demyx
           password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Resolve DEMYX version tag
-        run: |
-          DEMYX_VERSION_FILE="$(curl -fsSL https://raw.githubusercontent.com/demyxsh/demyx/refs/heads/master/VERSION)"
-          DEMYX_VERSION_TAG="$(printf '%s\n' "$DEMYX_VERSION_FILE" | sed -n 's/^DEMYX_VERSION=//p' | head -n 1 | tr -d '[:space:]')"
-
-          if [[ -z "$DEMYX_VERSION_TAG" ]]; then
-            echo "Failed to resolve DEMYX_VERSION from remote VERSION file." >&2
-            exit 1
-          fi
-
-          echo "DEMYX_VERSION_TAG=$DEMYX_VERSION_TAG" >> "$GITHUB_ENV"
       - name: Build
         run: |
           docker pull debian:buster-slim
-          docker pull demyx/mariadb
-          docker pull demyx/wordpress:cli
-          docker build -t demyx/${{ env.DEMYX_REPOSITORY }} -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION_TAG }} tag-latest
-          docker build -t demyx/${{ env.DEMYX_REPOSITORY }}:bedrock -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION_TAG }}-bedrock tag-bedrock
+          docker pull demyx/mariadb:${{ env.DEMYX_VERSION }}
+          docker pull demyx/wordpress:${{ env.DEMYX_VERSION }}
+          docker build -t demyx/${{ env.DEMYX_REPOSITORY }} -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }} -t demyx/${{ env.DEMYX_REPOSITORY }}:v1 tag-latest
+          docker build -t demyx/${{ env.DEMYX_REPOSITORY }}:bedrock -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }}-bedrock tag-bedrock
       - name: Test
         id: test
         shell: 'script -q -e -c "bash {0}"'
@@ -52,7 +42,7 @@ jobs:
             -e DEMYX_USERNAME=demyx \
             -e DEMYX_PASSWORD=demyx \
             -e DEMYX_ROOT_PASSWORD=demyx \
-            demyx/mariadb
+            demyx/mariadb:${{ env.DEMYX_VERSION }}
 
           sleep 5
 
@@ -65,7 +55,7 @@ jobs:
             -e DEMYX_DB_USER=demyx \
             -e DEMYX_DB_PASSWORD=demyx \
             -e DEMYX_DOMAIN=localhost \
-            demyx/${{ env.DEMYX_REPOSITORY }}
+            demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }}
 
           # tag-bedrock test
           docker run -d \
@@ -75,7 +65,7 @@ jobs:
             -e DEMYX_USERNAME=demyx \
             -e DEMYX_PASSWORD=demyx \
             -e DEMYX_ROOT_PASSWORD=demyx \
-            demyx/mariadb
+            demyx/mariadb:${{ env.DEMYX_VERSION }}
 
           sleep 5
 
@@ -129,5 +119,7 @@ jobs:
 
           docker push demyx/${{ env.DEMYX_REPOSITORY }}
           docker push demyx/${{ env.DEMYX_REPOSITORY }}:bedrock
-          docker push demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION_TAG }}
-          docker push demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION_TAG }}-bedrock
+          docker push demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }}
+          docker push demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }}-bedrock
+          docker push demyx/${{ env.DEMYX_REPOSITORY }}:v1
+          docker push demyx/${{ env.DEMYX_REPOSITORY }}:v1-bedrock

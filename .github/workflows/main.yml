@@ -21,11 +21,16 @@ jobs:
         with:
           username: demyx
           password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Upstream Version
+        run: |
+          DEMYX_UPSTREAM_VERSION="$(curl -fsSL https://raw.githubusercontent.com/demyxsh/demyx/refs/heads/master/VERSION | awk -F= '$1 == "DEMYX_VERSION" { print $2 }')"
+          test -n "$DEMYX_UPSTREAM_VERSION"
+          echo "DEMYX_UPSTREAM_VERSION=$DEMYX_UPSTREAM_VERSION" >> "$GITHUB_ENV"
       - name: Build
         run: |
           docker pull debian:buster-slim
-          docker pull demyx/mariadb:${{ env.DEMYX_VERSION }}
-          docker pull demyx/wordpress:${{ env.DEMYX_VERSION }}
+          docker pull demyx/mariadb:${{ env.DEMYX_UPSTREAM_VERSION }}
+          docker pull demyx/wordpress:${{ env.DEMYX_UPSTREAM_VERSION }}
           docker build -t demyx/${{ env.DEMYX_REPOSITORY }} -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }} -t demyx/${{ env.DEMYX_REPOSITORY }}:v1 tag-latest
           docker build -t demyx/${{ env.DEMYX_REPOSITORY }}:bedrock -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }}-bedrock -t demyx/${{ env.DEMYX_REPOSITORY }}:v1-bedrock tag-bedrock
       - name: Test
@@ -42,7 +47,7 @@ jobs:
             -e DEMYX_USERNAME=demyx \
             -e DEMYX_PASSWORD=demyx \
             -e DEMYX_ROOT_PASSWORD=demyx \
-            demyx/mariadb:${{ env.DEMYX_VERSION }}
+            demyx/mariadb:${{ env.DEMYX_UPSTREAM_VERSION }}
 
           sleep 5
 
@@ -65,7 +70,7 @@ jobs:
             -e DEMYX_USERNAME=demyx \
             -e DEMYX_PASSWORD=demyx \
             -e DEMYX_ROOT_PASSWORD=demyx \
-            demyx/mariadb:${{ env.DEMYX_VERSION }}
+            demyx/mariadb:${{ env.DEMYX_UPSTREAM_VERSION }}
 
           sleep 5
 

@@ -26,3 +26,28 @@ Join us on Discord for latest news, faster support, or just chill.
 <a href="https://demyx.sh/sponsor-buymeacoffee" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
 
 Support this project by buying coffee (please).
+
+## PHP Security
+
+This update addresses [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w) and [CVE-2026-109619](https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp) ([PHP advisory](https://www.php.net/archive/2026.php#2026-10-21-5)). The image uses the fixed `php:8.4.27-cli-bookworm` base while retaining LiteSpeed PHP 8.3 and 8.4 for web requests. PHP 8.3.36 and PHP 8.4.27 are the respective minimums. CLI, LSAPI, admin, and fallback launchers are checked during the build, which fails if a binary has an older or unexpected runtime.
+
+This repository change does not patch existing images or running workers. Rebuild with the image references used by your Compose configuration, then recreate containers. With current Demyx, set `DEMYX_APP_OLS_LSPHP=8.4` because new-site configuration defaults to PHP 8.5, which this image does not provide.
+
+```sh
+OLS_VERSION=1.11.0 # Set to the version referenced by your Compose configuration.
+docker build --pull --no-cache \
+  -t demyx/openlitespeed:latest \
+  -t "demyx/openlitespeed:${OLS_VERSION}" \
+  -t demyx/openlitespeed:v1 \
+  tag-latest
+docker build --no-cache \
+  -t demyx/openlitespeed:bedrock \
+  -t "demyx/openlitespeed:${OLS_VERSION}-bedrock" \
+  -t demyx/openlitespeed:v1-bedrock \
+  tag-bedrock
+docker compose up -d --force-recreate
+```
+
+Build `tag-latest` first; Bedrock must use that freshly built local base, so do not pull the Bedrock base before the patched parent is published. Versioned deployments need matching image tags and will not use a latest-only build.
+
+The runtime contract remains unchanged: PHP selection still supports branches 8.3 and 8.4; environment variables, image variants, entrypoint and command interfaces, ports 80/8080, compose paths, the non-root `demyx` UID 1000, and `/demyx`, `/etc/demyx/custom`, and `/var/log/demyx` mounts are preserved. The base OS moves to Debian 12 Bookworm. Official PHP CLI and LiteSpeed LSAPI remain separate runtimes; the PHP CLI base does not replace the site-request interpreter.

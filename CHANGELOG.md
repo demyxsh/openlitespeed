@@ -1,5 +1,18 @@
 # Changelog
 
+## 2026-10-21
+### Added
+- Add PHP binary security unit and image smoke tests.
+### Changed
+- Use the official PHP 8.4.27 CLI image on Debian Bookworm and install patched LiteSpeed PHP 8.3/8.4 branches.
+- Repoint OpenLiteSpeed LSAPI and admin PHP launchers to the fixed PHP 8.4 LSAPI runtime.
+### Fixed
+- Fail builds unless the official CLI, both LiteSpeed PHP branches, LSAPI launchers, and admin runtime meet their fixed version and SAPI requirements.
+### Removed
+- Disable OpenLiteSpeed's automatic legacy PHP 7.4 installation.
+### Security
+- Address CVE-2026-109618 and CVE-2026-109619 across CLI, LiteSpeed PHP 8.3/8.4, and admin PHP entrypoints.
+
 ## 2026-05-29
 ### Added
 - None.

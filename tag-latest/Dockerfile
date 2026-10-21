@@ -1,4 +1,4 @@
-FROM php:8.4-cli-bullseye
+FROM php:8.4.27-cli-bookworm
 
 LABEL sh.demyx.image                            demyx/openlitespeed
 LABEL sh.demyx.maintainer                       Demyx <info@demyx.sh>
@@ -69,6 +69,8 @@ ENV DEMYX_XMLRPC                                false
 ENV PATH                                        "${PATH}:/usr/local/lsws/${DEMYX_LSPHP}/bin"
 ENV TZ                                          America/Los_Angeles
 
+RUN php -r 'if (PHP_MAJOR_VERSION !== 8 || PHP_MINOR_VERSION !== 4 || version_compare(PHP_VERSION, "8.4.27", "<")) { fwrite(STDERR, "PHP 8.4.27 or newer is required\n"); exit(1); }'
+
 # Packages
 # Install these packages if you want to recompile PHP
 # gcc libxml2-dev pkg-config libssl-dev zlib1g-dev libcurl4-gnutls-dev libpng-dev libzip-dev make
@@ -108,6 +110,8 @@ RUN set -ex; \
     echo 'PS1="$(whoami)@\h:\w \$ "' > /home/demyx/.bashrc; \
     echo 'PS1="$(whoami)@\h:\w \$ "' > /root/.bashrc
 
+COPY bin/demyx-php-security /usr/local/bin/demyx-php-security
+
 # OpenLiteSpeed
 RUN set -ex; \
     # Efficient version detection with fallback
@@ -129,6 +133,7 @@ RUN set -ex; \
     # Download and install OpenLiteSpeed
     curl -fsSL "https://openlitespeed.org/packages/openlitespeed-$DEMYX_OLS_VERSION.tgz" -o /tmp/openlitespeed-"$DEMYX_OLS_VERSION".tgz; \
     tar -xzf /tmp/openlitespeed-"$DEMYX_OLS_VERSION".tgz -C /tmp; \
+    printf 'USE_LSPHP7=no\n' > /tmp/openlitespeed/ols.conf; \
     cd /tmp/openlitespeed && ./install.sh; \
     \
     wget -O - https://rpms.litespeedtech.com/debian/enable_lst_debian_repo.sh | bash; \
@@ -148,7 +153,24 @@ RUN set -ex; \
         lsphp83-mysql \
         lsphp83-redis; \
     \
-    ln -sf /usr/local/lsws/"$DEMYX_LSPHP"/bin/lsphp /usr/local/lsws/fcgi-bin/lsphp5; \
+    for launcher in \
+        /usr/local/lsws/fcgi-bin/lsphp \
+        /usr/local/lsws/fcgi-bin/lsphp5 \
+        /usr/local/lsws/admin/fcgi-bin/admin_php; do \
+        ln -sf /usr/local/lsws/lsphp84/bin/lsphp "$launcher"; \
+    done; \
+    \
+    for launcher in \
+        /usr/local/lsws/fcgi-bin/lsphp7 \
+        /usr/local/lsws/admin/fcgi-bin/admin_php5 \
+        /usr/local/lsws/admin/fcgi-bin/admin_php.bak; do \
+        if [ -e "$launcher" ] || [ -L "$launcher" ]; then \
+            ln -sf /usr/local/lsws/lsphp84/bin/lsphp "$launcher"; \
+        fi; \
+    done; \
+    \
+    chmod +x /usr/local/bin/demyx-php-security; \
+    /usr/local/bin/demyx-php-security; \
     \
     # Create directory for lsadm user
     install -d -m 0755 -o lsadm -g lsadm "$DEMYX_CONFIG"/ols; \

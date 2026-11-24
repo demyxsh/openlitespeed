@@ -1,4 +1,4 @@
-FROM php:8.4.27-cli-bookworm
+FROM php:8.4.28-cli-bookworm
 
 LABEL sh.demyx.image                            demyx/openlitespeed
 LABEL sh.demyx.maintainer                       Demyx <info@demyx.sh>
@@ -69,7 +69,7 @@ ENV DEMYX_XMLRPC                                false
 ENV PATH                                        "${PATH}:/usr/local/lsws/${DEMYX_LSPHP}/bin"
 ENV TZ                                          America/Los_Angeles
 
-RUN php -r 'if (PHP_MAJOR_VERSION !== 8 || PHP_MINOR_VERSION !== 4 || version_compare(PHP_VERSION, "8.4.27", "<")) { fwrite(STDERR, "PHP 8.4.27 or newer is required\n"); exit(1); }'
+RUN php -r 'if (PHP_MAJOR_VERSION !== 8 || PHP_MINOR_VERSION !== 4 || version_compare(PHP_VERSION, "8.4.28", "<")) { fwrite(STDERR, "PHP 8.4.28 or newer is required\n"); exit(1); }'
 
 # Packages
 # Install these packages if you want to recompile PHP

@@ -1,5 +1,17 @@
 # Changelog
 
+## 2026-11-23
+### Added
+- None.
+### Changed
+- None.
+### Fixed
+- None.
+### Removed
+- None.
+### Security
+- Update the PHP CLI base to 8.4.28 and enforce the 8.4.28 and 8.3.37 LiteSpeed PHP security minimums across LSAPI and admin launchers, addressing CVE-2026-129289 and the other November 2026 PHP security fixes.
+
 ## 2026-10-21
 ### Added
 - Add PHP binary security unit and image smoke tests.

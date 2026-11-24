@@ -29,7 +29,7 @@ Support this project by buying coffee (please).
 
 ## PHP Security
 
-This update addresses [CVE-2026-109618](https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w) and [CVE-2026-109619](https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp) ([PHP advisory](https://www.php.net/archive/2026.php#2026-10-21-5)). The image uses the fixed `php:8.4.27-cli-bookworm` base while retaining LiteSpeed PHP 8.3 and 8.4 for web requests. PHP 8.3.36 and PHP 8.4.27 are the respective minimums. CLI, LSAPI, admin, and fallback launchers are checked during the build, which fails if a binary has an older or unexpected runtime.
+The [November 2026 PHP security releases](https://www.php.net/archive/2026.php#2026-11-19-3) fix CVE-2026-129289 and other vulnerabilities. The image uses `php:8.4.28-cli-bookworm` and requires LiteSpeed PHP 8.4.28 and 8.3.37 or newer on their respective branches. The build checks the CLI, LSAPI, admin, and fallback launchers and rejects older versions or unexpected SAPIs.
 
 This repository change does not patch existing images or running workers. Rebuild with the image references used by your Compose configuration, then recreate containers. With current Demyx, set `DEMYX_APP_OLS_LSPHP=8.4` because new-site configuration defaults to PHP 8.5, which this image does not provide.
 

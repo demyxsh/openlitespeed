@@ -30,7 +30,7 @@ jobs:
           echo "DEMYX_UPSTREAM_VERSION=$DEMYX_UPSTREAM_VERSION" >> "$GITHUB_ENV"
       - name: Build
         run: |
-          docker pull php:8.4.27-cli-bookworm
+          docker pull php:8.4.28-cli-bookworm
           docker pull demyx/mariadb:${{ env.DEMYX_UPSTREAM_VERSION }}
           docker pull demyx/wordpress:${{ env.DEMYX_UPSTREAM_VERSION }}
           docker build -t demyx/${{ env.DEMYX_REPOSITORY }} -t demyx/${{ env.DEMYX_REPOSITORY }}:${{ env.DEMYX_VERSION }} -t demyx/${{ env.DEMYX_REPOSITORY }}:v1 tag-latest

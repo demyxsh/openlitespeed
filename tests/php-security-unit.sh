@@ -10,19 +10,19 @@ sed "s|/usr/local|$fixture_root/usr/local|g" "$root_dir/tag-latest/bin/demyx-php
 chmod +x "$helper"
 
 required_specs=(
-    '/usr/local/bin/php|4|cli|8.4.27|8.4.26|8.4.28'
-    '/usr/local/lsws/lsphp83/bin/php|3|cli|8.3.36|8.3.35|8.3.37'
-    '/usr/local/lsws/lsphp83/bin/lsphp|3|litespeed|8.3.36|8.3.35|8.3.37'
-    '/usr/local/lsws/lsphp84/bin/php|4|cli|8.4.27|8.4.26|8.4.28'
-    '/usr/local/lsws/lsphp84/bin/lsphp|4|litespeed|8.4.27|8.4.26|8.4.28'
-    '/usr/local/lsws/admin/fcgi-bin/admin_php|4|litespeed|8.4.27|8.4.26|8.4.28'
-    '/usr/local/lsws/fcgi-bin/lsphp|4|litespeed|8.4.27|8.4.26|8.4.28'
-    '/usr/local/lsws/fcgi-bin/lsphp5|4|litespeed|8.4.27|8.4.26|8.4.28'
+    '/usr/local/bin/php|4|cli|8.4.28|8.4.27|8.4.29'
+    '/usr/local/lsws/lsphp83/bin/php|3|cli|8.3.37|8.3.36|8.3.38'
+    '/usr/local/lsws/lsphp83/bin/lsphp|3|litespeed|8.3.37|8.3.36|8.3.38'
+    '/usr/local/lsws/lsphp84/bin/php|4|cli|8.4.28|8.4.27|8.4.29'
+    '/usr/local/lsws/lsphp84/bin/lsphp|4|litespeed|8.4.28|8.4.27|8.4.29'
+    '/usr/local/lsws/admin/fcgi-bin/admin_php|4|litespeed|8.4.28|8.4.27|8.4.29'
+    '/usr/local/lsws/fcgi-bin/lsphp|4|litespeed|8.4.28|8.4.27|8.4.29'
+    '/usr/local/lsws/fcgi-bin/lsphp5|4|litespeed|8.4.28|8.4.27|8.4.29'
 )
 optional_specs=(
-    '/usr/local/lsws/fcgi-bin/lsphp7|8.4.27|8.4.26|8.4.28'
-    '/usr/local/lsws/admin/fcgi-bin/admin_php5|8.4.27|8.4.26|8.4.28'
-    '/usr/local/lsws/admin/fcgi-bin/admin_php.bak|8.4.27|8.4.26|8.4.28'
+    '/usr/local/lsws/fcgi-bin/lsphp7|8.4.28|8.4.27|8.4.29'
+    '/usr/local/lsws/admin/fcgi-bin/admin_php5|8.4.28|8.4.27|8.4.29'
+    '/usr/local/lsws/admin/fcgi-bin/admin_php.bak|8.4.28|8.4.27|8.4.29'
 )
 
 write_fixture() {
@@ -133,9 +133,9 @@ for spec in "${required_specs[@]}"; do
     write_fixture "$path" "$minimum" "$sapi"
 done
 
-write_fixture /usr/local/bin/php 8.4.27RC1 cli
+write_fixture /usr/local/bin/php 8.4.28RC1 cli
 expect_failure 'prerelease version' 'Malformed or unsupported PHP version'
-write_fixture /usr/local/bin/php 8.4.27 cli
+write_fixture /usr/local/bin/php 8.4.28 cli
 printf '#!/usr/bin/env bash\nprintf "not a PHP version\\\\n"\n' > "$fixture_root/usr/local/bin/php"
 chmod +x "$fixture_root/usr/local/bin/php"
 expect_failure 'malformed version output' 'Malformed or unsupported PHP version'

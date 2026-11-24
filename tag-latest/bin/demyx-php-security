@@ -53,20 +53,20 @@ demyx_php_security_check() {
     printf 'PHP interpreter ok: %s reports %s\n' "$binary" "$version_line"
 }
 
-demyx_php_security_check /usr/local/bin/php 4 27 cli
-demyx_php_security_check /usr/local/lsws/lsphp83/bin/php 3 36 cli
-demyx_php_security_check /usr/local/lsws/lsphp83/bin/lsphp 3 36 litespeed
-demyx_php_security_check /usr/local/lsws/lsphp84/bin/php 4 27 cli
-demyx_php_security_check /usr/local/lsws/lsphp84/bin/lsphp 4 27 litespeed
-demyx_php_security_check /usr/local/lsws/admin/fcgi-bin/admin_php 4 27 litespeed
-demyx_php_security_check /usr/local/lsws/fcgi-bin/lsphp 4 27 litespeed
-demyx_php_security_check /usr/local/lsws/fcgi-bin/lsphp5 4 27 litespeed
+demyx_php_security_check /usr/local/bin/php 4 28 cli
+demyx_php_security_check /usr/local/lsws/lsphp83/bin/php 3 37 cli
+demyx_php_security_check /usr/local/lsws/lsphp83/bin/lsphp 3 37 litespeed
+demyx_php_security_check /usr/local/lsws/lsphp84/bin/php 4 28 cli
+demyx_php_security_check /usr/local/lsws/lsphp84/bin/lsphp 4 28 litespeed
+demyx_php_security_check /usr/local/lsws/admin/fcgi-bin/admin_php 4 28 litespeed
+demyx_php_security_check /usr/local/lsws/fcgi-bin/lsphp 4 28 litespeed
+demyx_php_security_check /usr/local/lsws/fcgi-bin/lsphp5 4 28 litespeed
 
 for binary in \
     /usr/local/lsws/fcgi-bin/lsphp7 \
     /usr/local/lsws/admin/fcgi-bin/admin_php5 \
     /usr/local/lsws/admin/fcgi-bin/admin_php.bak; do
     if [[ -e "$binary" || -L "$binary" ]]; then
-        demyx_php_security_check "$binary" 4 27 litespeed
+        demyx_php_security_check "$binary" 4 28 litespeed
     fi
 done
